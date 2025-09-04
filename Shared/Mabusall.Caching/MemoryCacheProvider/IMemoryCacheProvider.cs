@@ -1,5 +1,4 @@
-﻿
-namespace Tasheer.Caching.MemoryCacheProvider;
+﻿namespace Mabusall.Caching.MemoryCacheProvider;
 
 public interface IMemoryCacheProvider : IDisposable
 {

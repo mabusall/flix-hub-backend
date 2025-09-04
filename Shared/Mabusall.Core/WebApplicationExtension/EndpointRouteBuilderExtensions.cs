@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.WebApplicationExtension;
+﻿namespace Mabusall.Core.WebApplicationExtension;
 
 public static class EndpointRouteBuilderExtensions
 {

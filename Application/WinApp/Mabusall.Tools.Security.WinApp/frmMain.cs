@@ -1,6 +1,6 @@
-using Tasheer.Tools.Security.WinApp.Extension;
+using Mabusall.Tools.Security.WinApp.Extension;
 
-namespace Tasheer.Tools.Security.WinApp;
+namespace Mabusall.Tools.Security.WinApp;
 
 public partial class frmMain : Form
 {

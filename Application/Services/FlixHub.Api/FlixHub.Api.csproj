@@ -12,4 +12,9 @@
 	  <ProjectReference Include="..\..\..\Shared\Mabusall.Resources\Mabusall.Resources.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Entities\" />
+	  <Folder Include="Features\" />
+	</ItemGroup>
+
 </Project>

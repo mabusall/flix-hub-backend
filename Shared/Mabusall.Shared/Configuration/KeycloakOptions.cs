@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.Configuration;
+﻿namespace Mabusall.Shared.Configuration;
 
 public class KeycloakOptions
 {
@@ -10,7 +10,6 @@ public class KeycloakOptions
 
 public class Realm
 {
-    public Guid Id { get; set; }
     public string Name { get; set; }
     public string Client { get; set; }
     public Guid ClientId { get; set; }

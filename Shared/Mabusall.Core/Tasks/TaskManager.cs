@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.Tasks;
+﻿namespace Mabusall.Core.Tasks;
 
 public static class TaskManager
 {

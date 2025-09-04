@@ -1,6 +1,6 @@
 ﻿[assembly: InternalsVisibleTo("FlixHub.RestApi")]
 
-namespace Store.Api;
+namespace FlixHub.Api;
 
 static class DependencyInjection
 {
@@ -23,10 +23,9 @@ static class DependencyInjection
                 config.AddOpenBehavior(typeof(LoggingBehavior<,>));
             })
 
-            .AddScoped<IStoreUnitOfWork, StoreUnitOfWork>()
-            .AddScoped<CachingStore>()
+            .AddScoped<IFlixHubDbUnitOfWork, FlixHubDbUnitOfWork>()
 
-            .AddDbContext<StoreDbContext>((serviceProvider, options) =>
+            .AddDbContext<FlixHubDbContext>((serviceProvider, options) =>
             {
                 options.UseSqlServer(
                     configuration.GetConnectionString("Default").Decrypt(),
@@ -49,22 +48,22 @@ static class DependencyInjection
 
     public static WebApplication RegisterStoreTasks(this WebApplication app)
     {
-        var hangfireOptions = app
-            .Configuration
-            .GetSection(HangfireOptions.ConfigurationKey)
-            .Get<HangfireOptions>();
+        //var hangfireOptions = app
+        //    .Configuration
+        //    .GetSection(HangfireOptions.ConfigurationKey)
+        //    .Get<HangfireOptions>();
 
-        var jobManager = app.Services.CreateScope().ServiceProvider.GetRequiredService<IRecurringJobManager>();
-        var storeScheduler = hangfireOptions!.Tasks[nameof(TasksScheduler.Store)];
-        var cron = storeScheduler.Schedule.ToCronExpression();
+        //var jobManager = app.Services.CreateScope().ServiceProvider.GetRequiredService<IRecurringJobManager>();
+        //var storeScheduler = hangfireOptions!.Tasks[nameof(TasksScheduler.Store)];
+        //var cron = storeScheduler.Schedule.ToCronExpression();
 
-        if (!storeScheduler.IsEnabled)
-            jobManager.RemoveIfExists(storeScheduler.Id);
-        else
-            TaskManager.RegisterHangfireJob<CachingStore>(jobManager,
-                                                          storeScheduler.Id,
-                                                          cron,
-                                                          handler => handler.ExecuteAsync());
+        //if (!storeScheduler.IsEnabled)
+        //    jobManager.RemoveIfExists(storeScheduler.Id);
+        //else
+        //    TaskManager.RegisterHangfireJob<CachingStore>(jobManager,
+        //                                                  storeScheduler.Id,
+        //                                                  cron,
+        //                                                  handler => handler.ExecuteAsync());
 
         return app;
     }

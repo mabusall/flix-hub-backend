@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.Configuration;
+﻿namespace Mabusall.Shared.Configuration;
 
 public interface IAppSettingsKeyManagement
 {
@@ -13,6 +13,7 @@ public interface IAppSettingsKeyManagement
     AzurBlobServiceOptions AzurBlobServiceOptions { get; }
     RateLimitOptions RateLimitOptions { get; }
     Dictionary<string, bool> AppFeatures { get; }
+    FirebaseOptions FirebaseOptions { get; }
 }
 
 public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
@@ -25,7 +26,8 @@ public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
                                       BasicAuthenticationOptions basicAuthenticationOptions,
                                       AzurBlobServiceOptions azurBlobServiceOptions,
                                       RateLimitOptions rateLimitOptions,
-                                      Dictionary<string, bool> appFeatures)
+                                      Dictionary<string, bool> appFeatures,
+                                      FirebaseOptions firebaseOptions)
     : IAppSettingsKeyManagement
 {
     public ElasticApmOptions ElasticApmOptions { get; } = elasticApmOptions;
@@ -49,4 +51,6 @@ public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
     public RateLimitOptions RateLimitOptions { get; } = rateLimitOptions;
 
     public Dictionary<string, bool> AppFeatures { get; } = appFeatures;
+
+    public FirebaseOptions FirebaseOptions { get; } = firebaseOptions;
 }

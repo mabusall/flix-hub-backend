@@ -1,14 +1,16 @@
 ﻿@page
 
 @using System.Globalization
-@using Tasheer.Notification.Views.Account
-@using Tasheer.Resources
+@using Mabusall.Notification.Views.Account
+@using Mabusall.Resources
 
 @model VerifyOtpModel
 @{
     var viewModel = ViewContext.ViewData.Model as VerifyOtpModel;
-    Thread.CurrentThread.CurrentUICulture = new CultureInfo(viewModel!.LanguageIsoCode!);
     var isArabic = viewModel!.LanguageIsoCode!.Equals("ar", StringComparison.OrdinalIgnoreCase);
+
+    // set the thread language
+    Thread.CurrentThread.CurrentUICulture = new CultureInfo(viewModel!.LanguageIsoCode!);
 
     Layout = "_EmailLayout";
     ViewBag.IsArabic = isArabic;
@@ -16,31 +18,29 @@
     ViewBag.Team = EmailNotificationResources.Team;
     ViewBag.DoNotReplyToThisMail = EmailNotificationResources.DoNotReplyToThisMail;
     ViewBag.Copyright = EmailNotificationResources.Copyright;
-    ViewBag.EmailTitle = EmailNotificationResources.VerifyEmailTemplate_VerifyEmailTitle;
+    ViewBag.NeedHelp = EmailNotificationResources.NeedHelp;
+    ViewBag.NeedForHelpMessage = EmailNotificationResources.NeedForHelpMessage;
+    ViewBag.EmailTitle = EmailNotificationResources.VerifyOtpTemplate_Title;
 }
 
-<table width="100%" border="0" cellspacing="0"
-       cellpadding="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tbody>
         <tr>
-            <td class="title-36 a-center pb-15"
-                style="font-size: 24px; line-height: 40px; color: #282828; font-family: &#39;PT Sans&#39;,Arial, sans-serif; min-width: auto !important; text-align: center; padding-bottom: 15px;">
-                <strong>@EmailNotificationResources.WelcomeMessage,</strong>
+            <td style="font-size: 20px; line-height: 40px; color: #282828;">
+                <p>@EmailNotificationResources.WelcomeMessage,</p>
             </td>
         </tr>
         <tr>
-            <td class="text-16 lh-26 a-center pb-25"
-                style="font-size: 16px; color: #6e6e6e; font-family: &#39;PT Sans&#39;, Arial, sans-serif; min-width: auto !important; line-height: 26px; text-align: center; width: 50%; padding-left: 15%; padding-right: 15%; padding-bottom: 90px;"
-                dir='@(isArabic ? "rtl" : "ltr")'>
+            <td style="font-size: 16px;" dir='@(isArabic ? "rtl" : "ltr")'>
                 <p>
-                    @EmailNotificationResources.VerifyEmailTemplate_YourOTPLabel
+                    @EmailNotificationResources.VerifyOtpTemplate_YourOtpLabel
                 </p>
-                <h2 style="color: #282828; letter-spacing: 4px;">@viewModel.OTPValue</h2>
+                <h2 style="color: #282828; letter-spacing: 4px; font-size: 2rem; font-weight: bold; margin-top: .5rem; margin-bottom: .5rem;">@viewModel.OtpValue</h2>
                 <p>
-                    @EmailNotificationResources.VerifyEmailTemplate_PleaseDoNotShareOTP
+                    @EmailNotificationResources.VerifyOtpTemplate_PleaseDoNotShareOTP
                 </p>
                 <p>
-                    @EmailNotificationResources.VerifyEmailTemplate_OTPValidFor5min
+                    @EmailNotificationResources.VerifyOtpTemplate_OtpValidFor5min
                 </p>
             </td>
         </tr>

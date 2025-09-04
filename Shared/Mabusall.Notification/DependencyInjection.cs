@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Notification;
+﻿namespace Mabusall.Notification;
 
 public static class DependencyInjection
 {
@@ -9,45 +9,60 @@ public static class DependencyInjection
             .GetSection(RabbitMqOptions.ConfigurationKey)
             .Get<RabbitMqOptions>();
 
-        var emailEndpoint = rabbitMqOptions!.Consumers["EmailEndpoint"];
-        if (rabbitMqOptions!.IsActive && emailEndpoint!.IsActive)
+        // Firebase configuration - updated approach
+        var firebaseOptions = configuration
+            .GetSection(FirebaseOptions.ConfigurationKey)
+            .Get<FirebaseOptions>();
+
+        foreach (var endpoint in rabbitMqOptions!.Consumers.Values)
         {
-            // Use the current executing assembly to resolve the type
-            var type = Assembly.GetExecutingAssembly().GetType(emailEndpoint.Consumer);
-
-            BusConfiguration.AddBusConfigurator(busConfigurator =>
+            if (endpoint!.IsActive)
             {
-                busConfigurator.AddConsumer(type);
-            });
+                // Use the current executing assembly to resolve the type
+                var consumerType = Assembly
+                    .GetExecutingAssembly()
+                    .GetType(endpoint.Consumer);
 
-            BusConfiguration.AddBusFactoryConfigurator((busFactoryConfigurator, registration) =>
-            {
-                busFactoryConfigurator.ReceiveEndpoint(emailEndpoint.Name,
-                    e =>
-                    {
-                        e.ConfigureConsumer(registration, type);
+                BusConfiguration.AddBusConfigurator(busConfigurator =>
+                {
+                    busConfigurator.AddConsumer(consumerType);
+                });
 
-                        // retry 10 times with 5 seconds interval
-                        e.UseMessageRetry(r => r.Interval(emailEndpoint.RetryCount, emailEndpoint.Interval));
+                BusConfiguration.AddBusFactoryConfigurator((busFactoryConfigurator, registration) =>
+                {
+                    busFactoryConfigurator.ReceiveEndpoint(endpoint.Name,
+                        e =>
+                        {
+                            e.ConfigureConsumer(registration, consumerType);
+                            e.UseMessageRetry(r => r.Interval(endpoint.RetryCount, endpoint.Interval));
+                            e.PrefetchCount = endpoint.PrefetchCount;
+                            e.ConcurrentMessageLimit = endpoint.ConcurrentMessageLimit;
 
-                        // process one message only
-                        e.PrefetchCount = emailEndpoint.PrefetchCount;
-                        e.ConcurrentMessageLimit = emailEndpoint.ConcurrentMessageLimit;
-
-                        // ensuring message durability and exactly - once message processing.
-                        // It is used in the context of integrating RabbitMQ with Outbox Pattern
-                        // and Entity Framework to handle message publishing in a reliable way,
-                        // especially when you want to ensure that a message is only published once
-                        // and to guarantee that no messages are lost during the process.
-                        //if (emailEndpoint.UseDatabase)
-                        //{
-                        //e.UseEntityFrameworkOutbox<OutBoxDbContext>(registration);
-                        //}
-                    });
-            });
+                            if (endpoint.UseDatabase)
+                            {
+                                e.UseEntityFrameworkOutbox<OutBoxDbContext>(registration);
+                            }
+                        });
+                });
+            }
         }
+
+        if (firebaseOptions?.IsActive == true)
+        {
+            // Initialize Firebase app if it's not already initialized
+            if (FirebaseApp.DefaultInstance is null)
+            {
+                var jsonCredential = JsonSerializerHandler.Serialize(firebaseOptions.FirebaseConfiguration);
+                FirebaseApp.Create(new AppOptions
+                {
+                    Credential = GoogleCredential.FromJson(jsonCredential)
+                });
+            }
+        }
+
         services
             .AddScoped<IEmailTemplateRenderer, EmailTemplateRenderer>()
+            .AddSingleton<IMobileNotificationService, MobileNotificationService>()
             .AddRazorPages();
 
         return services;

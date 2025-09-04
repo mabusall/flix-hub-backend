@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.Enums;
+﻿namespace Mabusall.Shared.Enums;
 
 public enum CachingKeys
 {

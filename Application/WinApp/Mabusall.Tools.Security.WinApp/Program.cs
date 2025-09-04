@@ -1,7 +1,7 @@
+using Mabusall.Tools.Security.WinApp.Extension;
 using Microsoft.Extensions.Configuration;
-using Tasheer.Tools.Security.WinApp.Extension;
 
-namespace Tasheer.Tools.Security.WinApp;
+namespace Mabusall.Tools.Security.WinApp;
 
 internal class Program
 {

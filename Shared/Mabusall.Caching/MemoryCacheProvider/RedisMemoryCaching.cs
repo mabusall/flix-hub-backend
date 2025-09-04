@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Caching.MemoryCacheProvider;
+﻿namespace Mabusall.Caching.MemoryCacheProvider;
 
 public class RedisMemoryCaching : IMemoryCacheProvider
 {

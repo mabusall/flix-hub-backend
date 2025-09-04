@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.Interfaces;
+﻿namespace Mabusall.Shared.Interfaces;
 
 public interface IConcurrencyAware
 {

@@ -1,14 +1,15 @@
-﻿global using HealthChecks.UI.Client;
+﻿global using FlixHub.Api;
+global using FlixHub.RestApi.Extensions;
+global using HealthChecks.UI.Client;
 global using Keycloak.Api;
+global using Mabusall.Core;
+global using Mabusall.Core.Authentications;
+global using Mabusall.Core.WebApplicationExtension;
+global using Mabusall.Notification;
+global using Mabusall.Shared.Configuration;
+global using Mabusall.Shared.DataProtection;
 global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 global using Microsoft.OpenApi.Any;
 global using Microsoft.OpenApi.Models;
-global using Store.Api;
 global using Swashbuckle.AspNetCore.SwaggerGen;
-global using Tasheer.Api.Extensions;
-global using Tasheer.Core;
-global using Tasheer.Core.Authentications;
-global using Tasheer.Core.WebApplicationExtension;
-global using Tasheer.Notification;
-global using Tasheer.Shared.Configuration;
-global using Tasheer.Shared.DataProtection;
+

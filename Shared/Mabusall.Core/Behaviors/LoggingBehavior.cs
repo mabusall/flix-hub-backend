@@ -1,9 +1,10 @@
-﻿namespace Tasheer.Core.Behaviors;
+﻿using Mabusall.Shared.Interfaces;
 
-public class LoggingBehavior<TRequest, TResponse>
-    (ILogger<LoggingBehavior<TRequest, TResponse>> logger,
-     ICurrentUserService currentUserService,
-     ICorrelationIdService correlationIdService)
+namespace Mabusall.Core.Behaviors;
+
+public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger,
+                                                  ICurrentUserService currentUserService,
+                                                  ICorrelationIdService correlationIdService)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull, IRequest<TResponse>
     where TResponse : notnull

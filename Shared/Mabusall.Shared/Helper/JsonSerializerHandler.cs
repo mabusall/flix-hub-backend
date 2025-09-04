@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.Helper;
+﻿namespace Mabusall.Shared.Helper;
 
 public static class JsonSerializerHandler
 {

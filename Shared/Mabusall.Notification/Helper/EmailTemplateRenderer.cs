@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Notification.Helper;
+﻿namespace Mabusall.Notification.Helper;
 
 public class EmailTemplateRenderer(IRazorViewEngine engine,
                                    IServiceProvider serviceProvider,

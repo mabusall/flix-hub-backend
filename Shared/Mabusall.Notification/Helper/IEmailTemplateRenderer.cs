@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Notification.Helper;
+﻿namespace Mabusall.Notification.Helper;
 
 /// <summary>
 /// Make sure you have registered razor views dependencies : services.AddRazorPages or services.AddControllersWithViews();

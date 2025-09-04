@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.MessageBus;
+﻿namespace Mabusall.Core.MessageBus;
 
 public class BusService(IBus bus,
                         IPublishEndpoint outbox,

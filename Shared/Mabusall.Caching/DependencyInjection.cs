@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Caching;
+﻿namespace Mabusall.Caching;
 
 public static class DependencyInjection
 {

@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.Exceptions;
+﻿namespace Mabusall.Shared.Exceptions;
 
 public class InvalidApiKeyException : Exception
 {

@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.CQRS;
+﻿namespace Mabusall.Core.CQRS;
 
 public interface ICommandHandler<in TCommand, TResponse>
     : IRequestHandler<TCommand, TResponse>

@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.Services;
+﻿namespace Mabusall.Core.Services;
 
 public class LocalizationMiddleware(RequestDelegate next)
 {

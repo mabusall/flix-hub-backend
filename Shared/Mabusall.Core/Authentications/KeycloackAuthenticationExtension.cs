@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.Authentications;
+﻿namespace Mabusall.Core.Authentications;
 
 public static class KeycloackAuthenticationExtension
 {

@@ -1,8 +1,8 @@
-﻿namespace Tasheer.Shared.Configuration;
+﻿namespace Mabusall.Shared.Configuration;
 
 public class CorsOptions
 {
-    required public bool Enabled { get; set; }
-    required public bool AllowAnyOrigin { get; set; }
-    required public List<string> Origins { get; set; } = [];
+    public required bool Enabled { get; set; }
+    public required bool AllowAnyOrigin { get; set; }
+    public required List<string> Origins { get; set; } = [];
 }

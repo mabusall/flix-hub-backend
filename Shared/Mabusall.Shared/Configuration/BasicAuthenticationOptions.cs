@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.Configuration;
+﻿namespace Mabusall.Shared.Configuration;
 
 public class BasicAuthenticationOptions
 {

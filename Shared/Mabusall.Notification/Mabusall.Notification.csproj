@@ -9,16 +9,13 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Views\**" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+		<PackageReference Include="FirebaseAdmin" Version="3.3.0" />
 		<Content Update="Views\**\*.cshtml" />
-		<PackageReference Include="jsreport.Binary" Version="4.4.0" />
-		<PackageReference Include="jsreport.Local" Version="3.8.2" />
-		<PackageReference Include="System.Net.Http" Version="4.3.4" />
-		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Mabusall.Shared\Mabusall.Shared.csproj" />
-	  <ProjectReference Include="..\Mabusall.Resources\Mabusall.Resources.csproj" />
+		<ProjectReference Include="..\Mabusall.Core\Mabusall.Core.csproj" />
+		<ProjectReference Include="..\Mabusall.Resources\Mabusall.Resources.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,13 +1,13 @@
-﻿namespace Tasheer.Shared.Helper;
+﻿namespace Mabusall.Shared.Helper;
 
 public static class FileHandler
 {
-    readonly static byte[] _pNG = [137, 80, 78, 71, 13, 10, 26, 10];
-    readonly static byte[] _jPG = [255, 216, 255, 224, 0, 16, 74, 70, 73, 70, 0, 1];
-    readonly static byte[] _jPEG = [0xFF, 0xD8, 0xFF];
-    readonly static byte[] _wEBP = Encoding.ASCII.GetBytes("RIFF\x0B\x04WEBPVP8");
-    readonly static byte[] _pDF = [0x25, 0x50, 0x44, 0x46, 0x2D];
-    readonly static byte[] _hEIC = [0x66, 0x74, 0x79, 0x70, 0x68, 0x65, 0x69, 0x63];
+    static readonly byte[] _pNG = [137, 80, 78, 71, 13, 10, 26, 10];
+    static readonly byte[] _jPG = [255, 216, 255, 224, 0, 16, 74, 70, 73, 70, 0, 1];
+    static readonly byte[] _jPEG = [0xFF, 0xD8, 0xFF];
+    static readonly byte[] _wEBP = Encoding.ASCII.GetBytes("RIFF\x0B\x04WEBPVP8");
+    static readonly byte[] _pDF = [0x25, 0x50, 0x44, 0x46, 0x2D];
+    static readonly byte[] _hEIC = [0x66, 0x74, 0x79, 0x70, 0x68, 0x65, 0x69, 0x63];
 
     public static byte[] GetFileAsArray(IFormFile file,
                                         bool pngEncoder = true,

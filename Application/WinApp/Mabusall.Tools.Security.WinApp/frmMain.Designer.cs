@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Tools.Security.WinApp;
+﻿namespace Mabusall.Tools.Security.WinApp;
 
 partial class frmMain
 {

@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.Helper;
+﻿namespace Mabusall.Shared.Helper;
 
 public class NumberToStringConverter : JsonConverter<string>
 {

@@ -1,6 +1,7 @@
 ﻿global using FluentValidation;
 global using FluentValidation.Results;
 global using ImageMagick;
+global using Mabusall.Shared.Helper;
 global using MassTransit;
 global using Microsoft.AspNetCore.DataProtection;
 global using Microsoft.AspNetCore.Diagnostics;
@@ -21,4 +22,3 @@ global using System.Security.Cryptography;
 global using System.Text;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
-global using Tasheer.Shared.Helper;

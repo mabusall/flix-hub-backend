@@ -1,9 +1,9 @@
-﻿namespace Tasheer.Shared.Helper;
+﻿namespace Mabusall.Shared.Helper;
 
 public class AzureBlobUploadCommand
 {
-    required public string MimeType { get; set; }
-    required public byte[] FileContent { get; set; }
+    public required string MimeType { get; set; }
+    public required byte[] FileContent { get; set; }
 }
 
 public class AzureBlobUploadResult
@@ -14,7 +14,7 @@ public class AzureBlobUploadResult
 
 public class AzureBlobDeleteCommand
 {
-    required public Guid Id { get; set; }
+    public required Guid Id { get; set; }
 }
 
 public class AzureBlobDeleteResult

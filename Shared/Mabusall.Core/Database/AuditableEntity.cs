@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.Database;
+﻿namespace Mabusall.Core.Database;
 
 public abstract class AuditableEntity
 {

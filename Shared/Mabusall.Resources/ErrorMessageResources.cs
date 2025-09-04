@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 
-namespace Tasheer.Resources;
+namespace Mabusall.Resources;
 
 [DebuggerNonUserCode()]
 [System.Runtime.CompilerServices.CompilerGenerated()]
@@ -10,7 +10,6 @@ public class ErrorMessageResources
     private static System.Resources.ResourceManager? resourceMan;
     private static CultureInfo? resourceCulture;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
     internal ErrorMessageResources()
     {
 

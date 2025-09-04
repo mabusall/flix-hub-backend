@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.Behaviors;
+﻿namespace Mabusall.Core.Behaviors;
 
 public class FeatureBehavior<TRequest, TResponse>
     (IAppSettingsKeyManagement appSettingsKeyManagement, IFeatureManager featureManager)

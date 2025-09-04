@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Api.Extensions;
+﻿namespace FlixHub.RestApi.Extensions;
 
 public static class SwaggerExtensions
 {
@@ -7,7 +7,7 @@ public static class SwaggerExtensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Tasheer.Api", Version = "v1.0" });
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "FlixHub.Api", Version = "v1.0" });
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
             {

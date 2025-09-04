@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.Exceptions.Handler;
+﻿namespace Mabusall.Shared.Exceptions.Handler;
 
 public class CustomExceptionHandler(ILogger<CustomExceptionHandler> logger)
     : IExceptionHandler

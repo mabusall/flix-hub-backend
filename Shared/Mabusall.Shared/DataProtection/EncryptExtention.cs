@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.DataProtection;
+﻿namespace Mabusall.Shared.DataProtection;
 
 public static class DataProtectionProviderExtention
 {
@@ -122,7 +122,7 @@ public static class DataProtectionProviderExtention
     {
         try
         {
-            return Decrypt(textToDecrypt);
+            return textToDecrypt.Decrypt();
         }
         catch
         {

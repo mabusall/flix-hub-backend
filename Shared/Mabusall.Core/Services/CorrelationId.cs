@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.Services;
+﻿namespace Mabusall.Core.Services;
 
 public static class CorrelationIdExtesnsion
 {

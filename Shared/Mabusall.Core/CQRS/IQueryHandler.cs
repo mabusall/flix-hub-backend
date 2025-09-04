@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core.CQRS;
+﻿namespace Mabusall.Core.CQRS;
 public interface IQueryHandler<in TQuery, TResponse>
     : IRequestHandler<TQuery, TResponse>
     where TQuery : IQuery<TResponse>

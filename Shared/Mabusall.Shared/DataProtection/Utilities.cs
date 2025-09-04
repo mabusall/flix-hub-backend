@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Shared.DataProtection;
+﻿namespace Mabusall.Shared.DataProtection;
 
 public static class DataProtectionUtilities
 {

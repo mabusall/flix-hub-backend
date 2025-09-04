@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Notification.Helper;
+﻿namespace Mabusall.Notification.Helper;
 
 public class EmailNotificationEvent : IBusEvent
 {
@@ -6,13 +6,15 @@ public class EmailNotificationEvent : IBusEvent
 
     [Required] public string LanguageIsoCode { get; set; } = "en";
 
+    [Required] public string? SiteUrl { get; set; }
+
     [Required] public dynamic? ExtraData { get; set; }
 
     [Required] public EmailNotificationAttachment? Attachment { get; set; }
 
     [Required] public EmailPriority Priority { get; set; }
 
-    [Required] public NotificationTemplate Template { get; set; }
+    [Required] public EmailBodyTemplate Template { get; set; }
 
     [Required] public IEnumerable<string>? ToAddresses { get; set; }
 

@@ -26,14 +26,15 @@ internal class KeycloakClientRefreshTokenCommandHandler(IHttpClientFactory httpC
         // send the request
         var response = await httpClient.SendAsync(httpRequest, cancellationToken);
 
-        // cast the result
-        var json = await response.Content.ReadAsStringAsync(cancellationToken);
-
         // validate the response
         if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-            throw new BadRequestException(json);
+        {
+            response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+            throw new UnauthorizedException("Invalid refresh token");
+        }
 
-        response.EnsureSuccessStatusCode();
+        // cast the result
+        var json = await response.Content.ReadAsStringAsync(cancellationToken);
 
         return JsonSerializerHandler.Deserialize<KeycloakClientRefreshTokenResult>(json);
     }

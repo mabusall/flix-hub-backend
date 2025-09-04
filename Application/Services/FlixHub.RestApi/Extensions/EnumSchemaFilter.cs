@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Api.Extensions;
+﻿namespace FlixHub.RestApi.Extensions;
 
 public class EnumSchemaFilter : ISchemaFilter
 {

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Team" xml:space="preserve">
-    <value>فريق تأشير،</value>
+    <value>فريق تشغيل شركات الحج،</value>
   </data>
   <data name="DoNotReplyToThisMail" xml:space="preserve">
     <value>تم إنشاء هذا الإشعار الإلكتروني تلقائيًا. يرجى عدم الرد على هذه الرسالة.</value>
@@ -127,18 +127,80 @@
     <value>جميع الحقوق محفوظة لوزارة الحج و العمرة</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>مرحبا بك في منصة نسك</value>
+    <value>مرحبا بك في منصة تشغيل شركات الحج</value>
   </data>
-  <data name="VerifyEmailTemplate_YourOTPLabel" xml:space="preserve">
+  <data name="VerifyOtpTemplate_YourOtpLabel" xml:space="preserve">
     <value>رمز الدخول لمرة واحدة هو</value>
   </data>
-  <data name="VerifyEmailTemplate_PleaseDoNotShareOTP" xml:space="preserve">
+  <data name="VerifyOtpTemplate_PleaseDoNotShareOTP" xml:space="preserve">
     <value>يرجى عدم مشاركة هذا الرقم لأي شخص.</value>
   </data>
-  <data name="VerifyEmailTemplate_VerifyEmailTitle" xml:space="preserve">
+  <data name="VerifyOtpTemplate_Title" xml:space="preserve">
     <value>رمز سري لمرة واحدة</value>
   </data>
-  <data name="VerifyEmailTemplate_OTPValidFor5min" xml:space="preserve">
+  <data name="VerifyOtpTemplate_OtpValidFor5min" xml:space="preserve">
     <value>هذا الرقم صالح لمدة 5 دقائق.</value>
+  </data>
+  <data name="VerifyEmailTemplate_Title" xml:space="preserve">
+    <value>إدارة مقدم خدمة</value>
+  </data>
+  <data name="VerifyEmailTemplate_SpAdmin_Body" xml:space="preserve">
+    <value>عزيزي المستخدم,&lt;br&gt;&lt;br&gt;تم تعيينكم كمشرف نظام لمقدم خدمة الحج {0} في برنامج الحج المباشر، يرجى الضغط على الرابط &lt;a href="{1}"&gt;هنا&lt;/a&gt; حتى يتم تفعيل حسابكم. </value>
+  </data>
+  <data name="ForgetPasswordTemplate_Title" xml:space="preserve">
+    <value>إعادة تعيين كلمة المرور</value>
+  </data>
+  <data name="ForgetPasswordTemplate_Body" xml:space="preserve">
+    <value>&lt;p style="margin-bottom:10px; font-weight: bold;"&gt;
+    عزيزي المستخدم،
+&lt;/p&gt;
+&lt;p&gt;
+    تم طلب إعادة تعيين كلمة المرور,
+&lt;/p&gt;
+&lt;p&gt;
+    لاستعادة كلمة المرور الخاصة بك الرجاء الضغط على الرابط &lt;a href={0} target="_blank" rel="noopener noreferrer"&gt;هنا&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;
+    في حال لم تطلب إعادة تعيين كلمة المرور الخاصة بك يرجى تجاهل هذا البريد الإلكتروني.
+&lt;/p&gt;</value>
+  </data>
+  <data name="NeedForHelpMessage" xml:space="preserve">
+    <value>يمكنك التواصل معنا إذا كنت بحاجة إلى أي مساعدة أو لديك أسئلة، فإن فريق الدعم لدينا هنا للمساعدة. عن طريق احدى قنوات التواصل التالية</value>
+  </data>
+  <data name="NeedHelp" xml:space="preserve">
+    <value>هل تحتاج إلى مساعدة؟</value>
+  </data>
+  <data name="VerifyEmailTemplate_SpUser_Body" xml:space="preserve">
+    <value>عزيزي المستخدم،&lt;br&gt;&lt;br&gt;تم تعيينكم كموظف لدى مقدم خدمة الحج {0} في برنامج الحج المباشر، يرجى الضغط على الرابط &lt;a href="{1}"&gt;هنا&lt;/a&gt; حتى يتم تفعيل حسابكم.</value>
+  </data>
+  <data name="ActivateSubscriptionTemplate_Title" xml:space="preserve">
+    <value>تفعيل إشتراك</value>
+  </data>
+  <data name="ActivateSubscriptionTemplate_Body" xml:space="preserve">
+    <value>عزيزي المستخدم, تم تفعيل الاشتراك الخاص بمقدم الخدمة التابع لك على باقة '{0}'. يمكنك الآن تسجيل الدخول على المنصة واستخدام الخدمات حسب الباقة المحددة.</value>
+  </data>
+  <data name="RoomDistribution_MessageTitle" xml:space="preserve">
+    <value>تحديث حالة السكن</value>
+  </data>
+  <data name="RoomDistribution_MessageBody" xml:space="preserve">
+    <value>تم تحديث الغرفة في "{0}" الخاصة بك, الرجاء الدخول على صفحة سكني للاطلاع على التحديث</value>
+  </data>
+  <data name="ActivityAdded_MessageTitle" xml:space="preserve">
+    <value>إضافة نشاط</value>
+  </data>
+  <data name="ActivityAdded_MessageBody" xml:space="preserve">
+    <value>تم إضافتك إلى نشاط "{0}" من قبل مقدم الخدمة، يمكنك استعراض تفاصيل النشاط عن طريق الدخول إلى التطبيق</value>
+  </data>
+  <data name="ActivityUpdated_MessageTitle" xml:space="preserve">
+    <value>تعديل نشاط</value>
+  </data>
+  <data name="ActivityUpdated_MessageBody" xml:space="preserve">
+    <value>تم تعديل النشاط "{0}" الذي تم إضافتك عليه مسبقاً، يمكنك استعراض تفاصيل النشاط عن طريق الدخول إلى التطبيق</value>
+  </data>
+  <data name="ActivityRemoved_MessageTitle" xml:space="preserve">
+    <value>حذف نشاط</value>
+  </data>
+  <data name="ActivityRemoved_MessageBody" xml:space="preserve">
+    <value>تم حذف النشاط "{0}" الذي تم إضافتك عليه مسبقاً، يمكنك استعراض تفاصيل النشاط عن طريق الدخول إلى التطبيق</value>
   </data>
 </root>

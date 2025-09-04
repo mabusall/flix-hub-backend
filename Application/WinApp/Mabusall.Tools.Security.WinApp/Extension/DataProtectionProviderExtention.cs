@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Tasheer.Tools.Security.WinApp.Extension;
+namespace Mabusall.Tools.Security.WinApp.Extension;
 
 public static class DataProtectionProviderExtention
 {

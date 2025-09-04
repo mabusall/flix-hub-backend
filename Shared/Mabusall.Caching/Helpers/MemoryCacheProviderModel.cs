@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Caching.Helpers;
+﻿namespace Mabusall.Caching.Helpers;
 
 public enum CacheProviderType
 {

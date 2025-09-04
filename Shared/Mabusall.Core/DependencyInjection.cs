@@ -1,4 +1,4 @@
-﻿namespace Tasheer.Core;
+﻿namespace Mabusall.Core;
 
 public static class DependencyInjection
 {
@@ -341,6 +341,7 @@ public static class DependencyInjection
         AzurBlobServiceOptions azurBlobServiceOptions = new();
         RateLimitOptions rateLimitOptions = new();
         Dictionary<string, bool> appFeatures = [];
+        FirebaseOptions firebaseOptions = new();
 
         configuration
             .GetSection(ElasticApmOptions.ConfigurationKey)
@@ -375,6 +376,9 @@ public static class DependencyInjection
         configuration
             .GetSection("AppFeatures")
             .Bind(appFeatures);
+        configuration
+           .GetSection(FirebaseOptions.ConfigurationKey)
+           .Bind(firebaseOptions);
 
         return new AppSettingsKeyManagement(elasticApmOptions,
                                             elasticSearchOptions,
@@ -386,6 +390,7 @@ public static class DependencyInjection
                                             basicAuthenticationOptions,
                                             azurBlobServiceOptions,
                                             rateLimitOptions,
-                                            appFeatures);
+                                            appFeatures,
+                                            firebaseOptions);
     }
 }
