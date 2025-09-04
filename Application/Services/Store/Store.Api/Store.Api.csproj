@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Shared\Tasheer.Core\Tasheer.Core.csproj" />
+		<ProjectReference Include="..\..\..\..\Shared\Tasheer.Resources\Tasheer.Resources.csproj" />
+		<ProjectReference Include="..\..\Tasheer.Notification\Tasheer.Notification.csproj" />
+	</ItemGroup>
+
+</Project>

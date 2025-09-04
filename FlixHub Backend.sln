@@ -1,0 +1,100 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A852B369-ADD7-4C68-9C5E-F9BA338533DD}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Readme.md = Solution Items\Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{840AF196-53A7-4429-B366-0623EED804DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{F91C18E6-DA39-48F1-B365-9C5C617BB4ED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasheer.Core", "Shared\Tasheer.Core\Tasheer.Core.csproj", "{E70A26D0-0471-4879-ADA5-E57AAC567F73}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasheer.Resources", "Shared\Tasheer.Resources\Tasheer.Resources.csproj", "{2B039341-4AB0-4CE8-AD8D-6A4347E76A60}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasheer.Api", "Application\Services\Tasheer.Api\Tasheer.Api.csproj", "{116D75F5-14FE-4DC9-9AFF-DB5C6152FC41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Api", "Application\Services\Store\Store.Api\Store.Api.csproj", "{0D01EC88-8C17-4699-8C92-5473DA686073}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasheer.Shared", "Shared\Tasheer.Shared\Tasheer.Shared.csproj", "{C9665670-309C-4BF7-BB6E-EE2B4CBDDCD8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinApp", "WinApp", "{24B44810-E1A1-4295-9116-BCD4626DB115}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasheer.Tools.Security.WinApp", "Application\WinApp\Tasheer.Tools.Security.WinApp\Tasheer.Tools.Security.WinApp.csproj", "{74AB37C8-78FD-41E0-ADD0-29A18F6778BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasheer.Notification", "Application\Services\Tasheer.Notification\Tasheer.Notification.csproj", "{7A20649D-9BC5-4F76-8D08-421ACA2397B3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasheer.Caching", "Shared\Tasheer.Caching\Tasheer.Caching.csproj", "{9CA0A15E-26D6-48DA-8BA6-CCA4AB0A385A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keycloak.Api", "Application\Services\Keycloak.Api\Keycloak.Api.csproj", "{66E9CA5D-6731-4717-AD58-2C5F01C5D038}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E70A26D0-0471-4879-ADA5-E57AAC567F73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E70A26D0-0471-4879-ADA5-E57AAC567F73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E70A26D0-0471-4879-ADA5-E57AAC567F73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E70A26D0-0471-4879-ADA5-E57AAC567F73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B039341-4AB0-4CE8-AD8D-6A4347E76A60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B039341-4AB0-4CE8-AD8D-6A4347E76A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B039341-4AB0-4CE8-AD8D-6A4347E76A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B039341-4AB0-4CE8-AD8D-6A4347E76A60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{116D75F5-14FE-4DC9-9AFF-DB5C6152FC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{116D75F5-14FE-4DC9-9AFF-DB5C6152FC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{116D75F5-14FE-4DC9-9AFF-DB5C6152FC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{116D75F5-14FE-4DC9-9AFF-DB5C6152FC41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D01EC88-8C17-4699-8C92-5473DA686073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D01EC88-8C17-4699-8C92-5473DA686073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D01EC88-8C17-4699-8C92-5473DA686073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D01EC88-8C17-4699-8C92-5473DA686073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9665670-309C-4BF7-BB6E-EE2B4CBDDCD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9665670-309C-4BF7-BB6E-EE2B4CBDDCD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9665670-309C-4BF7-BB6E-EE2B4CBDDCD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9665670-309C-4BF7-BB6E-EE2B4CBDDCD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74AB37C8-78FD-41E0-ADD0-29A18F6778BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74AB37C8-78FD-41E0-ADD0-29A18F6778BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74AB37C8-78FD-41E0-ADD0-29A18F6778BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74AB37C8-78FD-41E0-ADD0-29A18F6778BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A20649D-9BC5-4F76-8D08-421ACA2397B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A20649D-9BC5-4F76-8D08-421ACA2397B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A20649D-9BC5-4F76-8D08-421ACA2397B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A20649D-9BC5-4F76-8D08-421ACA2397B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CA0A15E-26D6-48DA-8BA6-CCA4AB0A385A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CA0A15E-26D6-48DA-8BA6-CCA4AB0A385A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CA0A15E-26D6-48DA-8BA6-CCA4AB0A385A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CA0A15E-26D6-48DA-8BA6-CCA4AB0A385A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66E9CA5D-6731-4717-AD58-2C5F01C5D038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66E9CA5D-6731-4717-AD58-2C5F01C5D038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66E9CA5D-6731-4717-AD58-2C5F01C5D038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66E9CA5D-6731-4717-AD58-2C5F01C5D038}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B8055EBD-F44C-4BA1-BF75-07A7BA62AB52} = {F91C18E6-DA39-48F1-B365-9C5C617BB4ED}
+		{E70A26D0-0471-4879-ADA5-E57AAC567F73} = {840AF196-53A7-4429-B366-0623EED804DA}
+		{2B039341-4AB0-4CE8-AD8D-6A4347E76A60} = {840AF196-53A7-4429-B366-0623EED804DA}
+		{116D75F5-14FE-4DC9-9AFF-DB5C6152FC41} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
+		{0D01EC88-8C17-4699-8C92-5473DA686073} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
+		{C9665670-309C-4BF7-BB6E-EE2B4CBDDCD8} = {840AF196-53A7-4429-B366-0623EED804DA}
+		{24B44810-E1A1-4295-9116-BCD4626DB115} = {F91C18E6-DA39-48F1-B365-9C5C617BB4ED}
+		{74AB37C8-78FD-41E0-ADD0-29A18F6778BE} = {24B44810-E1A1-4295-9116-BCD4626DB115}
+		{7A20649D-9BC5-4F76-8D08-421ACA2397B3} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
+		{9CA0A15E-26D6-48DA-8BA6-CCA4AB0A385A} = {840AF196-53A7-4429-B366-0623EED804DA}
+		{66E9CA5D-6731-4717-AD58-2C5F01C5D038} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		RESX_CultureCountyOverrides = ar=ar-JO
+		SolutionGuid = {8FF911D2-13DD-4F54-B882-12DC7F2D7C65}
+	EndGlobalSection
+EndGlobal

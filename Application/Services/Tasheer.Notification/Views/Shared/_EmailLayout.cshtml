@@ -1,0 +1,473 @@
+﻿<!DOCTYPE html>
+<html lang='@(ViewBag.IsArabic ? "ar" : "en")' xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="date=no">
+    <meta name="format-detection" content="address=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="x-apple-disable-message-reformatting">
+
+    <style type="text/css" media="screen">
+        body {
+            padding: 0 !important;
+            margin: 0 auto !important;
+            display: block !important;
+            background: #f4f4f4;
+            -webkit-text-size-adjust: none;
+            font-size: 16px;
+            line-height: normal;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        p {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        img {
+            margin: 0 !important;
+            -ms-interpolation-mode: bicubic;
+            /* Allow smoother rendering of resized image in Internet Explorer */
+        }
+
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: inherit !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        .btn-16 a {
+            display: block;
+            padding: 15px 35px;
+            text-decoration: none;
+        }
+
+        .d-n {
+            display: none;
+        }
+
+        .wrapper-tbl {
+            width: 1080px !important;
+            min-width: 1080px !important;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .text-primary {
+            color: #282828;
+        }
+
+        .alert-primary {
+            color: #004085;
+            background-color: #cfe2ff;
+            border-color: #9ec5fe;
+        }
+
+        .alert {
+            position: relative;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+        }
+
+        .td-block_icon_32 {
+            width: 40px;
+            padding: 10px;
+            vertical-align: middle;
+            padding-bottom: 4px;
+        }
+
+            .td-block_icon_32 img {
+                width: 32px;
+                display: block;
+            }
+
+        .tbl-80-container {
+            padding-right: 10%;
+            padding-left: 10%;
+        }
+
+        .tbl-80 {
+            width: 80%;
+        }
+
+        .me-left {
+            margin-right: auto !important;
+        }
+
+        .me-center {
+            margin: 0 auto !important;
+        }
+
+        .me-right {
+            margin-left: auto !important;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+
+        .mt-15 {
+            margin-top: 15px;
+        }
+
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+
+        .mb-15 {
+            margin-bottom: 15px;
+        }
+
+        /* Mobile styles */
+
+        @@media (max-width: 1080px) {
+            body {
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+
+            .tbl-80-container {
+                padding-right: 5%;
+                padding-left: 5%;
+            }
+
+            .tbl-80 {
+                width: 90%;
+            }
+
+            .d-n {
+                display: block !important;
+                padding-top: 30px;
+            }
+
+            .d-b {
+                display: none;
+            }
+
+            .wrapper-tbl {
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+        }
+
+        @@media only screen and (max-device-width: 768px), only screen and (max-width: 768px) {
+            .md-block {
+                display: block;
+            }
+
+            .md-none {
+                display: none;
+            }
+
+            .tbl-80-container {
+                padding-right: 2%;
+                padding-left: 2%;
+            }
+
+            .tbl-80 {
+                width: 96%;
+            }
+        }
+
+        @@media only screen and (max-device-width: 480px), only screen and (max-width: 480px) {
+            body {
+                width: 100% !important;
+            }
+
+            .wrapper-tbl {
+                width: 100% !important;
+                min-width: 320px !important;
+            }
+
+            u + .body .gwfw {
+                width: 100% !important;
+                width: 100vw !important;
+            }
+
+            .td,
+            .m-shell {
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+
+            .mt-left {
+                text-align: left !important;
+            }
+
+            .mt-center {
+                text-align: center !important;
+            }
+
+            .mt-right {
+                text-align: right !important;
+            }
+
+            .me-left {
+                margin-right: auto !important;
+            }
+
+            .me-center {
+                margin: 0 auto !important;
+            }
+
+            .me-right {
+                margin-left: auto !important;
+            }
+
+            .mh-auto {
+                height: auto !important;
+            }
+
+            .mw-auto {
+                width: auto !important;
+            }
+
+            .column,
+            .column-top,
+            .column-dir-top {
+                float: left !important;
+                width: 100% !important;
+                display: block !important;
+            }
+
+            .m-hide {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+                font-size: 0 !important;
+                line-height: 0 !important;
+                min-height: 0 !important;
+            }
+
+            .m-block {
+                display: block !important;
+            }
+
+            .mw-15 {
+                width: 15px !important;
+            }
+
+            .mw-2p {
+                width: 2% !important;
+            }
+
+            .mw-32p {
+                width: 32% !important;
+            }
+
+            .mw-49p {
+                width: 49% !important;
+            }
+
+            .mw-50p {
+                width: 50% !important;
+            }
+
+            .mw-100p {
+                width: 100% !important;
+            }
+
+            .mmt-0 {
+                margin-top: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body class="body" style="" dir='@(ViewBag.IsArabic?"rtl":"ltr")'>
+    <center>
+        <table border="0" class="wrapper-tbl" cellspacing="0" cellpadding="0" style="padding: 0 !important;margin: 0 auto !important;background: #ffffff;-webkit-text-size-adjust: none; background-image: url('@ViewBag.SiteUrl/img/bg.svg');background-repeat:no-repeat;background-position: bottom;" dir='@(ViewBag.IsArabic?"rtl":"ltr")'>
+            <tbody>
+                <tr>
+                    <td style="">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0"
+                               style="margin: 0; padding: 0; width: 100%; height: 100%" class="gwfw">
+                            <tbody>
+                                <tr>
+                                    <td style="margin: 0; padding: 0; width: 100%; height: 100%" align="center" valign="top">
+                                        <table border="0" style="width: 100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td"
+                                                        style=" width: 100%; min-width: 100%; padding: 0; margin: 0; font-weight: normal;">
+                                                        <center>
+                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <!-- Top -->
+                                                                            <!-- END Top -->
+                                                                            <!-- Container -->
+                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="pt-10" style="border-radius: 10px 10px 0 0; padding-top: 10px;">
+                                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td style=" border-radius: 10px 10px 0 0;">
+                                                                                                            <!-- Logo -->
+                                                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                                                <tbody>
+                                                                                                                    <tr>
+                                                                                                                        <td class="img-center p-30 px-15"
+                                                                                                                            style="font-size: 0pt; line-height: 0pt; text-align: center; padding: 30px; padding-left: 15px; padding-right: 15px; ">
+                                                                                                                            <a href="#"
+                                                                                                                               target="_blank">
+                                                                                                                                <img src="@ViewBag.SiteUrl/img/Nusuk-Logo.svg" border="0" alt="">
+                                                                                                                            </a>
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                </tbody>
+                                                                                                            </table>
+                                                                                                            <!-- Logo -->
+                                                                                                            <!-- Main -->
+                                                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                                                <tbody>
+                                                                                                                    <tr>
+                                                                                                                        <td class="px-50">
+                                                                                                                            <!-- Section - Intro -->
+                                                                                                                            <table width="100%" border="0" cellspacing="0"
+                                                                                                                                   cellpadding="0">
+                                                                                                                                <tbody>
+                                                                                                                                    <tr>
+                                                                                                                                        <td class="pb-50" style="padding-bottom: 40px;">
+                                                                                                                                            <table width="100%" border="0" cellspacing="0"
+                                                                                                                                                   cellpadding="0">
+                                                                                                                                                <tbody>
+                                                                                                                                                    <tr>
+                                                                                                                                                        <td class="title-36 a-center pb-15"
+                                                                                                                                                            style=" font-size: 24px; line-height: 40px; color: #ffffff; font-family: &#39;PT Sans&#39;,Arial,sans-serif; min-width: auto !important; text-align: center; padding: 30px; background-color: #b39164;"
+                                                                                                                                                            dir='@(ViewBag.IsArabic ? "rtl" : "ltr")'>
+                                                                                                                                                            <p>@ViewBag.EmailTitle</p>
+                                                                                                                                                        </td>
+                                                                                                                                                    </tr>
+                                                                                                                                                </tbody>
+                                                                                                                                            </table>
+                                                                                                                                        </td>
+                                                                                                                                    </tr>
+                                                                                                                                </tbody>
+                                                                                                                            </table>
+                                                                                                                            <!-- END Section - Intro -->
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                </tbody>
+                                                                                                            </table>
+                                                                                                            <!-- END Main -->
+                                                                                                            <!-- Main -->
+                                                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                                                <tbody>
+                                                                                                                    <tr>
+                                                                                                                        <td class="px-50">
+                                                                                                                            <!-- Section - Intro -->
+                                                                                                                            <table width="100%" border="0" cellspacing="0"
+                                                                                                                                   cellpadding="0">
+                                                                                                                                <tbody>
+                                                                                                                                    <tr>
+                                                                                                                                        <td class="pb-50" style=" padding-bottom: 25px; ">
+                                                                                                                                            @RenderBody()
+                                                                                                                                            <br>
+                                                                                                                                            <table width="100%" border="0" cellspacing="0"
+                                                                                                                                                   cellpadding="0">
+                                                                                                                                                <tbody>
+                                                                                                                                                    <tr>
+                                                                                                                                                        <td class="text-16 lh-26 a-center pb-25"
+                                                                                                                                                            style="font-size: 16px; color: #6e6e6e; font-family: &#39;PT Sans&#39;, Arial, sans-serif; min-width: auto !important; line-height: 26px; text-align: center; width: 50%; padding-left: 15%; padding-right: 15%; padding-bottom: 90px;"
+                                                                                                                                                            dir='@(ViewBag.IsArabic?"rtl":"ltr")'>
+                                                                                                                                                            <p>
+                                                                                                                                                                @ViewBag.Team
+                                                                                                                                                                <br />
+                                                                                                                                                                @ViewBag.DoNotReplyToThisMail
+                                                                                                                                                            </p>
+                                                                                                                                                        </td>
+                                                                                                                                                    </tr>
+                                                                                                                                                </tbody>
+                                                                                                                                            </table>
+                                                                                                                                        </td>
+                                                                                                                                    </tr>
+                                                                                                                                </tbody>
+                                                                                                                            </table>
+                                                                                                                            <!-- END Section - Intro -->
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                </tbody>
+                                                                                                            </table>
+                                                                                                            <!-- END Main -->
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                            <!-- END Container -->
+                                                                            <!-- Footer -->
+                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="p-50"
+                                                                                            style="border-radius: 0 0 10px 10px; padding: 225px 53px 20px;">
+                                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td class="text-14 lh-24 a-center c-white l-white pb-20"
+                                                                                                            style="font-size: 14px; font-family: &#39;PT Sans&#39;,Arial, sans-serif; min-width: auto !important; line-height: 24px; text-align: left; color: #ffffff; padding-bottom: 31px; padding-top: 46px; ">
+                                                                                                            @ViewBag.Copyright
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td align="center" class="pb-20"
+                                                                                                            style="padding-bottom: 20px; text-align: -webkit-right;">
+                                                                                                            <!-- Socials -->
+                                                                                                            <!-- END Socials -->
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                            <!-- END Footer -->
+                                                                            <!-- Bottom -->
+                                                                            <!-- END Bottom -->
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </center>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+</body>
+</html>
