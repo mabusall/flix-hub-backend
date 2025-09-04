@@ -193,7 +193,7 @@ partial class frmMain
         Name = "frmMain";
         Padding = new Padding(30);
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "Tasheer Security Tool";
+        Text = "FlixHub Security Tool";
         ResumeLayout(false);
         PerformLayout();
     }

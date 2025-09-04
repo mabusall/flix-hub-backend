@@ -9,205 +9,204 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Tasheer.Core.Migrations
+namespace Mabusall.Core.Migrations;
+
+[DbContext(typeof(OutBoxDbContext))]
+[Migration("20250108085040_OutBox_Init")]
+partial class OutBox_Init
 {
-    [DbContext(typeof(OutBoxDbContext))]
-    [Migration("20250108085040_OutBox_Init")]
-    partial class OutBox_Init
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("MessageBus")
-                .HasAnnotation("ProductVersion", "8.0.11")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+        modelBuilder
+            .HasDefaultSchema("MessageBus")
+            .HasAnnotation("ProductVersion", "8.0.11")
+            .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+        SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime?>("Consumed")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("Consumed")
+                    .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ConsumerId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("ConsumerId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("Delivered")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("Delivered")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("ExpirationTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("ExpirationTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastSequenceNumber")
-                        .HasColumnType("bigint");
+                b.Property<long?>("LastSequenceNumber")
+                    .HasColumnType("bigint");
 
-                    b.Property<Guid>("LockId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("LockId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MessageId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("MessageId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ReceiveCount")
-                        .HasColumnType("int");
+                b.Property<int>("ReceiveCount")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("Received")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("Received")
+                    .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                b.Property<byte[]>("RowVersion")
+                    .IsConcurrencyToken()
+                    .ValueGeneratedOnAddOrUpdate()
+                    .HasColumnType("rowversion");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("Delivered");
+                b.HasIndex("Delivered");
 
-                    b.ToTable("InboxState", "MessageBus");
-                });
+                b.ToTable("InboxState", "MessageBus");
+            });
 
-            modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>
-                {
-                    b.Property<long>("SequenceNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>
+            {
+                b.Property<long>("SequenceNumber")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("SequenceNumber"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("SequenceNumber"));
 
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Body")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("ContentType")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.Property<Guid?>("ConversationId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid?>("ConversationId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CorrelationId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid?>("CorrelationId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("DestinationAddress")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("DestinationAddress")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTime?>("EnqueueTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("EnqueueTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("ExpirationTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("ExpirationTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("FaultAddress")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("FaultAddress")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("Headers")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Headers")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("InboxConsumerId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid?>("InboxConsumerId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("InboxMessageId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid?>("InboxMessageId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("InitiatorId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid?>("InitiatorId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MessageId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("MessageId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("MessageType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("MessageType")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("OutboxId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid?>("OutboxId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Properties")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Properties")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RequestId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid?>("RequestId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ResponseAddress")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("ResponseAddress")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTime>("SentTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("SentTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("SourceAddress")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("SourceAddress")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("SequenceNumber");
+                b.HasKey("SequenceNumber");
 
-                    b.HasIndex("EnqueueTime");
+                b.HasIndex("EnqueueTime");
 
-                    b.HasIndex("ExpirationTime");
+                b.HasIndex("ExpirationTime");
 
-                    b.HasIndex("OutboxId", "SequenceNumber")
-                        .IsUnique()
-                        .HasFilter("[OutboxId] IS NOT NULL");
+                b.HasIndex("OutboxId", "SequenceNumber")
+                    .IsUnique()
+                    .HasFilter("[OutboxId] IS NOT NULL");
 
-                    b.HasIndex("InboxMessageId", "InboxConsumerId", "SequenceNumber")
-                        .IsUnique()
-                        .HasFilter("[InboxMessageId] IS NOT NULL AND [InboxConsumerId] IS NOT NULL");
+                b.HasIndex("InboxMessageId", "InboxConsumerId", "SequenceNumber")
+                    .IsUnique()
+                    .HasFilter("[InboxMessageId] IS NOT NULL AND [InboxConsumerId] IS NOT NULL");
 
-                    b.ToTable("OutboxMessage", "MessageBus");
-                });
+                b.ToTable("OutboxMessage", "MessageBus");
+            });
 
-            modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxState", b =>
-                {
-                    b.Property<Guid>("OutboxId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+        modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxState", b =>
+            {
+                b.Property<Guid>("OutboxId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("Created")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Delivered")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("Delivered")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastSequenceNumber")
-                        .HasColumnType("bigint");
+                b.Property<long?>("LastSequenceNumber")
+                    .HasColumnType("bigint");
 
-                    b.Property<Guid>("LockId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("LockId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                b.Property<byte[]>("RowVersion")
+                    .IsConcurrencyToken()
+                    .ValueGeneratedOnAddOrUpdate()
+                    .HasColumnType("rowversion");
 
-                    b.HasKey("OutboxId");
+                b.HasKey("OutboxId");
 
-                    b.HasIndex("Created");
+                b.HasIndex("Created");
 
-                    b.ToTable("OutboxState", "MessageBus");
-                });
+                b.ToTable("OutboxState", "MessageBus");
+            });
 
-            modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>
-                {
-                    b.HasOne("MassTransit.EntityFrameworkCoreIntegration.OutboxState", null)
-                        .WithMany()
-                        .HasForeignKey("OutboxId");
+        modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>
+            {
+                b.HasOne("MassTransit.EntityFrameworkCoreIntegration.OutboxState", null)
+                    .WithMany()
+                    .HasForeignKey("OutboxId");
 
-                    b.HasOne("MassTransit.EntityFrameworkCoreIntegration.InboxState", null)
-                        .WithMany()
-                        .HasForeignKey("InboxMessageId", "InboxConsumerId")
-                        .HasPrincipalKey("MessageId", "ConsumerId");
-                });
+                b.HasOne("MassTransit.EntityFrameworkCoreIntegration.InboxState", null)
+                    .WithMany()
+                    .HasForeignKey("InboxMessageId", "InboxConsumerId")
+                    .HasPrincipalKey("MessageId", "ConsumerId");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

@@ -1,0 +1,14 @@
+﻿global using EntityFramework.Exceptions.SqlServer;
+global using FlixHub.Core.Api.Repository;
+global using FluentValidation;
+global using Mabusall.Core.Behaviors;
+global using Mabusall.Core.Database;
+global using Mabusall.Core.WebApplicationExtension;
+global using Mabusall.Shared.DataProtection;
+global using Mabusall.Shared.Interfaces;
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Reflection;
+global using System.Runtime.CompilerServices;

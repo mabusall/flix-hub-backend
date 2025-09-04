@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Tasheer.Core.Migrations
+namespace Mabusall.Core.Migrations
 {
     [DbContext(typeof(OutBoxDbContext))]
     partial class OutBoxDbContextModelSnapshot : ModelSnapshot

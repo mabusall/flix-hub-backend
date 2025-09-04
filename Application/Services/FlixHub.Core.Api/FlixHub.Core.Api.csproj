@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Shared\Mabusall.Core\Mabusall.Core.csproj" />
+	  <ProjectReference Include="..\..\..\Shared\Mabusall.Notification\Mabusall.Notification.csproj" />
+	  <ProjectReference Include="..\..\..\Shared\Mabusall.Resources\Mabusall.Resources.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Entities\" />
+	  <Folder Include="Features\" />
+	</ItemGroup>
+
+</Project>

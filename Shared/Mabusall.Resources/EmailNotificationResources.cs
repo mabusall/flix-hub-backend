@@ -22,7 +22,7 @@ public class EmailNotificationResources
         {
             if (ReferenceEquals(resourceMan, null))
             {
-                System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Tasheer.Resources.EmailNotificationResources", typeof(EmailNotificationResources).Assembly);
+                System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Mabusall.Resources.EmailNotificationResources", typeof(EmailNotificationResources).Assembly);
                 resourceMan = temp;
             }
             return resourceMan;

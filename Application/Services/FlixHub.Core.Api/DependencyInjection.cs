@@ -1,6 +1,6 @@
-﻿[assembly: InternalsVisibleTo("FlixHub.RestApi")]
+﻿[assembly: InternalsVisibleTo("FlixHub.Api")]
 
-namespace FlixHub.Api;
+namespace FlixHub.Core.Api;
 
 static class DependencyInjection
 {

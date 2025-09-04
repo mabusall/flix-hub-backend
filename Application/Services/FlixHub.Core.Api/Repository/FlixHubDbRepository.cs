@@ -1,4 +1,4 @@
-﻿namespace FlixHub.Api.Repository;
+﻿namespace FlixHub.Core.Api.Repository;
 
 #region [ interfaces ]
 

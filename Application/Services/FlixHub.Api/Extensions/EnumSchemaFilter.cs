@@ -1,4 +1,4 @@
-﻿namespace FlixHub.RestApi.Extensions;
+﻿namespace FlixHub.Api.Extensions;
 
 public class EnumSchemaFilter : ISchemaFilter
 {

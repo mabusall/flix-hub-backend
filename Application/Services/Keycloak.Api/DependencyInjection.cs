@@ -1,4 +1,4 @@
-﻿[assembly: InternalsVisibleTo("FlixHub.RestApi")]
+﻿[assembly: InternalsVisibleTo("FlixHub.Api")]
 
 namespace Keycloak.Api;
 

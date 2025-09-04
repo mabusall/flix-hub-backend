@@ -34,7 +34,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mabusall.Tools.Security.Win
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Api", "Application\Services\FlixHub.Api\FlixHub.Api.csproj", "{ED6844AE-D920-E1AE-90CF-C5A1650F4D29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.RestApi", "Application\Services\FlixHub.RestApi\FlixHub.RestApi.csproj", "{374F87AA-B440-1AD3-45AB-3169867C6C5B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Core.Api", "Application\Services\FlixHub.Core.Api\FlixHub.Core.Api.csproj", "{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,10 +74,10 @@ Global
 		{ED6844AE-D920-E1AE-90CF-C5A1650F4D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED6844AE-D920-E1AE-90CF-C5A1650F4D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED6844AE-D920-E1AE-90CF-C5A1650F4D29}.Release|Any CPU.Build.0 = Release|Any CPU
-		{374F87AA-B440-1AD3-45AB-3169867C6C5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{374F87AA-B440-1AD3-45AB-3169867C6C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{374F87AA-B440-1AD3-45AB-3169867C6C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{374F87AA-B440-1AD3-45AB-3169867C6C5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,10 +93,10 @@ Global
 		{B8E7E05F-1A59-13FF-0A13-6CF53EDCD343} = {840AF196-53A7-4429-B366-0623EED804DA}
 		{D92313EE-8481-E599-F156-281E7F0BB0FB} = {24B44810-E1A1-4295-9116-BCD4626DB115}
 		{ED6844AE-D920-E1AE-90CF-C5A1650F4D29} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
-		{374F87AA-B440-1AD3-45AB-3169867C6C5B} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
+		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_CultureCountyOverrides = ar=ar-JO
 		SolutionGuid = {8FF911D2-13DD-4F54-B882-12DC7F2D7C65}
+		RESX_CultureCountyOverrides = ar=ar-JO
 	EndGlobalSection
 EndGlobal

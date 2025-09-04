@@ -22,7 +22,7 @@ public class ErrorMessageResources
         {
             if (ReferenceEquals(resourceMan, null))
             {
-                System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Tasheer.Resources.ErrorMessageResources", typeof(ErrorMessageResources).Assembly);
+                System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Mabusall.Resources.ErrorMessageResources", typeof(ErrorMessageResources).Assembly);
                 resourceMan = temp;
             }
             return resourceMan;
