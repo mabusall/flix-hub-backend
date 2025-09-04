@@ -17,10 +17,10 @@ public static class HealthCheckExtensions
             .AddSqlServer(connectionString: configuration.GetConnectionString("Default").Decrypt(),
                           name: "sqlserver.Default",
                           tags: ["db", "sql", "sql.server", "Default"])
-            .AddSqlServer(connectionString: rabbitMqConfig.DbConnection.Decrypt(),
+            .AddSqlServer(connectionString: rabbitMqConfig!.DbConnection.Decrypt(),
                           name: "sqlserver.OutBox",
                           tags: ["db", "sql", "sql.server", "OutBox"])
-            .AddRedis(redisConnectionString: $"{redisConfig.Uri},password={redisConfig.Password.Decrypt()},abortConnect=false",
+            .AddRedis(redisConnectionString: $"{redisConfig!.Uri},password={redisConfig.Password.Decrypt()},abortConnect=false",
                       name: "redis",
                       tags: ["rd", "redis"]);
 

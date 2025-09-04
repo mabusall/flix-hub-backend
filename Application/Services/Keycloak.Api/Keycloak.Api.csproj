@@ -11,8 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Shared\Tasheer.Core\Tasheer.Core.csproj" />
-	  <ProjectReference Include="..\..\..\Shared\Tasheer.Resources\Tasheer.Resources.csproj" />
+		<ProjectReference Include="..\..\..\Shared\Mabusall.Core\Mabusall.Core.csproj" />
+		<ProjectReference Include="..\..\..\Shared\Mabusall.Resources\Mabusall.Resources.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -3,8 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables("TasheerKeys:");
 
 // load required keys in order to use it throwgh all application life cycle
-string publicId = builder.Configuration["VaultKey1"];
-string secretId = builder.Configuration["VaultKey2"];
+string publicId = builder.Configuration["VaultKey1"]!;
+string secretId = builder.Configuration["VaultKey2"]!;
 DataProtectionProviderExtention.Initialize(publicId, secretId);
 
 // Add services to the container.

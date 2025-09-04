@@ -15,10 +15,10 @@
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Shared\Tasheer.Resources\Tasheer.Resources.csproj" />
-		<ProjectReference Include="..\..\..\Shared\Tasheer.Shared\Tasheer.Shared.csproj" />
+	  <ProjectReference Include="..\Mabusall.Shared\Mabusall.Shared.csproj" />
+	  <ProjectReference Include="..\Mabusall.Resources\Mabusall.Resources.csproj" />
 	</ItemGroup>
 
 </Project>

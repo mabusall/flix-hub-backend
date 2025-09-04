@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Nullable>disable</Nullable>
+		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
@@ -17,8 +17,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\FlixHub.Api\FlixHub.Api.csproj" />
 		<ProjectReference Include="..\Keycloak.Api\Keycloak.Api.csproj" />
-		<ProjectReference Include="..\Store\Store.Api\Store.Api.csproj" />
 	</ItemGroup>
 
 </Project>

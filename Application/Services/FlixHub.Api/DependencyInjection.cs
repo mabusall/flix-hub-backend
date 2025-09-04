@@ -1,4 +1,4 @@
-﻿[assembly: InternalsVisibleTo("Tasheer.Api")]
+﻿[assembly: InternalsVisibleTo("FlixHub.RestApi")]
 
 namespace Store.Api;
 
