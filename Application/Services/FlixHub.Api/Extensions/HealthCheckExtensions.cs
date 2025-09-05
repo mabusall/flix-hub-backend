@@ -14,15 +14,18 @@ public static class HealthCheckExtensions
             .Get<RedisOptions>();
 
         services.AddHealthChecks()
-            .AddSqlServer(connectionString: configuration.GetConnectionString("Default").Decrypt(),
-                          name: "sqlserver.Default",
-                          tags: ["db", "sql", "sql.server", "Default"])
-            .AddSqlServer(connectionString: rabbitMqConfig!.DbConnection.Decrypt(),
-                          name: "sqlserver.OutBox",
-                          tags: ["db", "sql", "sql.server", "OutBox"])
+            .AddNpgSql(connectionString: configuration.GetConnectionString("Default").Decrypt(),
+                       name: "postgres.Default",
+                       tags: ["db", "sql", "postgres", "Default"])
+            
+            .AddNpgSql(connectionString: rabbitMqConfig!.DbConnection.Decrypt(),
+                       name: "postgres.OutBox",
+                       tags: ["db", "sql", "postgres", "OutBox"])
+            
             .AddRedis(redisConnectionString: $"{redisConfig!.Uri},password={redisConfig.Password.Decrypt()},abortConnect=false",
                       name: "redis",
                       tags: ["rd", "redis"]);
+
 
         return services;
     }
