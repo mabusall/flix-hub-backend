@@ -1,4 +1,4 @@
-﻿global using EntityFramework.Exceptions.SqlServer;
+﻿global using EntityFramework.Exceptions.PostgreSQL;
 global using FlixHub.Core.Api.Repository;
 global using FlixHub.Core.Behaviors;
 global using FlixHub.Core.Database;

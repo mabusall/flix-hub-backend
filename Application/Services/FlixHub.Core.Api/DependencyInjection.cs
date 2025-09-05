@@ -27,21 +27,23 @@ static class DependencyInjection
 
             .AddDbContext<FlixHubDbContext>((serviceProvider, options) =>
             {
-                options.UseSqlServer(
+                options.UseNpgsql(
                     configuration.GetConnectionString("Default").Decrypt(),
-                    sqlOptions =>
+                    npgsqlOptions =>
                     {
-                        sqlOptions.EnableRetryOnFailure(
+                        npgsqlOptions.EnableRetryOnFailure(
                             maxRetryCount: 5,
                             maxRetryDelay: TimeSpan.FromSeconds(5),
-                            errorNumbersToAdd: null);
-                    }).UseExceptionProcessor();
+                            errorCodesToAdd: null); // PostgreSQL uses error codes, not SQL Server numbers
+                    })
+                    .UseExceptionProcessor(); // make sure you installed EntityFrameworkCore.Exceptions.PostgreSQL
 
                 if (isDevelopment)
                 {
                     options.EnableSensitiveDataLogging();
                 }
             });
+
 
         return services;
     }

@@ -1,6 +1,4 @@
-﻿using Hangfire.PostgreSql;
-
-namespace FlixHub.Core;
+﻿namespace FlixHub.Core;
 
 public static class DependencyInjection
 {
@@ -166,12 +164,12 @@ public static class DependencyInjection
 
             .AddDbContext<OutBoxDbContext>((_, options) =>
             {
-                options.UseSqlServer(rabbitMqOptions.DbConnection.Decrypt(), sqlOptions =>
+                options.UseNpgsql(rabbitMqOptions.DbConnection.Decrypt(), npgsqlOptions =>
                 {
-                    sqlOptions.EnableRetryOnFailure(
+                    npgsqlOptions.EnableRetryOnFailure(
                         maxRetryCount: 10,
                         maxRetryDelay: TimeSpan.FromSeconds(5),
-                        errorNumbersToAdd: null);
+                        errorCodesToAdd: null);
                 });
             });
 
@@ -190,8 +188,8 @@ public static class DependencyInjection
 
                 options.AddEntityFrameworkOutbox<OutBoxDbContext>(efConfig =>
                 {
-                    // configure which database lock provider to use (Postgres, SqlServer, or MySql)
-                    efConfig.UseSqlServer();
+                    // configure which database lock provider to use
+                    efConfig.UsePostgres();   // 🔄 switched from SQL Server to Postgres
 
                     // enable the bus outbox based on configuration
                     efConfig.UseBusOutbox(b =>
