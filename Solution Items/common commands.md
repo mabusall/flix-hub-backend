@@ -10,10 +10,14 @@ $env:FlixHubKeys:VaultKey2='Q9@h]n3zT!mV^2Lf'
 
 # databse scaffolding
 ```
-Add-Migration Store_Init -Context StoreDbContext -StartupProject FlixHub.Api -Project Store.Api -Verbose
-Remove-Migration -Context StoreDbContext -StartupProject FlixHub.Api -Project Store.Api -Verbose
-Update-Database -Context StoreDbContext -StartupProject FlixHub.Api -Project Store.Api -Verbose
+* FlixHub database *
+Add-Migration FlixHubDb_Init -Context FlixHubDbContext -StartupProject FlixHub.Api -Project FlixHub.Core.Api -verbos
+Update-Database -Context FlixHubDbContext -StartupProject FlixHub.Api -Project FlixHub.Core.Api -verbos
+Remove-Migration -Context FlixHubDbContext -StartupProject FlixHub.Api -Project FlixHub.Core.Api -verbos
+Drop-Database -Context FlixHubDbContext -StartupProject FlixHub.Api -Project FlixHub.Core.Api -verbos
+Script-Migration -Context FlixHubDbContext -StartupProject FlixHub.Api -Project FlixHub.Core.Api -verbos
 
+* message bus *
 Add-Migration OutBox_Init -Context OutBoxDbContext -StartupProject FlixHub.Api -Project FlixHub.Core -Verbose
 Update-Database -Context OutBoxDbContext -StartupProject FlixHub.Api -Project FlixHub.Core -Verbose
 ```
