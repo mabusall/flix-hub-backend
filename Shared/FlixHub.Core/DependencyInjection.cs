@@ -1,4 +1,6 @@
-﻿namespace FlixHub.Core;
+﻿using Hangfire.PostgreSql;
+
+namespace FlixHub.Core;
 
 public static class DependencyInjection
 {
@@ -107,19 +109,27 @@ public static class DependencyInjection
                     .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                     .UseSimpleAssemblyNameTypeSerializer()
                     .UseRecommendedSerializerSettings()
-                    .UseFilter(new AutomaticRetryAttribute { Attempts = 0, OnAttemptsExceeded = AttemptsExceededAction.Fail })
+                    .UseFilter(new AutomaticRetryAttribute
+                    {
+                        Attempts = 0,
+                        OnAttemptsExceeded = AttemptsExceededAction.Fail
+                    })
                     .UseSerializerSettings(new Newtonsoft.Json.JsonSerializerSettings()
                     {
                         ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore,
                     })
-                    .UseSqlServerStorage(hangfireOptions.DbConnection.Decrypt(), new SqlServerStorageOptions
-                    {
-                        SchemaName = hangfireOptions.SchemaName,
-                        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                        QueuePollInterval = TimeSpan.FromSeconds(5),
-                        UseRecommendedIsolationLevel = true
-                    }))
+                    .UsePostgreSqlStorage(
+                        opts =>
+                        {
+                            opts.UseNpgsqlConnection(hangfireOptions.DbConnection.Decrypt());
+                        },
+                        new PostgreSqlStorageOptions
+                        {
+                            SchemaName = hangfireOptions.SchemaName,
+                            InvisibilityTimeout = TimeSpan.FromMinutes(5),
+                            QueuePollInterval = TimeSpan.FromSeconds(5),
+                            PrepareSchemaIfNecessary = true
+                        }))
                 .AddHangfireServer();
         }
 

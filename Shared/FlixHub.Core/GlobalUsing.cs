@@ -14,7 +14,6 @@ global using FlixHub.Shared.Helper;
 global using FlixHub.Shared.Interfaces;
 global using FluentValidation;
 global using Hangfire;
-global using Hangfire.SqlServer;
 global using Mapster;
 global using MassTransit;
 global using MediatR;
