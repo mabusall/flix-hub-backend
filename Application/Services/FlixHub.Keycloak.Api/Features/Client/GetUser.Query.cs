@@ -1,0 +1,24 @@
+﻿namespace FlixHub.Keycloak.Api.Features.Client;
+
+public record KeycloakClientGetUserQuery
+(
+    string Email
+) : IQuery<List<KeycloakClientGetUserResult>>;
+
+public record KeycloakClientGetUserResult
+{
+    public Guid Id { get; set; }
+    [
+        JsonConverter(typeof(UnixTimestampToDateTimeConverter)),
+        JsonPropertyName("createdTimeStamp")
+    ]
+    public DateTime CreatedDate { get; set; }
+    public string? UserName { get; set; }
+    [JsonPropertyName("enabled")]
+    public bool IsActive { get; set; }
+    [JsonPropertyName("emailVerified")]
+    public bool IsVerified { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Email { get; set; }
+};

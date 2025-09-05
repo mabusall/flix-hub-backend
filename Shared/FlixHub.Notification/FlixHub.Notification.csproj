@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Views\**" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+		<PackageReference Include="FirebaseAdmin" Version="3.3.0" />
+		<Content Update="Views\**\*.cshtml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FlixHub.Core\FlixHub.Core.csproj" />
+		<ProjectReference Include="..\FlixHub.Resources\FlixHub.Resources.csproj" />
+	</ItemGroup>
+
+</Project>

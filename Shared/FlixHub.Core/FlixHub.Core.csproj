@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Azure.Identity" Version="1.15.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.25.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.12" />
+		<PackageReference Include="Mapster" Version="7.4.0" />
+		<PackageReference Include="MediatR" Version="13.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
+		<PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" Version="8.1.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.12" />
+		<PackageReference Include="Hangfire" Version="1.8.21" />
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.21" />
+		<PackageReference Include="Microsoft.FeatureManagement" Version="4.3.0" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.76.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+		<PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
+		<PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+		<PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
+		<PackageReference Include="Serilog.Enrichers.Sensitive" Version="2.1.0" />
+		<PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.34.0" />
+		<PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.4.1" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FlixHub.Caching\FlixHub.Caching.csproj" />
+		<ProjectReference Include="..\FlixHub.Shared\FlixHub.Shared.csproj" />
+	</ItemGroup>
+
+</Project>

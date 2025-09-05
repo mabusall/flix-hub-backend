@@ -5,11 +5,11 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5026",
+      "applicationUrl": "http://localhost:5040",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "FlixHubKeys:VaultKey1": "S6kbU35+td9QKg5x+K4FTg==",
-        "FlixHubKeys:VaultKey2": "i7}/uiARkZ:D)xip"
+        "FlixHubKeys:VaultKey1": "h8LqW9z0+DpXMg2y+Q7kRw==",
+        "FlixHubKeys:VaultKey2": "Q9@h]n3zT!mV^2Lf"
       }
     },
     "https": {
@@ -17,11 +17,11 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "hangfire/recurring",
-      "applicationUrl": "https://localhost:7038;http://localhost:5026",
+      "applicationUrl": "https://localhost:7060;http://localhost:5040",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "FlixHubKeys:VaultKey1": "S6kbU35+td9QKg5x+K4FTg==",
-        "FlixHubKeys:VaultKey2": "i7}/uiARkZ:D)xip"
+        "FlixHubKeys:VaultKey1": "h8LqW9z0+DpXMg2y+Q7kRw==",
+        "FlixHubKeys:VaultKey2": "Q9@h]n3zT!mV^2Lf"
       }
     },
     "IIS Express": {
@@ -30,8 +30,8 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "FlixHubKeys:VaultKey1": "S6kbU35+td9QKg5x+K4FTg==",
-        "FlixHubKeys:VaultKey2": "i7}/uiARkZ:D)xip"
+        "FlixHubKeys:VaultKey1": "h8LqW9z0+DpXMg2y+Q7kRw==",
+        "FlixHubKeys:VaultKey2": "Q9@h]n3zT!mV^2Lf"
       }
     }
   },

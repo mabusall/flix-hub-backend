@@ -18,23 +18,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{B8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinApp", "WinApp", "{24B44810-E1A1-4295-9116-BCD4626DB115}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keycloak.Api", "Application\Services\Keycloak.Api\Keycloak.Api.csproj", "{66E9CA5D-6731-4717-AD58-2C5F01C5D038}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Shared", "Shared\FlixHub.Shared\FlixHub.Shared.csproj", "{0AC14587-71DD-CD23-F311-3C20B7E3F782}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mabusall.Shared", "Shared\Mabusall.Shared\Mabusall.Shared.csproj", "{0AC14587-71DD-CD23-F311-3C20B7E3F782}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Notification", "Shared\FlixHub.Notification\FlixHub.Notification.csproj", "{12B41D68-C2F3-255D-F796-BCFCFA3A6DFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mabusall.Notification", "Shared\Mabusall.Notification\Mabusall.Notification.csproj", "{12B41D68-C2F3-255D-F796-BCFCFA3A6DFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Resources", "Shared\FlixHub.Resources\FlixHub.Resources.csproj", "{D17D04B7-A99D-3F09-4B69-2AEC7A8C014B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mabusall.Resources", "Shared\Mabusall.Resources\Mabusall.Resources.csproj", "{D17D04B7-A99D-3F09-4B69-2AEC7A8C014B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Caching", "Shared\FlixHub.Caching\FlixHub.Caching.csproj", "{AC1235DC-13A8-FA80-F64A-A5143379125C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mabusall.Caching", "Shared\Mabusall.Caching\Mabusall.Caching.csproj", "{AC1235DC-13A8-FA80-F64A-A5143379125C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Core", "Shared\FlixHub.Core\FlixHub.Core.csproj", "{B8E7E05F-1A59-13FF-0A13-6CF53EDCD343}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mabusall.Core", "Shared\Mabusall.Core\Mabusall.Core.csproj", "{B8E7E05F-1A59-13FF-0A13-6CF53EDCD343}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mabusall.Tools.Security.WinApp", "Application\WinApp\Mabusall.Tools.Security.WinApp\Mabusall.Tools.Security.WinApp.csproj", "{D92313EE-8481-E599-F156-281E7F0BB0FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Tools.Security.WinApp", "Application\WinApp\FlixHub.Tools.Security.WinApp\FlixHub.Tools.Security.WinApp.csproj", "{D92313EE-8481-E599-F156-281E7F0BB0FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Api", "Application\Services\FlixHub.Api\FlixHub.Api.csproj", "{ED6844AE-D920-E1AE-90CF-C5A1650F4D29}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Core.Api", "Application\Services\FlixHub.Core.Api\FlixHub.Core.Api.csproj", "{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Keycloak.Api", "Application\Services\FlixHub.Keycloak.Api\FlixHub.Keycloak.Api.csproj", "{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,10 +42,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{66E9CA5D-6731-4717-AD58-2C5F01C5D038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{66E9CA5D-6731-4717-AD58-2C5F01C5D038}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{66E9CA5D-6731-4717-AD58-2C5F01C5D038}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{66E9CA5D-6731-4717-AD58-2C5F01C5D038}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0AC14587-71DD-CD23-F311-3C20B7E3F782}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0AC14587-71DD-CD23-F311-3C20B7E3F782}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AC14587-71DD-CD23-F311-3C20B7E3F782}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -78,6 +74,10 @@ Global
 		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,7 +85,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B8055EBD-F44C-4BA1-BF75-07A7BA62AB52} = {F91C18E6-DA39-48F1-B365-9C5C617BB4ED}
 		{24B44810-E1A1-4295-9116-BCD4626DB115} = {F91C18E6-DA39-48F1-B365-9C5C617BB4ED}
-		{66E9CA5D-6731-4717-AD58-2C5F01C5D038} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
 		{0AC14587-71DD-CD23-F311-3C20B7E3F782} = {840AF196-53A7-4429-B366-0623EED804DA}
 		{12B41D68-C2F3-255D-F796-BCFCFA3A6DFE} = {840AF196-53A7-4429-B366-0623EED804DA}
 		{D17D04B7-A99D-3F09-4B69-2AEC7A8C014B} = {840AF196-53A7-4429-B366-0623EED804DA}
@@ -94,9 +93,10 @@ Global
 		{D92313EE-8481-E599-F156-281E7F0BB0FB} = {24B44810-E1A1-4295-9116-BCD4626DB115}
 		{ED6844AE-D920-E1AE-90CF-C5A1650F4D29} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
 		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
+		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8FF911D2-13DD-4F54-B882-12DC7F2D7C65}
 		RESX_CultureCountyOverrides = ar=ar-JO
+		SolutionGuid = {8FF911D2-13DD-4F54-B882-12DC7F2D7C65}
 	EndGlobalSection
 EndGlobal

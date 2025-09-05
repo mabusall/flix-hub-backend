@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddEnvironmentVariables("TasheerKeys:");
+builder.Configuration.AddEnvironmentVariables("FlixHubKeys:");
 
 // load required keys in order to use it throwgh all application life cycle
 string publicId = builder.Configuration["VaultKey1"]!;

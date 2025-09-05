@@ -7,13 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Shared\Mabusall.Core\Mabusall.Core.csproj" />
-	  <ProjectReference Include="..\..\..\Shared\Mabusall.Notification\Mabusall.Notification.csproj" />
-	  <ProjectReference Include="..\..\..\Shared\Mabusall.Resources\Mabusall.Resources.csproj" />
+	  <ProjectReference Include="..\..\..\Shared\FlixHub.Core\FlixHub.Core.csproj" />
+	  <ProjectReference Include="..\..\..\Shared\FlixHub.Notification\FlixHub.Notification.csproj" />
+	  <ProjectReference Include="..\..\..\Shared\FlixHub.Resources\FlixHub.Resources.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Entities\" />
 	  <Folder Include="Features\" />
 	</ItemGroup>
 
