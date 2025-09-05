@@ -11,10 +11,10 @@ class SystemUser : AuditableEntity
 
     public Guid? KeycloakUserId { get; set; }
 
-    [Required, MaxLength(150), Column(TypeName = "nvarchar")]
+    [Required, MaxLength(150), Column(TypeName = "varchar")]
     public string? FirstName { get; set; }
 
-    [Required, MaxLength(150), Column(TypeName = "nvarchar")]
+    [Required, MaxLength(150), Column(TypeName = "varchar")]
     public string? LastName { get; set; }
 
     [MaxLength(200), Column(TypeName = "varchar")]
@@ -25,4 +25,8 @@ class SystemUser : AuditableEntity
 
     [Required]
     public bool IsVerified { get; set; }
+
+    // This will be stored as JSONB in PostgreSQL
+    [Column(TypeName = "jsonb")]
+    public UserPreferencesDto Preferences { get; set; } = new();
 }

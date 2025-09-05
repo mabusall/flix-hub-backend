@@ -17,11 +17,11 @@ public static class HealthCheckExtensions
             .AddNpgSql(connectionString: configuration.GetConnectionString("Default").Decrypt(),
                        name: "postgres.Default",
                        tags: ["db", "sql", "postgres", "Default"])
-            
+
             .AddNpgSql(connectionString: rabbitMqConfig!.DbConnection.Decrypt(),
                        name: "postgres.OutBox",
                        tags: ["db", "sql", "postgres", "OutBox"])
-            
+
             .AddRedis(redisConnectionString: $"{redisConfig!.Uri},password={redisConfig.Password.Decrypt()},abortConnect=false",
                       name: "redis",
                       tags: ["rd", "redis"]);

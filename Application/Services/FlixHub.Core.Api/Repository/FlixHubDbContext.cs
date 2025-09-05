@@ -5,7 +5,7 @@ class FlixHubDbContext(DbContextOptions<FlixHubDbContext> options,
                        ICurrentUserService currentUserService) :
     GenericDbContext(options, idGeneratorService, currentUserService)
 {
-    protected override string Schema => "dbo";
+    protected override string Schema => "public";
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
