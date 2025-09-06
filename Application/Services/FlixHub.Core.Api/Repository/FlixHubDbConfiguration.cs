@@ -55,9 +55,8 @@ class SystemUserConfiguration : IEntityTypeConfiguration<SystemUser>
         builder.Property(p => p.Preferences)
             .HasColumnType("jsonb")
             .HasComment("User preferences stored as JSON.")
-            .HasConversion(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null!),
-                v => JsonSerializer.Deserialize<UserPreferencesDto>(v, (JsonSerializerOptions)null!)!);
+            .HasConversion(v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                           v => JsonSerializer.Deserialize<UserPreferencesDto>(v, JsonSerializerOptions.Default)!);
 
         builder.Property(p => p.Created)
             .HasComment("Date and time when the record was created.");
