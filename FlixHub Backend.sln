@@ -5,9 +5,9 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A852B369-ADD7-4C68-9C5E-F9BA338533DD}"
 	ProjectSection(SolutionItems) = preProject
-		LICENSE = LICENSE
 		Solution Items\common commands.md = Solution Items\common commands.md
-		README.md = README.md
+		Solution Items\LICENSE = Solution Items\LICENSE
+		Solution Items\README.md = Solution Items\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{840AF196-53A7-4429-B366-0623EED804DA}"
@@ -96,7 +96,7 @@ Global
 		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8FF911D2-13DD-4F54-B882-12DC7F2D7C65}
 		RESX_CultureCountyOverrides = ar=ar-JO
+		SolutionGuid = {8FF911D2-13DD-4F54-B882-12DC7F2D7C65}
 	EndGlobalSection
 EndGlobal
