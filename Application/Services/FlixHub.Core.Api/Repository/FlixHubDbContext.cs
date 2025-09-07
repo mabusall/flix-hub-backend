@@ -21,4 +21,6 @@ class FlixHubDbContext(DbContextOptions<FlixHubDbContext> options,
 
         base.OnModelCreating(modelBuilder);
     }
+
+    public DbSet<SystemUser> SystemUsers => Set<SystemUser>();
 }
