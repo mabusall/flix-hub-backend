@@ -257,6 +257,13 @@ class ContentCastConfiguration : IEntityTypeConfiguration<ContentCast>
     {
         builder.HasKey(cc => new { cc.ContentId, cc.PersonId });
 
+        builder.HasOne(cc => cc.Person)
+            .WithMany()
+            .HasForeignKey(cc => cc.PersonId);
+        builder.HasOne<Content>()
+            .WithMany(c => c.Casts)
+            .HasForeignKey(cc => cc.ContentId);
+
         builder.Property(cc => cc.ContentId)
             .HasComment("Foreign key to Content (movie or TV).");
         builder.Property(cc => cc.PersonId)
@@ -282,6 +289,13 @@ class ContentCrewConfiguration : IEntityTypeConfiguration<ContentCrew>
     public void Configure(EntityTypeBuilder<ContentCrew> builder)
     {
         builder.HasKey(cc => new { cc.ContentId, cc.PersonId });
+
+        builder.HasOne(cc => cc.Person)
+            .WithMany()
+            .HasForeignKey(cc => cc.PersonId);
+        builder.HasOne<Content>()
+            .WithMany(c => c.Crews)
+            .HasForeignKey(cc => cc.ContentId);
 
         builder.Property(cc => cc.ContentId)
             .HasComment("Foreign key to Content (movie or TV).");
