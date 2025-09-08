@@ -1,5 +1,6 @@
 ﻿global using EntityFramework.Exceptions.PostgreSQL;
 global using FlixHub.Core.Api.Entities;
+global using FlixHub.Core.Api.Enums;
 global using FlixHub.Core.Api.Model;
 global using FlixHub.Core.Api.Repository;
 global using FlixHub.Core.Behaviors;

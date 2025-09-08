@@ -1,6 +1,6 @@
 ﻿namespace FlixHub.Shared.Helper;
 
-public record AuditDto
+public record AuditableDto
 {
     public Guid Uuid { get; set; }
 

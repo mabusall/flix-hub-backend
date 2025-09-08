@@ -2,8 +2,8 @@
 
 public abstract class AuditableEntity
 {
-    [Key]
-    public int Id { get; set; }
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public long Id { get; set; }
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Uuid { get; set; }

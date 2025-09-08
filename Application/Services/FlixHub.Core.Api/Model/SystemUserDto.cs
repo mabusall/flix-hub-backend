@@ -1,6 +1,6 @@
 ﻿namespace FlixHub.Core.Api.Model;
 
-public record SystemUserDto : AuditDto
+public record SystemUserDto : AuditableDto
 {
     public string? Username { get; set; }
     public string? Email { get; set; }

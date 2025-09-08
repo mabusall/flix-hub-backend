@@ -23,4 +23,10 @@ class FlixHubDbContext(DbContextOptions<FlixHubDbContext> options,
     }
 
     public DbSet<SystemUser> SystemUsers => Set<SystemUser>();
+    public DbSet<Content> Contents => Set<Content>();
+    public DbSet<Genre> Genres => Set<Genre>();
+    public DbSet<ContentGenre> ContentGenres => Set<ContentGenre>();
+    public DbSet<Person> Persons => Set<Person>();
+    public DbSet<ContentCast> ContentCasts => Set<ContentCast>();
+    public DbSet<ContentCrew> ContentCrews => Set<ContentCrew>();
 }

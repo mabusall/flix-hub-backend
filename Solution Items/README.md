@@ -36,3 +36,49 @@ FlixHub.Api/
 ├── Services/ # Business Logic Layer
 ├── Program.cs # Entry Point
 └── appsettings.json # Configuration
+
+# Database Design Strategy
+
+## 1. Unified Content Table
+- Holds **both Movies + TV Series**.  
+- `type` column to distinguish (`movie` or `tv`).  
+- Normalized `release_date` column (maps to `release_date` for movies, `first_air_date` for TV).  
+- Stores high-level metadata:
+  - title
+  - overview
+  - language
+  - country
+  - runtime
+  - status  
+
+---
+
+## 2. Supporting Tables (Shared)
+- **genres** → master list of genres.  
+- **content_genres** → mapping table (many-to-many).  
+- **people** → actors, directors, writers.  
+- **content_cast** → mapping table (`content_id + person_id + role`).  
+- **content_crew** → mapping table (director, writer, producer, etc.).  
+- **images** → posters, backdrops, logos (with type + size).  
+- **videos** → trailers, teasers (YouTube keys, type, official).  
+- **external_ids** → IMDb, Trakt, etc.  
+- **ratings** → IMDb, TMDb, Trakt scores.  
+
+---
+
+## 3. TV-Specific Tables
+- **seasons** → belongs to a TV show.  
+- **episodes** → belongs to a season.  
+- **episode_cast** / **episode_crew** (optional, if you want detailed credits per episode).  
+
+---
+
+## 🔹 File Structure Proposal
+We can break this into `.sql` files so history stays clean and modular:
+
+- `01_content.sql` → Main content table (movies + series).  
+- `02_genres.sql` → Genres + mapping.  
+- `03_people.sql` → People + cast/crew mapping.  
+- `04_media.sql` → Images + videos.  
+- `05_external.sql` → External IDs + ratings.  
+- `06_tv.sql` → Seasons + episodes (only for type=tv).  
