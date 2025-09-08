@@ -9,4 +9,5 @@ public record PersonDto : AuditableDto
     public string? KnownForDepartment { get; set; } // Acting, Directing, Writing
     public string? Biography { get; set; }
     public string? ProfilePath { get; set; } // TMDb image path
+    public IList<PersonImageDto> Images { get; set; } = [];
 }

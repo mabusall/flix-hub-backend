@@ -9,6 +9,13 @@ interface IContentGenresRepository : IGenericRepository<ContentGenre, ContentGen
 interface IPersonsRepository : IGenericRepository<Person, PersonDto> { }
 interface IContentCastsRepository : IGenericRepository<ContentCast, ContentCastDto> { }
 interface IContentCrewsRepository : IGenericRepository<ContentCrew, ContentCrewDto> { }
+interface IContentRatingsRepository : IGenericRepository<ContentRating, ContentRatingDto> { }
+interface IContentImagesRepository : IGenericRepository<ContentImage, ContentImageDto> { }
+interface IPersonImagesRepository : IGenericRepository<PersonImage, PersonImageDto> { }
+interface IContentSeasonsRepository : IGenericRepository<ContentSeason, ContentSeasonDto> { }
+interface IEpisodesRepository : IGenericRepository<Episode, EpisodeDto> { }
+interface IEpisodeCastsRepository : IGenericRepository<EpisodeCast, EpisodeCastDto> { }
+interface IEpisodeCrewsRepository : IGenericRepository<EpisodeCrew, EpisodeCrewDto> { }
 
 #endregion
 
@@ -40,6 +47,34 @@ class ContentCastsRepository(FlixHubDbContext context)
 
 class ContentCrewsRepository(FlixHubDbContext context)
    : GenericRepository<ContentCrew, ContentCrewDto>(context), IContentCrewsRepository
+{ }
+
+class ContentRatingsRepository(FlixHubDbContext context)
+   : GenericRepository<ContentRating, ContentRatingDto>(context), IContentRatingsRepository
+{ }
+
+class ContentImagesRepository(FlixHubDbContext context)
+   : GenericRepository<ContentImage, ContentImageDto>(context), IContentImagesRepository
+{ }
+
+class PersonImagesRepository(FlixHubDbContext context)
+   : GenericRepository<PersonImage, PersonImageDto>(context), IPersonImagesRepository
+{ }
+
+class ContentSeasonsRepository(FlixHubDbContext context)
+   : GenericRepository<ContentSeason, ContentSeasonDto>(context), IContentSeasonsRepository
+{ }
+
+class EpisodesRepository(FlixHubDbContext context)
+   : GenericRepository<Episode, EpisodeDto>(context), IEpisodesRepository
+{ }
+
+class EpisodeCastsRepository(FlixHubDbContext context)
+   : GenericRepository<EpisodeCast, EpisodeCastDto>(context), IEpisodeCastsRepository
+{ }
+
+class EpisodeCrewsRepository(FlixHubDbContext context)
+   : GenericRepository<EpisodeCrew, EpisodeCrewDto>(context), IEpisodeCrewsRepository
 { }
 
 #endregion

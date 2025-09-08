@@ -9,6 +9,13 @@ interface IFlixHubDbUnitOfWork : IUnitOfWork
     IPersonsRepository PersonsRepository { get; }
     IContentCastsRepository ContentCastsRepository { get; }
     IContentCrewsRepository ContentCrewsRepository { get; }
+    IContentRatingsRepository ContentRatingsRepository { get; }
+    IContentImagesRepository ContentImagesRepository { get; }
+    IPersonImagesRepository PersonImagesRepository { get; }
+    IContentSeasonsRepository ContentSeasonsRepository { get; }
+    IEpisodesRepository EpisodesRepository { get; }
+    IEpisodeCastsRepository EpisodeCastsRepository { get; }
+    IEpisodeCrewsRepository EpisodeCrewsRepository { get; }
 }
 
 class FlixHubDbUnitOfWork(FlixHubDbContext context) : UnitOfWork(context), IFlixHubDbUnitOfWork
@@ -20,4 +27,11 @@ class FlixHubDbUnitOfWork(FlixHubDbContext context) : UnitOfWork(context), IFlix
     public IPersonsRepository PersonsRepository => new PersonsRepository(context);
     public IContentCastsRepository ContentCastsRepository => new ContentCastsRepository(context);
     public IContentCrewsRepository ContentCrewsRepository => new ContentCrewsRepository(context);
+    public IContentRatingsRepository ContentRatingsRepository => new ContentRatingsRepository(context);
+    public IContentImagesRepository ContentImagesRepository => new ContentImagesRepository(context);
+    public IPersonImagesRepository PersonImagesRepository => new PersonImagesRepository(context);
+    public IContentSeasonsRepository ContentSeasonsRepository => new ContentSeasonsRepository(context);
+    public IEpisodesRepository EpisodesRepository => new EpisodesRepository(context);
+    public IEpisodeCastsRepository EpisodeCastsRepository => new EpisodeCastsRepository(context);
+    public IEpisodeCrewsRepository EpisodeCrewsRepository => new EpisodeCrewsRepository(context);
 }

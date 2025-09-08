@@ -16,10 +16,16 @@ class Content : AuditableEntity
     public ContentType Type { get; set; }
 
     [Required]
-    public string Title { get; set; } = string.Empty;
+    public string? Title { get; set; }
 
+    [MaxLength(200)]
     public string? OriginalTitle { get; set; }
+
+    [MaxLength(500)]
     public string? Overview { get; set; }
+
+    [MaxLength(500)]
+    public string? Awards { get; set; }
 
     [MaxLength(10)]
     public string? OriginalLanguage { get; set; }
@@ -35,18 +41,29 @@ class Content : AuditableEntity
     public int? Runtime { get; set; }
 
     [Column(TypeName = "decimal(12,6)")]
-    public decimal? PopularityTmdb { get; set; }
+    public decimal? Popularity { get; set; }
 
     [Column(TypeName = "decimal(4,2)")]
     public decimal? VoteAverage { get; set; }
 
     public int? VoteCount { get; set; }
 
+    public long? Budget { get; set; }
+
+    [MaxLength(500)]
     public string? PosterPath { get; set; }
+
+    [MaxLength(500)]
     public string? BackdropPath { get; set; }
+
+    [MaxLength(500)]
     public string? LogoPath { get; set; }
 
     public virtual ICollection<ContentGenre> Genres { get; set; } = [];
     public virtual ICollection<ContentCast> Casts { get; set; } = [];
     public virtual ICollection<ContentCrew> Crews { get; set; } = [];
+    public virtual ICollection<ContentRating> Ratings { get; set; } = [];
+    public virtual ICollection<ContentImage> Images { get; set; } = [];
+    public virtual ICollection<ContentVideo> Videos { get; set; } = [];
+    public virtual ICollection<ContentSeason> Seasons { get; set; } = [];
 }

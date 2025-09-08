@@ -88,6 +88,12 @@ class ContentConfiguration : IEntityTypeConfiguration<Content>
         builder.Property(p => p.OriginalTitle)
             .HasComment("Original title or name in original language.");
 
+        builder.Property(p => p.Budget)
+            .HasComment("Movie/TV Budget.");
+
+        builder.Property(p => p.Awards)
+            .HasComment("Awards wining.");
+
         builder.Property(p => p.Overview)
             .HasComment("Summary / description.");
 
@@ -114,7 +120,7 @@ class ContentConfiguration : IEntityTypeConfiguration<Content>
             .HasComment("Runtime in minutes (movie or avg episode runtime).");
 
         // Popularity & votes
-        builder.Property(p => p.PopularityTmdb)
+        builder.Property(p => p.Popularity)
             .HasComment("TMDb popularity score.");
 
         builder.Property(p => p.VoteAverage)
@@ -143,9 +149,6 @@ class ContentConfiguration : IEntityTypeConfiguration<Content>
 
         // Indexes
         builder.HasIndex(p => p.TmdbId).IsUnique();
-        builder.HasIndex(p => p.Type);
-        builder.HasIndex(p => p.ReleaseDate);
-        builder.HasIndex(p => p.PopularityTmdb);
     }
 }
 
@@ -236,7 +239,7 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
 
         builder.Property(p => p.KnownForDepartment)
             .HasComment("Department this person is best known for (Acting, Directing, Writing).");
-        
+
         builder.Property(p => p.Biography)
             .HasComment("Person Biography.");
 
@@ -260,6 +263,7 @@ class ContentCastConfiguration : IEntityTypeConfiguration<ContentCast>
         builder.HasOne(cc => cc.Person)
             .WithMany()
             .HasForeignKey(cc => cc.PersonId);
+
         builder.HasOne<Content>()
             .WithMany(c => c.Casts)
             .HasForeignKey(cc => cc.ContentId);
@@ -315,5 +319,332 @@ class ContentCrewConfiguration : IEntityTypeConfiguration<ContentCrew>
         builder.Property(p => p.CreatedBy).HasComment("Username or identifier of the user who created the record.");
         builder.Property(p => p.LastModified).HasComment("Date and time when the record was last modified.");
         builder.Property(p => p.LastModifiedBy).HasComment("Username or identifier of the user who last modified the record.");
+    }
+}
+
+class ContentRatingConfiguration : IEntityTypeConfiguration<ContentRating>
+{
+    public void Configure(EntityTypeBuilder<ContentRating> builder)
+    {
+        builder.Property(cr => cr.Id)
+            .HasComment("Internal primary key for ContentRating.");
+        builder.Property(cr => cr.Uuid)
+            .HasComment("Unique UUID identifier for ContentRating.");
+
+        builder.Property(cr => cr.ContentId)
+            .HasComment("Foreign key to Content entity.");
+
+        builder.Property(cr => cr.Source)
+            .HasConversion<int>() // store enum as int in DB
+            .HasComment("Rating source: 1=IMDb, 2=RottenTomatoes, 3=Metacritic.");
+
+        builder.Property(cr => cr.Value)
+            .HasComment("Rating value string from OMDb, e.g. '8.3/10', '98%', '88/100'.");
+
+        // Relationships
+        builder.HasOne<Content>()
+            .WithMany(c => c.Ratings)
+            .HasForeignKey(cr => cr.ContentId);
+
+        // Audit fields
+        builder.Property(cr => cr.Created).HasComment("Date and time when the record was created.");
+        builder.Property(cr => cr.CreatedBy).HasComment("User who created the record.");
+        builder.Property(cr => cr.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(cr => cr.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}
+
+class ContentImageConfiguration : IEntityTypeConfiguration<ContentImage>
+{
+    public void Configure(EntityTypeBuilder<ContentImage> builder)
+    {
+        builder.Property(ci => ci.Id)
+            .HasComment("Internal primary key for ContentImage.");
+        builder.Property(ci => ci.Uuid)
+            .HasComment("Unique UUID identifier for ContentImage.");
+
+        builder.Property(ci => ci.ContentId)
+            .HasComment("Foreign key to Content entity.");
+
+        builder.Property(ci => ci.Type)
+            .HasConversion<int>() // store enum as int
+            .HasComment("Image type: 1=Poster, 2=Backdrop, 3=Logo, 4=Still.");
+
+        builder.Property(ci => ci.FilePath)
+            .HasComment("File path for the image from TMDb.");
+
+        builder.Property(ci => ci.Language)
+            .HasComment("Language code (iso_639_1).");
+
+        builder.Property(ci => ci.Width)
+            .HasComment("Image width in pixels.");
+        builder.Property(ci => ci.Height)
+            .HasComment("Image height in pixels.");
+
+        // Relationships
+        builder.HasOne<Content>()
+            .WithMany(c => c.Images)
+            .HasForeignKey(ci => ci.ContentId);
+
+        // Audit fields
+        builder.Property(ci => ci.Created).HasComment("Date and time when the record was created.");
+        builder.Property(ci => ci.CreatedBy).HasComment("User who created the record.");
+        builder.Property(ci => ci.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(ci => ci.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}
+
+class PersonImageConfiguration : IEntityTypeConfiguration<PersonImage>
+{
+    public void Configure(EntityTypeBuilder<PersonImage> builder)
+    {
+        builder.Property(pi => pi.Id)
+            .HasComment("Internal primary key for PersonImage.");
+        builder.Property(pi => pi.Uuid)
+            .HasComment("Unique UUID identifier for PersonImage.");
+
+        builder.Property(pi => pi.PersonId)
+            .HasComment("Foreign key to Person entity.");
+
+        builder.Property(pi => pi.Type)
+            .HasConversion<int>()
+            .HasComment("Image type: 5=Profile.");
+
+        builder.Property(pi => pi.FilePath)
+            .HasComment("File path for the person image from TMDb.");
+
+        builder.Property(pi => pi.Language)
+            .HasComment("Language code (iso_639_1).");
+
+        builder.Property(pi => pi.Width)
+            .HasComment("Image width in pixels.");
+        builder.Property(pi => pi.Height)
+            .HasComment("Image height in pixels.");
+
+        // Relationships
+        builder.HasOne<Person>()
+            .WithMany(c => c.Images)
+            .HasForeignKey(p => p.PersonId);
+
+        // Audit fields
+        builder.Property(pi => pi.Created).HasComment("Date and time when the record was created.");
+        builder.Property(pi => pi.CreatedBy).HasComment("User who created the record.");
+        builder.Property(pi => pi.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(pi => pi.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}
+
+class ContentVideoConfiguration : IEntityTypeConfiguration<ContentVideo>
+{
+    public void Configure(EntityTypeBuilder<ContentVideo> builder)
+    {
+        builder.Property(cv => cv.Id)
+            .HasComment("Internal primary key for ContentVideo.");
+        builder.Property(cv => cv.Uuid)
+            .HasComment("Unique UUID identifier for ContentVideo.");
+
+        builder.Property(cv => cv.ContentId)
+            .HasComment("Foreign key to Content entity.");
+
+        builder.Property(cv => cv.Type)
+            .HasConversion<int>()
+            .HasComment("Video type: 1=Trailer, 2=Teaser, 3=Clip, 4=Featurette.");
+
+        builder.Property(cv => cv.Site)
+            .HasConversion<int>()
+            .HasComment("Video site: 1=YouTube, 2=Vimeo.");
+
+        builder.Property(cv => cv.Key)
+            .HasComment("External video key (e.g., YouTube video id).");
+
+        builder.Property(cv => cv.Name)
+            .HasComment("Title of the video.");
+
+        builder.Property(cv => cv.IsOfficial)
+            .HasComment("Indicates whether the video is an official release.");
+
+        // Relationships
+        builder.HasOne<Content>()
+            .WithMany(c => c.Videos)
+            .HasForeignKey(cv => cv.ContentId);
+
+        // Audit fields
+        builder.Property(cv => cv.Created).HasComment("Date and time when the record was created.");
+        builder.Property(cv => cv.CreatedBy).HasComment("User who created the record.");
+        builder.Property(cv => cv.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(cv => cv.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}
+
+class ContentSeasonConfiguration : IEntityTypeConfiguration<ContentSeason>
+{
+    public void Configure(EntityTypeBuilder<ContentSeason> builder)
+    {
+        builder.Property(s => s.Id)
+            .HasComment("Internal primary key for Season.");
+        builder.Property(s => s.Uuid)
+            .HasComment("Unique UUID identifier for Season.");
+
+        builder.Property(s => s.ContentId)
+            .HasComment("Foreign key to Content entity (TV series).");
+
+        builder.Property(s => s.SeasonNumber)
+            .HasComment("Season number, starting at 1.");
+
+        builder.Property(s => s.Title)
+            .HasComment("Optional title of the season.");
+
+        builder.Property(s => s.Overview)
+            .HasComment("Overview/description of the season.");
+
+        builder.Property(s => s.AirDate)
+            .HasComment("First air date of the season.");
+
+        builder.Property(s => s.EpisodeCount)
+            .HasComment("Number of episodes in this season (if known).");
+
+        builder.Property(s => s.PosterPath)
+            .HasComment("Poster image path from TMDb.");
+
+        // Relationships
+        builder.HasOne<Content>()
+            .WithMany(c => c.Seasons)
+            .HasForeignKey(s => s.ContentId);
+
+        // Indexes
+        builder.HasIndex(s => new { s.ContentId, s.SeasonNumber })
+            .IsUnique();
+
+        // Audit fields
+        builder.Property(s => s.Created).HasComment("Date and time when the record was created.");
+        builder.Property(s => s.CreatedBy).HasComment("User who created the record.");
+        builder.Property(s => s.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(s => s.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}
+
+class EpisodeConfiguration : IEntityTypeConfiguration<Episode>
+{
+    public void Configure(EntityTypeBuilder<Episode> builder)
+    {
+        builder.Property(e => e.Id)
+            .HasComment("Internal primary key for Episode.");
+        builder.Property(e => e.Uuid)
+            .HasComment("Unique UUID identifier for Episode.");
+
+        builder.Property(e => e.SeasonId)
+            .HasComment("Foreign key to Season entity.");
+
+        builder.Property(e => e.EpisodeNumber)
+            .HasComment("Episode number within the season.");
+
+        builder.Property(e => e.Title)
+            .HasComment("Title of the episode.");
+
+        builder.Property(e => e.Overview)
+            .HasComment("Overview/description of the episode.");
+
+        builder.Property(e => e.AirDate)
+            .HasComment("Air date of the episode.");
+
+        builder.Property(e => e.Runtime)
+            .HasComment("Runtime of the episode in minutes.");
+
+        builder.Property(e => e.StillPath)
+            .HasComment("Still image path from TMDb.");
+
+        builder.Property(e => e.VoteAverage)
+            .HasComment("Average vote score for the episode.");
+        builder.Property(e => e.VoteCount)
+            .HasComment("Number of votes for the episode.");
+
+        // Relationships
+        builder.HasOne<ContentSeason>()
+            .WithMany(s => s.Episodes)
+            .HasForeignKey(e => e.SeasonId);
+
+        // Indexes
+        builder.HasIndex(e => new { e.SeasonId, e.EpisodeNumber })
+            .IsUnique();
+
+        // Audit fields
+        builder.Property(e => e.Created).HasComment("Date and time when the record was created.");
+        builder.Property(e => e.CreatedBy).HasComment("User who created the record.");
+        builder.Property(e => e.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(e => e.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}
+
+class EpisodeCastConfiguration : IEntityTypeConfiguration<EpisodeCast>
+{
+    public void Configure(EntityTypeBuilder<EpisodeCast> builder)
+    {
+        builder.Property(ec => ec.Id)
+            .HasComment("Internal primary key for EpisodeCast.");
+        builder.Property(ec => ec.Uuid)
+            .HasComment("Unique UUID identifier for EpisodeCast.");
+
+        builder.Property(ec => ec.EpisodeId)
+            .HasComment("Foreign key to Episode entity.");
+        builder.Property(ec => ec.PersonId)
+            .HasComment("Foreign key to Person entity.");
+
+        builder.Property(ec => ec.Character)
+            .HasComment("Character name played by the actor in this episode.");
+
+        builder.Property(ec => ec.Order)
+            .HasComment("Billing order of the actor in this episode.");
+
+        // Relationships
+        builder.HasOne<Episode>()
+            .WithMany(e => e.Casts)
+            .HasForeignKey(ec => ec.EpisodeId);
+
+        builder.HasOne(ec => ec.Person)
+            .WithMany()
+            .HasForeignKey(ec => ec.PersonId);
+
+        // Audit fields
+        builder.Property(ec => ec.Created).HasComment("Date and time when the record was created.");
+        builder.Property(ec => ec.CreatedBy).HasComment("User who created the record.");
+        builder.Property(ec => ec.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(ec => ec.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}
+
+class EpisodeCrewConfiguration : IEntityTypeConfiguration<EpisodeCrew>
+{
+    public void Configure(EntityTypeBuilder<EpisodeCrew> builder)
+    {
+        builder.Property(ec => ec.Id)
+            .HasComment("Internal primary key for EpisodeCrew.");
+        builder.Property(ec => ec.Uuid)
+            .HasComment("Unique UUID identifier for EpisodeCrew.");
+
+        builder.Property(ec => ec.EpisodeId)
+            .HasComment("Foreign key to Episode entity.");
+        builder.Property(ec => ec.PersonId)
+            .HasComment("Foreign key to Person entity.");
+
+        builder.Property(ec => ec.Department)
+            .HasComment("Department of the crew member (Directing, Writing, etc.).");
+
+        builder.Property(ec => ec.Job)
+            .HasComment("Specific job title of the crew member.");
+
+        // Relationships
+        builder.HasOne<Episode>()
+            .WithMany(e => e.Crews)
+            .HasForeignKey(ec => ec.EpisodeId);
+
+        builder.HasOne(ec => ec.Person)
+            .WithMany()
+            .HasForeignKey(ec => ec.PersonId);
+
+        // Audit fields
+        builder.Property(ec => ec.Created).HasComment("Date and time when the record was created.");
+        builder.Property(ec => ec.CreatedBy).HasComment("User who created the record.");
+        builder.Property(ec => ec.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(ec => ec.LastModifiedBy).HasComment("User who last modified the record.");
     }
 }
