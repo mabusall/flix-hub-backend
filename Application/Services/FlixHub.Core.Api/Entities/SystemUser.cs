@@ -28,5 +28,7 @@ class SystemUser : AuditableEntity
 
     // This will be stored as JSONB in PostgreSQL
     [Column(TypeName = "jsonb")]
-    public UserPreferencesDto Preferences { get; set; } = new();
+    public UserPreferencesDto? Preferences { get; set; }
+
+    public virtual ICollection<Watchlist> Watchlist { get; set; } = [];
 }

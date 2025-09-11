@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FlixHub.Core.Api.Migrations
 {
     [DbContext(typeof(FlixHubDbContext))]
-    [Migration("20250909155302_FlixHubDb_Init")]
+    [Migration("20250911172056_FlixHubDb_Init")]
     partial class FlixHubDb_Init
     {
         /// <inheritdoc />
@@ -1014,7 +1014,6 @@ namespace FlixHub.Core.Api.Migrations
                         .HasComment("Last name of the system user.");
 
                     b.Property<string>("Preferences")
-                        .IsRequired()
                         .HasColumnType("jsonb")
                         .HasComment("User preferences stored as JSON.");
 
@@ -1038,6 +1037,60 @@ namespace FlixHub.Core.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("SystemUser", "public");
+                });
+
+            modelBuilder.Entity("FlixHub.Core.Api.Entities.Watchlist", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasComment("Internal primary key for Watchlist.");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Date and time when the content was added to the watchlist.");
+
+                    b.Property<long>("ContentId")
+                        .HasColumnType("bigint")
+                        .HasComment("Foreign key to Content entity.");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Date and time when the record was created.");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasComment("User who created the record.");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Date and time when the record was last modified.");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasComment("User who last modified the record.");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasComment("Foreign key to SystemUser entity.");
+
+                    b.Property<Guid>("Uuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasComment("Unique UUID identifier for Watchlist.");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContentId");
+
+                    b.HasIndex("UserId", "ContentId")
+                        .IsUnique();
+
+                    b.ToTable("Watchlist", "public");
                 });
 
             modelBuilder.Entity("FlixHub.Core.Api.Entities.ContentCast", b =>
@@ -1179,6 +1232,23 @@ namespace FlixHub.Core.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FlixHub.Core.Api.Entities.Watchlist", b =>
+                {
+                    b.HasOne("FlixHub.Core.Api.Entities.Content", "Content")
+                        .WithMany()
+                        .HasForeignKey("ContentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FlixHub.Core.Api.Entities.SystemUser", null)
+                        .WithMany("Watchlist")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Content");
+                });
+
             modelBuilder.Entity("FlixHub.Core.Api.Entities.Content", b =>
                 {
                     b.Navigation("Casts");
@@ -1211,6 +1281,11 @@ namespace FlixHub.Core.Api.Migrations
             modelBuilder.Entity("FlixHub.Core.Api.Entities.Person", b =>
                 {
                     b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("FlixHub.Core.Api.Entities.SystemUser", b =>
+                {
+                    b.Navigation("Watchlist");
                 });
 #pragma warning restore 612, 618
         }

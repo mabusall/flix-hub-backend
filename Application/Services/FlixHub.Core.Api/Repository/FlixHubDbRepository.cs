@@ -16,6 +16,7 @@ interface IContentSeasonsRepository : IGenericRepository<ContentSeason, ContentS
 interface IEpisodesRepository : IGenericRepository<Episode, EpisodeDto> { }
 interface IEpisodeCastsRepository : IGenericRepository<EpisodeCast, EpisodeCastDto> { }
 interface IEpisodeCrewsRepository : IGenericRepository<EpisodeCrew, EpisodeCrewDto> { }
+interface IWatchlistsRepository : IGenericRepository<Watchlist, WatchlistDto> { }
 
 #endregion
 
@@ -75,6 +76,10 @@ class EpisodeCastsRepository(FlixHubDbContext context)
 
 class EpisodeCrewsRepository(FlixHubDbContext context)
    : GenericRepository<EpisodeCrew, EpisodeCrewDto>(context), IEpisodeCrewsRepository
+{ }
+
+class WatchlistsRepository(FlixHubDbContext context)
+   : GenericRepository<Watchlist, WatchlistDto>(context), IWatchlistsRepository
 { }
 
 #endregion

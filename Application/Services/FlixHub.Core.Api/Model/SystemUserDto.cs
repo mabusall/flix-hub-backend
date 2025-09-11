@@ -10,5 +10,6 @@ public record SystemUserDto : AuditableDto
     public string? EmailVerificationCode { get; set; }
     public bool IsActive { get; set; }
     public bool IsVerified { get; set; }
-    public UserPreferencesDto Preferences { get; set; } = new();
+    public UserPreferencesDto? Preferences { get; set; }
+    public IList<WatchlistDto> Watchlist { get; set; } = [];
 }

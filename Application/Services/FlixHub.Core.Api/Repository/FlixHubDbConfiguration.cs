@@ -648,3 +648,41 @@ class EpisodeCrewConfiguration : IEntityTypeConfiguration<EpisodeCrew>
         builder.Property(ec => ec.LastModifiedBy).HasComment("User who last modified the record.");
     }
 }
+
+class WatchlistConfiguration : IEntityTypeConfiguration<Watchlist>
+{
+    public void Configure(EntityTypeBuilder<Watchlist> builder)
+    {
+        builder.Property(w => w.Id)
+            .HasComment("Internal primary key for Watchlist.");
+        builder.Property(w => w.Uuid)
+            .HasComment("Unique UUID identifier for Watchlist.");
+
+        builder.Property(w => w.UserId)
+            .HasComment("Foreign key to SystemUser entity.");
+        builder.Property(w => w.ContentId)
+            .HasComment("Foreign key to Content entity.");
+
+        builder.Property(w => w.AddedAt)
+            .HasComment("Date and time when the content was added to the watchlist.");
+
+        // Relationships
+        builder.HasOne<SystemUser>()
+            .WithMany(u => u.Watchlist)
+            .HasForeignKey(w => w.UserId);
+
+        builder.HasOne(w => w.Content)
+            .WithMany()
+            .HasForeignKey(w => w.ContentId);
+
+        // Unique constraint: a user cannot add the same content twice
+        builder.HasIndex(w => new { w.UserId, w.ContentId })
+            .IsUnique();
+
+        // Audit fields
+        builder.Property(w => w.Created).HasComment("Date and time when the record was created.");
+        builder.Property(w => w.CreatedBy).HasComment("User who created the record.");
+        builder.Property(w => w.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(w => w.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}

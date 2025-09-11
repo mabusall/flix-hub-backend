@@ -112,7 +112,7 @@ namespace FlixHub.Core.Api.Migrations
                     EmailVerificationCode = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true, comment: "Email verification code for user."),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, comment: "Indicates whether the user is active."),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false, comment: "Indicates whether the user is verified."),
-                    Preferences = table.Column<string>(type: "jsonb", nullable: false, comment: "User preferences stored as JSON."),
+                    Preferences = table.Column<string>(type: "jsonb", nullable: true, comment: "User preferences stored as JSON."),
                     Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique identifier for the SystemUser."),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
                     CreatedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "Username or identifier of the user who created the record."),
@@ -384,6 +384,41 @@ namespace FlixHub.Core.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Watchlist",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for Watchlist.")
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to SystemUser entity."),
+                    ContentId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Content entity."),
+                    AddedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the content was added to the watchlist."),
+                    Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for Watchlist."),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
+                    CreatedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who created the record."),
+                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true, comment: "Date and time when the record was last modified."),
+                    LastModifiedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who last modified the record.")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Watchlist", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Watchlist_Content_ContentId",
+                        column: x => x.ContentId,
+                        principalSchema: "public",
+                        principalTable: "Content",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Watchlist_SystemUser_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "public",
+                        principalTable: "SystemUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Episode",
                 schema: "public",
                 columns: table => new
@@ -596,6 +631,19 @@ namespace FlixHub.Core.Api.Migrations
                 table: "SystemUser",
                 column: "Username",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Watchlist_ContentId",
+                schema: "public",
+                table: "Watchlist",
+                column: "ContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Watchlist_UserId_ContentId",
+                schema: "public",
+                table: "Watchlist",
+                columns: new[] { "UserId", "ContentId" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -638,7 +686,7 @@ namespace FlixHub.Core.Api.Migrations
                 schema: "public");
 
             migrationBuilder.DropTable(
-                name: "SystemUser",
+                name: "Watchlist",
                 schema: "public");
 
             migrationBuilder.DropTable(
@@ -651,6 +699,10 @@ namespace FlixHub.Core.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Person",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "SystemUser",
                 schema: "public");
 
             migrationBuilder.DropTable(
