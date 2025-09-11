@@ -15,7 +15,7 @@ public class LocalizationMiddleware(RequestDelegate next)
         if (string.IsNullOrEmpty(language))
             language = "ar"; // Fallback to default language if not provided
 
-        if(language.Contains('-'))
+        if (language.Contains('-'))
             language = language.Split('-')[0]; // Use only the primary language subtag
 
         // check what is the current language
