@@ -16,7 +16,7 @@ builder
     .AddCors()
     .AddNotificationModule(builder.Configuration)
     .AddCoreServices(builder.Configuration)
-    .AddStoreModule(builder.Configuration, builder.Environment.IsDevelopment())
+    .AddFlixHubModule(builder.Configuration, builder.Environment.IsDevelopment())
     .AddKeycloakModule()
     .AddApiHealthChecks(builder.Configuration)
     .AddKeyclockAuthentication(builder.Configuration);
@@ -43,7 +43,7 @@ app.RegisterEndpoints();
 app.MapPing();
 
 app
-    .RegisterStoreTasks()
+    .RegisterTypedTasks()
     .UseCoreServices(builder.Configuration)
     .UseApiHealthChecks();
 

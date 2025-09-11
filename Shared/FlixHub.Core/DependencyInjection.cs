@@ -97,6 +97,9 @@ public static class DependencyInjection
 
             .AddMessageBus(rabbitMqConfig);
 
+        // HttpClient factory
+        services.AddHttpClient<IApiClient, ApiClient>();
+
         // Add feature management services
         services.AddFeatureManagement(configuration.GetSection("AppFeatures"));
 
@@ -285,7 +288,7 @@ public static class DependencyInjection
                               rollingInterval: RollingInterval.Day,
                               rollOnFileSizeLimit: true,
                               retainedFileCountLimit: null,
-                              fileSizeLimitBytes: 10000000), blockWhenFull: false)
+                              fileSizeLimitBytes: 5242880), blockWhenFull: false)
                 .ReadFrom.Configuration(configuration);
         }, preserveStaticLogger: true, writeToProviders: true);
         Log.CloseAndFlush();
@@ -350,6 +353,7 @@ public static class DependencyInjection
         RateLimitOptions rateLimitOptions = new();
         Dictionary<string, bool> appFeatures = [];
         FirebaseOptions firebaseOptions = new();
+        IntegrationApisOptions integrationApisOptions = new();
 
         configuration
             .GetSection(ElasticApmOptions.ConfigurationKey)
@@ -387,6 +391,9 @@ public static class DependencyInjection
         configuration
            .GetSection(FirebaseOptions.ConfigurationKey)
            .Bind(firebaseOptions);
+        configuration
+           .GetSection(IntegrationApisOptions.ConfigurationKey)
+           .Bind(integrationApisOptions);
 
         return new AppSettingsKeyManagement(elasticApmOptions,
                                             elasticSearchOptions,
@@ -399,6 +406,7 @@ public static class DependencyInjection
                                             azurBlobServiceOptions,
                                             rateLimitOptions,
                                             appFeatures,
-                                            firebaseOptions);
+                                            firebaseOptions,
+                                            integrationApisOptions);
     }
 }

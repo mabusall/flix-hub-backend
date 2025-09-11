@@ -14,6 +14,7 @@ public interface IAppSettingsKeyManagement
     RateLimitOptions RateLimitOptions { get; }
     Dictionary<string, bool> AppFeatures { get; }
     FirebaseOptions FirebaseOptions { get; }
+    IntegrationApisOptions IntegrationApisOptions { get; }
 }
 
 public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
@@ -27,7 +28,8 @@ public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
                                       AzurBlobServiceOptions azurBlobServiceOptions,
                                       RateLimitOptions rateLimitOptions,
                                       Dictionary<string, bool> appFeatures,
-                                      FirebaseOptions firebaseOptions)
+                                      FirebaseOptions firebaseOptions,
+                                      IntegrationApisOptions integrationApisOptions)
     : IAppSettingsKeyManagement
 {
     public ElasticApmOptions ElasticApmOptions { get; } = elasticApmOptions;
@@ -53,4 +55,5 @@ public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
     public Dictionary<string, bool> AppFeatures { get; } = appFeatures;
 
     public FirebaseOptions FirebaseOptions { get; } = firebaseOptions;
+    public IntegrationApisOptions IntegrationApisOptions { get; } = integrationApisOptions;
 }

@@ -1,12 +1,14 @@
-﻿[assembly: InternalsVisibleTo("FlixHub.Api")]
+﻿using FlixHub.Core.Api.Tasks;
+
+[assembly: InternalsVisibleTo("FlixHub.Api")]
 
 namespace FlixHub.Core.Api;
 
 static class DependencyInjection
 {
-    internal static IServiceCollection AddStoreModule(this IServiceCollection services,
-                                                    IConfiguration configuration,
-                                                    bool isDevelopment = false)
+    internal static IServiceCollection AddFlixHubModule(this IServiceCollection services,
+                                                        IConfiguration configuration,
+                                                        bool isDevelopment = false)
     {
         var assembly = Assembly.GetExecutingAssembly();
 
@@ -22,6 +24,11 @@ static class DependencyInjection
                 config.AddOpenBehavior(typeof(ValidationBehavior<,>));
                 config.AddOpenBehavior(typeof(LoggingBehavior<,>));
             })
+
+            // Register TMDB/OMDb/Trakt services
+            .AddScoped<TmdbService>()
+            //.AddScoped<OmdbService>()
+            //.AddScoped<TraktService>();
 
             .AddScoped<IFlixHubDbUnitOfWork, FlixHubDbUnitOfWork>()
 
@@ -48,24 +55,16 @@ static class DependencyInjection
         return services;
     }
 
-    public static WebApplication RegisterStoreTasks(this WebApplication app)
+    public static WebApplication RegisterTypedTasks(this WebApplication app)
     {
-        //var hangfireOptions = app
-        //    .Configuration
-        //    .GetSection(HangfireOptions.ConfigurationKey)
-        //    .Get<HangfireOptions>();
+        var hangfireOptions = app
+            .Configuration
+            .GetSection(HangfireOptions.ConfigurationKey)
+            .Get<HangfireOptions>()!;
 
-        //var jobManager = app.Services.CreateScope().ServiceProvider.GetRequiredService<IRecurringJobManager>();
-        //var storeScheduler = hangfireOptions!.Tasks[nameof(TasksScheduler.Store)];
-        //var cron = storeScheduler.Schedule.ToCronExpression();
+        var jobManager = app.Services.GetRequiredService<IRecurringJobManager>();
 
-        //if (!storeScheduler.IsEnabled)
-        //    jobManager.RemoveIfExists(storeScheduler.Id);
-        //else
-        //    TaskManager.RegisterHangfireJob<CachingStore>(jobManager,
-        //                                                  storeScheduler.Id,
-        //                                                  cron,
-        //                                                  handler => handler.ExecuteAsync());
+        TaskRegister.Register(app, jobManager, hangfireOptions);
 
         return app;
     }
