@@ -1,26 +1,50 @@
 ﻿namespace FlixHub.Core.Api.Services;
 
 internal class TmdbService(IApiClient apiClient,
-                           IAppSettingsKeyManagement appSettings,
-                           IManagedCancellationToken managedCancellationToken)
+                          IAppSettingsKeyManagement appSettings,
+                          IManagedCancellationToken managedCancellationToken)
 {
+    public IntegrationApi TmdbConf { get; set; } = appSettings.IntegrationApisOptions.Apis["TMDB"];
+
+    private Dictionary<string, string> BuildHeaders() => new()
+    {
+        { "Authorization", $"Bearer {TmdbConf.Token.Decrypt()}" }
+    };
+
     public async Task<TmdbGenreResponse?> GetGenresAsync(string language = "en")
     {
-        var tmdpConf = appSettings.IntegrationApisOptions.Apis["TMDB"];
-
-        var headers = new Dictionary<string, string>
-        {
-            { "Authorization", $"Bearer {tmdpConf.Token.Decrypt()}" }
-        };
-
-        return await apiClient.GetAsync<TmdbGenreResponse>(tmdpConf.BaseUrl,
+        return await apiClient.GetAsync<TmdbGenreResponse>(TmdbConf.BaseUrl,
                                                            "genre/movie/list",
-                                                           headers,
+                                                           BuildHeaders(),
                                                            new Dictionary<string, string> { { "language", language } },
                                                            managedCancellationToken.Token);
     }
+
+    public async Task<TmdbMovieResponse?> GetMovieDetailsAsync(int movieId,
+                                                               string language = "en",
+                                                               string? appendToResponse = null)
+    {
+        var query = new Dictionary<string, string> { { "language", language } };
+        if (!string.IsNullOrWhiteSpace(appendToResponse))
+            query["append_to_response"] = appendToResponse;
+
+        return await apiClient.GetAsync<TmdbMovieResponse>(TmdbConf.BaseUrl,
+                                                           $"movie/{movieId}",
+                                                           BuildHeaders(),
+                                                           query,
+                                                           managedCancellationToken.Token);
+    }
+
+    public async Task<TmdbSeriesResponse?> GetSeriesDetailsAsync(int seriesId, string language = "en", string? appendToResponse = null)
+    {
+        var query = new Dictionary<string, string> { { "language", language } };
+        if (!string.IsNullOrWhiteSpace(appendToResponse))
+            query["append_to_response"] = appendToResponse;
+
+        return await apiClient.GetAsync<TmdbSeriesResponse>(TmdbConf.BaseUrl,
+                                                            $"tv/{seriesId}",
+                                                            BuildHeaders(),
+                                                            query,
+                                                            managedCancellationToken.Token);
+    }
 }
-
-public record TmdbGenreResponse(IList<TmdbGenre> Genres);
-public record TmdbGenre(int Id, string Name);
-

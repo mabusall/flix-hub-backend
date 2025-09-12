@@ -27,8 +27,8 @@ static class DependencyInjection
 
             // Register TMDB/OMDb/Trakt services
             .AddScoped<TmdbService>()
-            //.AddScoped<OmdbService>()
-            //.AddScoped<TraktService>();
+            .AddScoped<OmdbService>()
+            .AddScoped<TraktService>()
 
             .AddScoped<IFlixHubDbUnitOfWork, FlixHubDbUnitOfWork>()
 

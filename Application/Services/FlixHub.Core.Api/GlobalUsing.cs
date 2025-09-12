@@ -4,6 +4,7 @@ global using FlixHub.Core.Api.Enums;
 global using FlixHub.Core.Api.Model;
 global using FlixHub.Core.Api.Repository;
 global using FlixHub.Core.Api.Services;
+global using FlixHub.Core.Api.Services.Dtos;
 global using FlixHub.Core.Behaviors;
 global using FlixHub.Core.Database;
 global using FlixHub.Core.Tasks;
