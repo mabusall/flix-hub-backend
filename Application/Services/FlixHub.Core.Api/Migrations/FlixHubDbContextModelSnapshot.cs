@@ -500,6 +500,75 @@ namespace FlixHub.Core.Api.Migrations
                     b.ToTable("ContentSeason", "public");
                 });
 
+            modelBuilder.Entity("FlixHub.Core.Api.Entities.ContentSyncLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasComment("Internal primary key for ContentSyncLog.");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Date and time when the record was created.");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasComment("User who created the record.");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean")
+                        .HasComment("Indicates whether the sync for this year/month/type is completed.");
+
+                    b.Property<int>("LastCompletedPage")
+                        .HasColumnType("integer")
+                        .HasComment("Last successfully completed page number for this sync batch.");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Date and time when the record was last modified.");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasComment("User who last modified the record.");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("integer")
+                        .HasComment("Month of the sync batch (1–12).");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)")
+                        .HasComment("Optional notes or error details for debugging.");
+
+                    b.Property<int?>("TotalPages")
+                        .HasColumnType("integer")
+                        .HasComment("Total pages available for this sync batch (from TMDb).");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasComment("Content type being synced: 1=Movie, 2=Series.");
+
+                    b.Property<Guid>("Uuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasComment("Unique UUID identifier for ContentSyncLog.");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("integer")
+                        .HasComment("Year of the sync batch.");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Type", "Year", "Month")
+                        .IsUnique();
+
+                    b.ToTable("ContentSyncLog", "public");
+                });
+
             modelBuilder.Entity("FlixHub.Core.Api.Entities.ContentVideo", b =>
                 {
                     b.Property<long>("Id")

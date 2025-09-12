@@ -53,6 +53,31 @@ namespace FlixHub.Core.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ContentSyncLog",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for ContentSyncLog.")
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Type = table.Column<int>(type: "integer", nullable: false, comment: "Content type being synced: 1=Movie, 2=Series."),
+                    Year = table.Column<int>(type: "integer", nullable: false, comment: "Year of the sync batch."),
+                    Month = table.Column<int>(type: "integer", nullable: false, comment: "Month of the sync batch (1–12)."),
+                    IsCompleted = table.Column<bool>(type: "boolean", nullable: false, comment: "Indicates whether the sync for this year/month/type is completed."),
+                    LastCompletedPage = table.Column<int>(type: "integer", nullable: false, comment: "Last successfully completed page number for this sync batch."),
+                    TotalPages = table.Column<int>(type: "integer", nullable: true, comment: "Total pages available for this sync batch (from TMDb)."),
+                    Notes = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true, comment: "Optional notes or error details for debugging."),
+                    Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for ContentSyncLog."),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
+                    CreatedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who created the record."),
+                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true, comment: "Date and time when the record was last modified."),
+                    LastModifiedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who last modified the record.")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContentSyncLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Genre",
                 schema: "public",
                 columns: table => new
@@ -569,6 +594,13 @@ namespace FlixHub.Core.Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ContentSyncLog_Type_Year_Month",
+                schema: "public",
+                table: "ContentSyncLog",
+                columns: new[] { "Type", "Year", "Month" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ContentVideo_ContentId",
                 schema: "public",
                 table: "ContentVideo",
@@ -667,6 +699,10 @@ namespace FlixHub.Core.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "ContentRating",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "ContentSyncLog",
                 schema: "public");
 
             migrationBuilder.DropTable(

@@ -686,3 +686,46 @@ class WatchlistConfiguration : IEntityTypeConfiguration<Watchlist>
         builder.Property(w => w.LastModifiedBy).HasComment("User who last modified the record.");
     }
 }
+
+class ContentSyncLogConfiguration : IEntityTypeConfiguration<ContentSyncLog>
+{
+    public void Configure(EntityTypeBuilder<ContentSyncLog> builder)
+    {
+        builder.Property(csl => csl.Id)
+            .HasComment("Internal primary key for ContentSyncLog.");
+        builder.Property(csl => csl.Uuid)
+            .HasComment("Unique UUID identifier for ContentSyncLog.");
+
+        builder.Property(csl => csl.Type)
+            .HasConversion<int>()
+            .HasComment("Content type being synced: 1=Movie, 2=Series.");
+
+        builder.Property(csl => csl.Year)
+            .HasComment("Year of the sync batch.");
+
+        builder.Property(csl => csl.Month)
+            .HasComment("Month of the sync batch (1–12).");
+
+        builder.Property(csl => csl.IsCompleted)
+            .HasComment("Indicates whether the sync for this year/month/type is completed.");
+
+        builder.Property(csl => csl.LastCompletedPage)
+            .HasComment("Last successfully completed page number for this sync batch.");
+
+        builder.Property(csl => csl.TotalPages)
+            .HasComment("Total pages available for this sync batch (from TMDb).");
+
+        builder.Property(csl => csl.Notes)
+            .HasComment("Optional notes or error details for debugging.");
+
+        // Ensure uniqueness → one log per (Type, Year, Month)
+        builder.HasIndex(csl => new { csl.Type, csl.Year, csl.Month })
+            .IsUnique();
+
+        // Audit fields
+        builder.Property(csl => csl.Created).HasComment("Date and time when the record was created.");
+        builder.Property(csl => csl.CreatedBy).HasComment("User who created the record.");
+        builder.Property(csl => csl.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(csl => csl.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}
