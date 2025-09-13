@@ -1,0 +1,27 @@
+namespace FlixHub.Core.Api.Services;
+
+internal sealed class TmdbPeopleService(IApiClient apiClient,
+                                       IAppSettingsKeyManagement appSettings,
+                                       IManagedCancellationToken managedCancellationToken)
+{
+    public IntegrationApi TmdbConf { get; set; } = appSettings.IntegrationApisOptions.Apis["TMDB"];
+
+    private Dictionary<string, string> BuildHeaders() => new()
+    {
+        { "Authorization", $"Bearer {TmdbConf.Token.Decrypt()}" }
+    };
+
+    public async Task<PersonResponse> PersonAsync(string id, string? language = "en-US")
+    {
+        var query = new Dictionary<string, string>();
+        if (!string.IsNullOrEmpty(language))
+            query["language"] = language;
+
+        return await apiClient.GetAsync<PersonResponse>(TmdbConf.BaseUrl,
+                                                        $"person/{id}/images",
+                                                        BuildHeaders(),
+                                                        query,
+                                                        managedCancellationToken.Token);
+    }
+
+}

@@ -1,12 +1,12 @@
-﻿namespace FlixHub.Core.Api.Services;
+namespace FlixHub.Core.Api.Services;
 
-internal class OmdbService(IApiClient apiClient,
-                           IAppSettingsKeyManagement appSettings,
-                           IManagedCancellationToken managedCancellationToken)
+internal sealed class OmdbService(IApiClient apiClient,
+                                  IAppSettingsKeyManagement appSettings,
+                                  IManagedCancellationToken managedCancellationToken)
 {
     public IntegrationApi OmdbConf { get; set; } = appSettings.IntegrationApisOptions.Apis["OMDB"];
 
-    public async Task<OmdbResponse?> GetByImdbIdAsync(string imdbId)
+    public async Task<OmdbMovieDetailsResponse> GetMovieDetailsAsync(string imdbId)
     {
         var query = new Dictionary<string, string>
         {
@@ -14,10 +14,10 @@ internal class OmdbService(IApiClient apiClient,
             { "apikey", OmdbConf.Token.Decrypt() }
         };
 
-        return await apiClient.GetAsync<OmdbResponse>(OmdbConf.BaseUrl,
-                                                      null,
-                                                      null,
-                                                      query,
-                                                      managedCancellationToken.Token);
+        return await apiClient.GetAsync<OmdbMovieDetailsResponse>(OmdbConf.BaseUrl,
+                                                                  null,
+                                                                  null,
+                                                                  query,
+                                                                  managedCancellationToken.Token);
     }
 }
