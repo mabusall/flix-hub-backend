@@ -9,7 +9,7 @@ internal sealed record TvDetailsResponse
     public string? BackdropPath { get; set; }
 
     [JsonPropertyName("created_by")]
-    public IList<Creator> CreatedBy { get; set; } = [];
+    public IList<TvCreator> CreatedBy { get; set; } = [];
 
     [JsonPropertyName("episode_run_time")]
     public IList<int> EpisodeRunTime { get; set; } = [];
@@ -45,7 +45,7 @@ internal sealed record TvDetailsResponse
     public TvEpisodeResponse? NextEpisodeToAir { get; set; }
 
     [JsonPropertyName("networks")]
-    public IList<Network> Networks { get; set; } = [];
+    public IList<TmdbNetwork> Networks { get; set; } = [];
 
     [JsonPropertyName("number_of_episodes")]
     public int NumberOfEpisodes { get; set; }
@@ -72,16 +72,16 @@ internal sealed record TvDetailsResponse
     public string? PosterPath { get; set; }
 
     [JsonPropertyName("production_companies")]
-    public IList<ProductionCompany> ProductionCompanies { get; set; } = [];
+    public IList<TmdbProductionCompany> ProductionCompanies { get; set; } = [];
 
     [JsonPropertyName("production_countries")]
-    public IList<ProductionCountry> ProductionCountries { get; set; } = [];
+    public IList<TmdbProductionCountry> ProductionCountries { get; set; } = [];
 
     [JsonPropertyName("seasons")]
     public IList<TvSeasonResponse> Seasons { get; set; } = [];
 
     [JsonPropertyName("spoken_languages")]
-    public IList<SpokenLanguage> SpokenLanguages { get; set; } = [];
+    public IList<TmdbSpokenLanguage> SpokenLanguages { get; set; } = [];
 
     [JsonPropertyName("status")]
     public string? Status { get; set; }
@@ -106,78 +106,6 @@ internal sealed record TvKeywordsResponse
 
     [JsonPropertyName("results")]
     public IList<TmdbKeyword> Results { get; set; } = [];
-}
-
-internal sealed record Creator
-{
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("credit_id")]
-    public string? CreditId { get; set; }
-
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    [JsonPropertyName("original_name")]
-    public string? OriginalName { get; set; }
-
-    [JsonPropertyName("gender")]
-    public GenderType Gender { get; set; }
-
-    [JsonPropertyName("profile_path")]
-    public string? ProfilePath { get; set; }
-}
-
-internal sealed record Network
-{
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("logo_path")]
-    public string? LogoPath { get; set; }
-
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    [JsonPropertyName("origin_country")]
-    public string? OriginCountry { get; set; }
-}
-
-internal sealed record ProductionCompany
-{
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("logo_path")]
-    public string? LogoPath { get; set; }
-
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    [JsonPropertyName("origin_country")]
-    public string? OriginCountry { get; set; }
-}
-
-internal sealed record ProductionCountry
-{
-    [JsonPropertyName("iso_3166_1")]
-    public string? Iso31661 { get; set; }
-
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-}
-
-internal sealed record SpokenLanguage
-{
-    [JsonPropertyName("english_name")]
-    public string? EnglishName { get; set; }
-
-    [JsonPropertyName("iso_639_1")]
-    public string? Iso6391 { get; set; }
-
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
 }
 
 internal sealed record TvSeasonResponse
@@ -269,4 +197,23 @@ internal sealed record TvChange
     public bool Adult { get; init; }
 }
 
-internal sealed record TvTrendingResponse : TmdbPagedResponse<TmdbDiscover>;
+internal sealed record TvCreator
+{
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("credit_id")]
+    public string? CreditId { get; set; }
+
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("original_name")]
+    public string? OriginalName { get; set; }
+
+    [JsonPropertyName("gender")]
+    public GenderType Gender { get; set; }
+
+    [JsonPropertyName("profile_path")]
+    public string? ProfilePath { get; set; }
+}

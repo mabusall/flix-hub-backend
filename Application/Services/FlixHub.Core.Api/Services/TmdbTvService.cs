@@ -11,60 +11,60 @@ internal sealed class TmdbTvService(IApiClient apiClient,
         { "Authorization", $"Bearer {TmdbConf.Token.Decrypt()}" }
     };
 
-    public async Task<DiscoverResponse> GetDiscoverAsync(string? language = "en-US",
-                                                         Dictionary<string, string> query = default!,
-                                                         int? page = null)
+    public async Task<TmdbDiscoverSearchTrendingResponse> GetDiscoverAsync(string? language = "en-US",
+                                                                           Dictionary<string, string> query = default!,
+                                                                           int? page = null)
     {
         if (!string.IsNullOrEmpty(language))
             query["language"] = language;
         if (page is not null)
             query["page"] = page.Value.ToString();
 
-        return await apiClient.GetAsync<DiscoverResponse>(TmdbConf.BaseUrl,
-                                                            $"discover/tv",
-                                                            BuildHeaders(),
-                                                            query,
-                                                            managedCancellationToken.Token);
+        return await apiClient.GetAsync<TmdbDiscoverSearchTrendingResponse>(TmdbConf.BaseUrl,
+                                                                            $"discover/tv",
+                                                                            BuildHeaders(),
+                                                                            query,
+                                                                            managedCancellationToken.Token);
     }
 
-    public async Task<SearchResponse> GetSearchAsync(string? language = "en-US",
-                                                     Dictionary<string, string> query = default!,
-                                                     int? page = null)
+    public async Task<TmdbDiscoverSearchTrendingResponse> GetSearchAsync(string? language = "en-US",
+                                                                         Dictionary<string, string> query = default!,
+                                                                         int? page = null)
     {
         if (!string.IsNullOrEmpty(language))
             query["language"] = language;
         if (page is not null)
             query["page"] = page.Value.ToString();
 
-        return await apiClient.GetAsync<SearchResponse>(TmdbConf.BaseUrl,
-                                                          $"search/tv",
-                                                          BuildHeaders(),
-                                                          query,
-                                                          managedCancellationToken.Token);
+        return await apiClient.GetAsync<TmdbDiscoverSearchTrendingResponse>(TmdbConf.BaseUrl,
+                                                                            $"search/tv",
+                                                                            BuildHeaders(),
+                                                                            query,
+                                                                            managedCancellationToken.Token);
     }
 
-    public async Task<TvDetailsResponse> GetDetailsAsync(int tvId)
+    public async Task<TvDetailsResponse> GetDetailsAsync(int id)
     {
         return await apiClient.GetAsync<TvDetailsResponse>(TmdbConf.BaseUrl,
-                                                          $"tv/{tvId}",
+                                                          $"tv/{id}",
                                                           BuildHeaders(),
                                                           null,
                                                           managedCancellationToken.Token);
     }
 
-    public async Task<TmdbExternalIdsResponse> GetExternalIdsAsync(int tvId)
+    public async Task<TmdbExternalIdsResponse> GetExternalIdsAsync(int id)
     {
         return await apiClient.GetAsync<TmdbExternalIdsResponse>(TmdbConf.BaseUrl,
-                                                               $"tv/{tvId}/external_ids",
+                                                               $"tv/{id}/external_ids",
                                                                BuildHeaders(),
                                                                null,
                                                                managedCancellationToken.Token);
     }
 
-    public async Task<TmdbCreditsResponse> GetCreditsAsync(int tvId)
+    public async Task<TmdbCreditsResponse> GetCreditsAsync(int id)
     {
         return await apiClient.GetAsync<TmdbCreditsResponse>(TmdbConf.BaseUrl,
-                                                           $"tv/{tvId}/credits",
+                                                           $"tv/{id}/credits",
                                                            BuildHeaders(),
                                                            null,
                                                            managedCancellationToken.Token);
@@ -79,48 +79,48 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                            managedCancellationToken.Token);
     }
 
-    public async Task<TmdbImagesResponse> GetImagesAsync(int tvId)
+    public async Task<TmdbImagesResponse> GetImagesAsync(int id)
     {
         return await apiClient.GetAsync<TmdbImagesResponse>(TmdbConf.BaseUrl,
-                                                            $"tv/{tvId}/images",
+                                                            $"tv/{id}/images",
                                                             BuildHeaders(),
                                                             null,
                                                             managedCancellationToken.Token);
     }
 
-    public async Task<TvKeywordsResponse> GetKeywordsAsync(int tvId)
+    public async Task<TvKeywordsResponse> GetKeywordsAsync(int id)
     {
         return await apiClient.GetAsync<TvKeywordsResponse>(TmdbConf.BaseUrl,
-                                                            $"tv/{tvId}/keywords",
+                                                            $"tv/{id}/keywords",
                                                             BuildHeaders(),
                                                             null,
                                                             managedCancellationToken.Token);
     }
 
-    public async Task<TmdbVideosResponse> GetVideosAsync(int tvId)
+    public async Task<TmdbVideosResponse> GetVideosAsync(int id)
     {
         return await apiClient.GetAsync<TmdbVideosResponse>(TmdbConf.BaseUrl,
-                                                            $"tv/{tvId}/videos",
+                                                            $"tv/{id}/videos",
                                                             BuildHeaders(),
                                                             null,
                                                             managedCancellationToken.Token);
     }
 
-    public async Task<TvSeasonResponse> GetSeasonDetailsAsync(int tvId, int seasonNumber)
+    public async Task<TvSeasonResponse> GetSeasonDetailsAsync(int id, int seasonNumber)
     {
         return await apiClient.GetAsync<TvSeasonResponse>(TmdbConf.BaseUrl,
-                                                          $"tv/{tvId}/season/{seasonNumber}",
+                                                          $"tv/{id}/season/{seasonNumber}",
                                                           BuildHeaders(),
                                                           null,
                                                           managedCancellationToken.Token);
     }
 
-    public async Task<TvEpisodeResponse> GetEpisodeDetailsAsync(int tvId,
+    public async Task<TvEpisodeResponse> GetEpisodeDetailsAsync(int id,
                                                                 int seasonNumber,
                                                                 int episodeNumber)
     {
         return await apiClient.GetAsync<TvEpisodeResponse>(TmdbConf.BaseUrl,
-                                                           $"tv/{tvId}/season/{seasonNumber}/episode/{episodeNumber}",
+                                                           $"tv/{id}/season/{seasonNumber}/episode/{episodeNumber}",
                                                            BuildHeaders(),
                                                            null,
                                                            managedCancellationToken.Token);
@@ -142,12 +142,12 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                            managedCancellationToken.Token);
     }
 
-    public async Task<TvTrendingResponse> GetTrendingAsync(string timeWindow="week")
+    public async Task<TmdbDiscoverSearchTrendingResponse> GetTrendingAsync(string timeWindow="week")
     {
-        return await apiClient.GetAsync<TvTrendingResponse>(TmdbConf.BaseUrl,
-                                                            $"trending/tv/{timeWindow}",
-                                                            BuildHeaders(),
-                                                            null,
-                                                            managedCancellationToken.Token);
+        return await apiClient.GetAsync<TmdbDiscoverSearchTrendingResponse>(TmdbConf.BaseUrl,
+                                                                            $"trending/tv/{timeWindow}",
+                                                                            BuildHeaders(),
+                                                                            null,
+                                                                            managedCancellationToken.Token);
     }
 }

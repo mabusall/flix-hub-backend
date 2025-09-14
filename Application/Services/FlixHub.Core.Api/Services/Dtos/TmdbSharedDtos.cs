@@ -21,9 +21,7 @@ internal sealed record TmdbGenreResponse
     public IList<TmdbGenre> Genres { get; set; } = [];
 }
 
-internal sealed record DiscoverResponse : TmdbPagedResponse<TmdbDiscover>;
-
-internal sealed record SearchResponse : TmdbPagedResponse<TmdbSearch>;
+internal sealed record TmdbDiscoverSearchTrendingResponse : TmdbPagedResponse<TmdbDiscoverSearchTrending>;
 
 internal sealed record TmdbExternalIdsResponse
 {
@@ -92,6 +90,66 @@ internal sealed record TmdbVideosResponse
 
     [JsonPropertyName("results")]
     public IList<TmdbVideo> Results { get; set; } = [];
+}
+
+internal sealed record TmdbDiscoverSearchTrending
+{
+    [JsonPropertyName("adult")]
+    public bool Adult { get; set; }
+
+    [JsonPropertyName("backdrop_path")]
+    public string? BackdropPath { get; set; }
+
+    [JsonPropertyName("genre_ids")]
+    public IList<int> GenreIds { get; set; } = [];
+
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("origin_country")]
+    public IList<string?> OriginCountry { get; set; } = [];
+
+    [JsonPropertyName("original_language")]
+    public string? OriginalLanguage { get; set; }
+
+    [JsonPropertyName("title")]
+    public string? Title { get; set; }
+
+    [JsonPropertyName("original_title")]
+    public string? OriginalTitle { get; set; }
+
+    [JsonPropertyName("original_name")]
+    public string? OriginalName { get; set; }
+
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("overview")]
+    public string? Overview { get; set; }
+
+    [JsonPropertyName("popularity")]
+    public double Popularity { get; set; }
+
+    [JsonPropertyName("poster_path")]
+    public string? PosterPath { get; set; }
+
+    [JsonPropertyName("first_air_date")]
+    public DateTime? FirstAirDate { get; set; }
+
+    [JsonPropertyName("release_date")]
+    public DateTime? ReleaseDate { get; set; }
+
+    [JsonPropertyName("video")]
+    public bool Video { get; set; }
+
+    [JsonPropertyName("media_type")]
+    public string? MediaType { get; set; } // null for Search, filled for Discover
+
+    [JsonPropertyName("vote_average")]
+    public double VoteAverage { get; set; }
+
+    [JsonPropertyName("vote_count")]
+    public int VoteCount { get; set; }
 }
 
 internal sealed record TmdbGenre
@@ -241,119 +299,53 @@ internal sealed record TmdbVideo
     public string? Id { get; init; }
 }
 
-internal sealed record TmdbDiscover
+internal sealed record TmdbNetwork
 {
-    [JsonPropertyName("adult")]
-    public bool Adult { get; set; }
-
-    [JsonPropertyName("backdrop_path")]
-    public string? BackdropPath { get; set; }
-
-    [JsonPropertyName("genre_ids")]
-    public IList<int> GenreIds { get; set; } = [];
-
     [JsonPropertyName("id")]
     public int Id { get; set; }
 
-    [JsonPropertyName("origin_country")]
-    public IList<string?> OriginCountry { get; set; } = [];
-
-    [JsonPropertyName("original_language")]
-    public string? OriginalLanguage { get; set; }
-
-    [JsonPropertyName("original_title")]
-    public string? OriginalTitle { get; set; }
-
-    [JsonPropertyName("original_name")]
-    public string? OriginalName { get; set; }
-
-    [JsonPropertyName("overview")]
-    public string? Overview { get; set; }
-
-    [JsonPropertyName("popularity")]
-    public double Popularity { get; set; }
-
-    [JsonPropertyName("poster_path")]
-    public string? PosterPath { get; set; }
-
-    [JsonPropertyName("first_air_date")]
-    public DateTime? FirstAirDate { get; set; }
-
-    [JsonPropertyName("release_date")]
-    public DateTime? ReleaseDate { get; set; }
+    [JsonPropertyName("logo_path")]
+    public string? LogoPath { get; set; }
 
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    [JsonPropertyName("title")]
-    public string? Title { get; set; }
-
-    [JsonPropertyName("video")]
-    public bool Video { get; set; }
-
-    [JsonPropertyName("media_type")]
-    public string? MediaType { get; set; }
-
-    [JsonPropertyName("vote_average")]
-    public double VoteAverage { get; set; }
-
-    [JsonPropertyName("vote_count")]
-    public int VoteCount { get; set; }
+    [JsonPropertyName("origin_country")]
+    public string? OriginCountry { get; set; }
 }
 
-internal sealed record TmdbSearch
+internal sealed record TmdbProductionCompany
 {
-    [JsonPropertyName("adult")]
-    public bool Adult { get; set; }
-
-    [JsonPropertyName("backdrop_path")]
-    public string? BackdropPath { get; set; }
-
-    [JsonPropertyName("genre_ids")]
-    public IList<int> GenreIds { get; set; } = [];
-
     [JsonPropertyName("id")]
     public int Id { get; set; }
 
-    [JsonPropertyName("origin_country")]
-    public IList<string?> OriginCountry { get; set; } = [];
-
-    [JsonPropertyName("original_language")]
-    public string? OriginalLanguage { get; set; }
-
-    [JsonPropertyName("title")]
-    public string? Title { get; set; }
-
-    [JsonPropertyName("original_title")]
-    public string? OriginalTitle { get; set; }
-
-    [JsonPropertyName("original_name")]
-    public string? OriginalName { get; set; }
-
-    [JsonPropertyName("overview")]
-    public string? Overview { get; set; }
-
-    [JsonPropertyName("popularity")]
-    public double Popularity { get; set; }
-
-    [JsonPropertyName("poster_path")]
-    public string? PosterPath { get; set; }
-
-    [JsonPropertyName("first_air_date")]
-    public DateTime? FirstAirDate { get; set; }
-
-    [JsonPropertyName("release_date")]
-    public DateTime? ReleaseDate { get; set; }
+    [JsonPropertyName("logo_path")]
+    public string? LogoPath { get; set; }
 
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    [JsonPropertyName("video")]
-    public bool Video { get; set; }
+    [JsonPropertyName("origin_country")]
+    public string? OriginCountry { get; set; }
+}
 
-    [JsonPropertyName("vote_average")]
-    public double VoteAverage { get; set; }
+internal sealed record TmdbProductionCountry
+{
+    [JsonPropertyName("iso_3166_1")]
+    public string? Iso31661 { get; set; }
 
-    [JsonPropertyName("vote_count")]
-    public int VoteCount { get; set; }
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+}
+
+internal sealed record TmdbSpokenLanguage
+{
+    [JsonPropertyName("english_name")]
+    public string? EnglishName { get; set; }
+
+    [JsonPropertyName("iso_639_1")]
+    public string? Iso6391 { get; set; }
+
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
 }
