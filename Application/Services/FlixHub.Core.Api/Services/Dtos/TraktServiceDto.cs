@@ -18,7 +18,7 @@ internal sealed record TraktMovieDetailsResponse
     public string? Overview { get; set; }
 
     [JsonPropertyName("released")]
-    public string? Released { get; set; }
+    public DateTime? Released { get; set; }
 
     [JsonPropertyName("runtime")]
     public int Runtime { get; set; }
@@ -45,7 +45,7 @@ internal sealed record TraktMovieDetailsResponse
     public int CommentCount { get; set; }
 
     [JsonPropertyName("updated_at")]
-    public string? UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     [JsonPropertyName("language")]
     public string? Language { get; set; }

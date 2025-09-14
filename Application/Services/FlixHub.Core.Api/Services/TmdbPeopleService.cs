@@ -11,14 +11,15 @@ internal sealed class TmdbPeopleService(IApiClient apiClient,
         { "Authorization", $"Bearer {TmdbConf.Token.Decrypt()}" }
     };
 
-    public async Task<PersonResponse> PersonAsync(string id, string? language = "en-US")
+    public async Task<PersonResponse> GetPersonAsync(string id,
+                                                     string? language = "en-US")
     {
         var query = new Dictionary<string, string>();
         if (!string.IsNullOrEmpty(language))
             query["language"] = language;
 
         return await apiClient.GetAsync<PersonResponse>(TmdbConf.BaseUrl,
-                                                        $"person/{id}/images",
+                                                        $"person/{id}",
                                                         BuildHeaders(),
                                                         query,
                                                         managedCancellationToken.Token);
