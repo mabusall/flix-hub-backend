@@ -1,5 +1,3 @@
-using Elastic.Apm.Api;
-
 namespace FlixHub.Core.Api.Services;
 
 internal sealed class TmdbMovieService(IApiClient apiClient,

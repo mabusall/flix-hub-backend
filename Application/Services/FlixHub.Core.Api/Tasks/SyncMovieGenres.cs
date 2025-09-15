@@ -7,40 +7,41 @@ internal class SyncMovieGenres(IFlixHubDbUnitOfWork uow,
 {
     public async Task ExecuteAsync()
     {
-        Dictionary<string, string> query = new()
+        var currentDate = DateTime.UtcNow.Date;
+        var movieGenres = await tmdbService.Movies.GetGenresAsync();
+        var tvGenres = await tmdbService.Tv.GetGenresAsync();
+        var genres = movieGenres.Genres
+            .Concat(tvGenres.Genres)
+            .GroupBy(g => g.Id)
+            .Select(g => g.First())
+            .OrderBy(g => g.Name)
+            .ToList();
+
+        foreach (var genre in genres)
         {
-            { "with_release_type", "2|3|4|5|6" },
-            { "sort_by", "first_air_date.asc" },
-        };
-        var response = await tmdbService.Tv.GetDiscoverAsync(query: query, page: 1);
-        //var currentDate = DateTime.UtcNow.Date;
-        //var response = await tmdbService.GetGenresAsync("en");
+            var existingGenre = await uow
+                    .GenresRepository
+                    .AsQueryable(false)
+                    .FirstOrDefaultAsync(g => g.TmdbId == genre.Id, applicationLifetime.Token);
 
-        //foreach (var genre in response!.Genres)
-        //{
-        //    var existingGenre = await uow
-        //            .GenresRepository
-        //            .AsQueryable(false)
-        //            .FirstOrDefaultAsync(g => g.TmdbId == genre.Id, applicationLifetime.Token);
+            if (existingGenre is null)
+            {
+                var newGenre = new Genre
+                {
+                    TmdbId = genre.Id,
+                    Name = genre.Name,
+                };
 
-        //    if (existingGenre is null)
-        //    {
-        //        var newGenre = new Genre
-        //        {
-        //            TmdbId = genre.Id,
-        //            Name = genre.Name,
-        //        };
+                uow.GenresRepository.Insert(newGenre);
+            }
+            else if (existingGenre.Name != genre.Name)
+            {
+                existingGenre.TmdbId = genre.Id;
+                existingGenre.Name = genre.Name;
 
-        //        uow.GenresRepository.Insert(newGenre);
-        //    }
-        //    else if (existingGenre.Name != genre.Name)
-        //    {
-        //        existingGenre.TmdbId = genre.Id;
-        //        existingGenre.Name = genre.Name;
-
-        //        uow.GenresRepository.Update(existingGenre);
-        //    }
-        //}
-        //await uow.SaveChangesAsync(applicationLifetime.Token);
+                uow.GenresRepository.Update(existingGenre);
+            }
+        }
+        await uow.SaveChangesAsync(applicationLifetime.Token);
     }
 }
