@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FlixHub.Core.Api.Migrations
 {
     [DbContext(typeof(FlixHubDbContext))]
-    [Migration("20250912130711_FlixHubDb_Init")]
+    [Migration("20250915174611_FlixHubDb_Init")]
     partial class FlixHubDb_Init
     {
         /// <inheritdoc />
@@ -121,11 +121,6 @@ namespace FlixHub.Core.Api.Migrations
                     b.Property<int>("TmdbId")
                         .HasColumnType("integer")
                         .HasComment("TMDb ID (unique for movie/tv).");
-
-                    b.Property<string>("TraktId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasComment("Trakt slug/ID.");
 
                     b.Property<string>("Type")
                         .IsRequired()

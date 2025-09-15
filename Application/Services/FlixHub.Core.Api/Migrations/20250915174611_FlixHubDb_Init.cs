@@ -23,7 +23,6 @@ namespace FlixHub.Core.Api.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TmdbId = table.Column<int>(type: "integer", nullable: false, comment: "TMDb ID (unique for movie/tv)."),
                     ImdbId = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true, comment: "IMDb ID."),
-                    TraktId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Trakt slug/ID."),
                     Type = table.Column<string>(type: "varchar(10)", nullable: false, comment: "Content type: Movie or TV."),
                     Title = table.Column<string>(type: "text", nullable: false, comment: "Display title of the content."),
                     OriginalTitle = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true, comment: "Original title or name in original language."),

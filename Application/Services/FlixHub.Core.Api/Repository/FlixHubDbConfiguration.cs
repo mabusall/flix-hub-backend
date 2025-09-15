@@ -73,9 +73,6 @@ class ContentConfiguration : IEntityTypeConfiguration<Content>
         builder.Property(p => p.ImdbId)
             .HasComment("IMDb ID.");
 
-        builder.Property(p => p.TraktId)
-            .HasComment("Trakt slug/ID.");
-
         // Type (Movie/TV)
         builder.Property(p => p.Type)
             .HasConversion<string>()

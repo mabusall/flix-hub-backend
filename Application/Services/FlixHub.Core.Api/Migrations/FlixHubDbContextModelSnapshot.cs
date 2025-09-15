@@ -119,11 +119,6 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("integer")
                         .HasComment("TMDb ID (unique for movie/tv).");
 
-                    b.Property<string>("TraktId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasComment("Trakt slug/ID.");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("varchar(10)")

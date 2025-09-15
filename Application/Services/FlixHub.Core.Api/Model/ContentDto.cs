@@ -4,7 +4,6 @@ public record ContentDto : AuditableDto
 {
     public int TmdbId { get; set; }
     public string? ImdbId { get; set; }
-    public string? TraktId { get; set; }
     public ContentType Type { get; set; }
     public string? Title { get; set; }
     public string? OriginalTitle { get; set; }
