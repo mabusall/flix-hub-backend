@@ -21,45 +21,56 @@ internal sealed record TmdbGenreResponse
     public IList<TmdbGenre> Genres { get; set; } = [];
 }
 
-internal sealed record TmdbDiscoverSearchTrendingResponse : TmdbPagedResponse<TmdbDiscoverSearchTrending>;
+internal sealed record TmdbMediaListResponse : TmdbPagedResponse<TmdbMediaListItem>;
+
+internal sealed record TmdbChangesResponse : TmdbPagedResponse<TmdbChange>;
+
+internal sealed record TmdbChange
+{
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("adult")]
+    public bool Adult { get; set; }
+}
 
 internal sealed record TmdbExternalIdsResponse
 {
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     [JsonPropertyName("imdb_id")]
-    public string? ImdbId { get; init; }
+    public string? ImdbId { get; set; }
 
     [JsonPropertyName("freebase_mid")]
-    public string? FreebaseMid { get; init; }
+    public string? FreebaseMid { get; set; }
 
     [JsonPropertyName("freebase_id")]
-    public string? FreebaseId { get; init; }
+    public string? FreebaseId { get; set; }
 
     [JsonPropertyName("tvdb_id")]
-    public int? TvdbId { get; init; }
+    public int? TvdbId { get; set; }
 
     [JsonPropertyName("tvrage_id")]
-    public int? TvrageId { get; init; }
+    public int? TvrageId { get; set; }
 
     [JsonPropertyName("wikidata_id")]
-    public string? WikidataId { get; init; }
+    public string? WikidataId { get; set; }
 
     [JsonPropertyName("facebook_id")]
-    public string? FacebookId { get; init; }
+    public string? FacebookId { get; set; }
 
     [JsonPropertyName("instagram_id")]
-    public string? InstagramId { get; init; }
+    public string? InstagramId { get; set; }
 
     [JsonPropertyName("twitter_id")]
-    public string? TwitterId { get; init; }
+    public string? TwitterId { get; set; }
 }
 
 internal sealed record TmdbCreditsResponse
 {
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     [JsonPropertyName("cast")]
     public IList<TmdbCast> Cast { get; set; } = [];
@@ -71,7 +82,7 @@ internal sealed record TmdbCreditsResponse
 internal sealed record TmdbImagesResponse
 {
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     [JsonPropertyName("backdrops")]
     public IList<TmdbImage> Backdrops { get; set; } = [];
@@ -86,13 +97,58 @@ internal sealed record TmdbImagesResponse
 internal sealed record TmdbVideosResponse
 {
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     [JsonPropertyName("results")]
     public IList<TmdbVideo> Results { get; set; } = [];
 }
 
-internal sealed record TmdbDiscoverSearchTrending
+internal sealed record PersonResponse
+{
+    [JsonPropertyName("adult")]
+    public bool Adult { get; set; }
+
+    [JsonPropertyName("also_known_as")]
+    public IList<string> AlsoKnownAs { get; set; } = [];
+
+    [JsonPropertyName("biography")]
+    public string? Biography { get; set; }
+
+    [JsonPropertyName("birthday")]
+    public DateTime? Birthday { get; set; }
+
+    [JsonPropertyName("deathday")]
+    public DateTime? Deathday { get; set; }
+
+    [JsonPropertyName("gender")]
+    public GenderType? Gender { get; set; }
+
+    [JsonPropertyName("homepage")]
+    public string? Homepage { get; set; }
+
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("imdb_id")]
+    public string? ImdbId { get; set; }
+
+    [JsonPropertyName("known_for_department")]
+    public string? KnownForDepartment { get; set; }
+
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("place_of_birth")]
+    public string? PlaceOfBirth { get; set; }
+
+    [JsonPropertyName("popularity")]
+    public double Popularity { get; set; }
+
+    [JsonPropertyName("profile_path")]
+    public string? ProfilePath { get; set; }
+}
+
+internal sealed record TmdbMediaListItem
 {
     [JsonPropertyName("adult")]
     public bool Adult { get; set; }
@@ -155,148 +211,148 @@ internal sealed record TmdbDiscoverSearchTrending
 internal sealed record TmdbGenre
 {
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; init; }
+    public string? Name { get; set; }
 }
 
 internal sealed record TmdbCrew
 {
     [JsonPropertyName("adult")]
-    public bool Adult { get; init; }
+    public bool Adult { get; set; }
 
     [JsonPropertyName("gender")]
-    public GenderType Gender { get; init; }
+    public GenderType Gender { get; set; }
 
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     [JsonPropertyName("known_for_department")]
-    public string? KnownForDepartment { get; init; }
+    public string? KnownForDepartment { get; set; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; init; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("original_name")]
-    public string? OriginalName { get; init; }
+    public string? OriginalName { get; set; }
 
     [JsonPropertyName("popularity")]
-    public double Popularity { get; init; }
+    public double Popularity { get; set; }
 
     [JsonPropertyName("profile_path")]
-    public string? ProfilePath { get; init; }
+    public string? ProfilePath { get; set; }
 
     [JsonPropertyName("credit_id")]
-    public string? CreditId { get; init; }
+    public string? CreditId { get; set; }
 
     [JsonPropertyName("department")]
-    public string? Department { get; init; }
+    public string? Department { get; set; }
 
     [JsonPropertyName("job")]
-    public string? Job { get; init; }
+    public string? Job { get; set; }
 }
 
 internal sealed record TmdbCast
 {
     [JsonPropertyName("adult")]
-    public bool Adult { get; init; }
+    public bool Adult { get; set; }
 
     [JsonPropertyName("gender")]
-    public GenderType Gender { get; init; }
+    public GenderType Gender { get; set; }
 
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     [JsonPropertyName("known_for_department")]
-    public string? KnownForDepartment { get; init; }
+    public string? KnownForDepartment { get; set; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; init; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("original_name")]
-    public string? OriginalName { get; init; }
+    public string? OriginalName { get; set; }
 
     [JsonPropertyName("popularity")]
-    public double Popularity { get; init; }
+    public double Popularity { get; set; }
 
     [JsonPropertyName("profile_path")]
-    public string? ProfilePath { get; init; }
+    public string? ProfilePath { get; set; }
 
     [JsonPropertyName("character")]
-    public string? Character { get; init; }
+    public string? Character { get; set; }
 
     [JsonPropertyName("credit_id")]
-    public string? CreditId { get; init; }
+    public string? CreditId { get; set; }
 
     [JsonPropertyName("order")]
-    public int Order { get; init; }
+    public int Order { get; set; }
 }
 
 internal sealed record TmdbImage
 {
     [JsonPropertyName("aspect_ratio")]
-    public double AspectRatio { get; init; }
+    public double AspectRatio { get; set; }
 
     [JsonPropertyName("height")]
-    public int Height { get; init; }
+    public int Height { get; set; }
 
     [JsonPropertyName("iso_639_1")]
-    public string? Iso6391 { get; init; }
+    public string? Iso6391 { get; set; }
 
     [JsonPropertyName("file_path")]
-    public string? FilePath { get; init; }
+    public string? FilePath { get; set; }
 
     [JsonPropertyName("vote_average")]
-    public double VoteAverage { get; init; }
+    public double VoteAverage { get; set; }
 
     [JsonPropertyName("vote_count")]
-    public int VoteCount { get; init; }
+    public int VoteCount { get; set; }
 
     [JsonPropertyName("width")]
-    public int Width { get; init; }
+    public int Width { get; set; }
 }
 
 internal sealed record TmdbKeyword
 {
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; init; }
+    public string? Name { get; set; }
 }
 
 internal sealed record TmdbVideo
 {
     [JsonPropertyName("iso_639_1")]
-    public string? Iso6391 { get; init; }
+    public string? Iso6391 { get; set; }
 
     [JsonPropertyName("iso_3166_1")]
-    public string? Iso31661 { get; init; }
+    public string? Iso31661 { get; set; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; init; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("key")]
-    public string? Key { get; init; }
+    public string? Key { get; set; }
 
     [JsonPropertyName("site")]
-    public string? Site { get; init; }
+    public string? Site { get; set; }
 
     [JsonPropertyName("size")]
-    public int Size { get; init; }
+    public int Size { get; set; }
 
     [JsonPropertyName("type")]
-    public string? Type { get; init; }
+    public string? Type { get; set; }
 
     [JsonPropertyName("official")]
-    public bool Official { get; init; }
+    public bool Official { get; set; }
 
     [JsonPropertyName("published_at")]
-    public DateTime PublishedAt { get; init; }
+    public DateTime PublishedAt { get; set; }
 
     [JsonPropertyName("id")]
-    public string? Id { get; init; }
+    public string? Id { get; set; }
 }
 
 internal sealed record TmdbNetwork

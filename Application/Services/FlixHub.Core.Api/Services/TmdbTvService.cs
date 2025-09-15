@@ -11,7 +11,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
         { "Authorization", $"Bearer {TmdbConf.Token.Decrypt()}" }
     };
 
-    public async Task<TmdbDiscoverSearchTrendingResponse> GetDiscoverAsync(string? language = "en-US",
+    public async Task<TmdbMediaListResponse> GetDiscoverAsync(string? language = "en-US",
                                                                            Dictionary<string, string> query = default!,
                                                                            int? page = null)
     {
@@ -20,14 +20,14 @@ internal sealed class TmdbTvService(IApiClient apiClient,
         if (page is not null)
             query["page"] = page.Value.ToString();
 
-        return await apiClient.GetAsync<TmdbDiscoverSearchTrendingResponse>(TmdbConf.BaseUrl,
+        return await apiClient.GetAsync<TmdbMediaListResponse>(TmdbConf.BaseUrl,
                                                                             $"discover/tv",
                                                                             BuildHeaders(),
                                                                             query,
                                                                             managedCancellationToken.Token);
     }
 
-    public async Task<TmdbDiscoverSearchTrendingResponse> GetSearchAsync(string? language = "en-US",
+    public async Task<TmdbMediaListResponse> GetSearchAsync(string? language = "en-US",
                                                                          Dictionary<string, string> query = default!,
                                                                          int? page = null)
     {
@@ -36,7 +36,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
         if (page is not null)
             query["page"] = page.Value.ToString();
 
-        return await apiClient.GetAsync<TmdbDiscoverSearchTrendingResponse>(TmdbConf.BaseUrl,
+        return await apiClient.GetAsync<TmdbMediaListResponse>(TmdbConf.BaseUrl,
                                                                             $"search/tv",
                                                                             BuildHeaders(),
                                                                             query,
@@ -55,19 +55,19 @@ internal sealed class TmdbTvService(IApiClient apiClient,
     public async Task<TmdbExternalIdsResponse> GetExternalIdsAsync(int id)
     {
         return await apiClient.GetAsync<TmdbExternalIdsResponse>(TmdbConf.BaseUrl,
-                                                               $"tv/{id}/external_ids",
-                                                               BuildHeaders(),
-                                                               null,
-                                                               managedCancellationToken.Token);
+                                                                 $"tv/{id}/external_ids",
+                                                                 BuildHeaders(),
+                                                                 null,
+                                                                 managedCancellationToken.Token);
     }
 
     public async Task<TmdbCreditsResponse> GetCreditsAsync(int id)
     {
         return await apiClient.GetAsync<TmdbCreditsResponse>(TmdbConf.BaseUrl,
-                                                           $"tv/{id}/credits",
-                                                           BuildHeaders(),
-                                                           null,
-                                                           managedCancellationToken.Token);
+                                                             $"tv/{id}/credits",
+                                                             BuildHeaders(),
+                                                             null,
+                                                             managedCancellationToken.Token);
     }
 
     public async Task<TmdbGenreResponse> GetGenresAsync()
@@ -126,25 +126,29 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                            managedCancellationToken.Token);
     }
 
-    public async Task<TvChangesResponse> GetChangesAsync(string? language = "en-US",
-                                                         Dictionary<string, string> query = default!,
-                                                         int? page = null)
+    public async Task<TmdbChangesResponse> GetChangesAsync(string? language = "en-US",
+                                                           Dictionary<string, string> query = default!,
+                                                           int? page = null)
     {
         if (!string.IsNullOrEmpty(language))
             query["language"] = language;
         if (page is not null)
             query["page"] = page.Value.ToString();
 
-        return await apiClient.GetAsync<TvChangesResponse>(TmdbConf.BaseUrl,
+        return await apiClient.GetAsync<TmdbChangesResponse>(TmdbConf.BaseUrl,
                                                            $"tv/changes",
                                                            BuildHeaders(),
                                                            query,
                                                            managedCancellationToken.Token);
     }
 
-    public async Task<TmdbDiscoverSearchTrendingResponse> GetTrendingAsync(string timeWindow="week")
+    public async Task<TmdbMediaListResponse> GetTrendingAsync(string timeWindow = "week", int? page = null)
     {
-        return await apiClient.GetAsync<TmdbDiscoverSearchTrendingResponse>(TmdbConf.BaseUrl,
+        Dictionary<string, string> query = [];
+        if (page is not null)
+            query["page"] = page.Value.ToString();
+
+        return await apiClient.GetAsync<TmdbMediaListResponse>(TmdbConf.BaseUrl,
                                                                             $"trending/tv/{timeWindow}",
                                                                             BuildHeaders(),
                                                                             null,

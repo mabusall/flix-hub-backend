@@ -102,7 +102,7 @@ internal sealed record TvDetailsResponse
 internal sealed record TvKeywordsResponse
 {
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     [JsonPropertyName("results")]
     public IList<TmdbKeyword> Results { get; set; } = [];
@@ -184,17 +184,6 @@ internal sealed record TvEpisodeResponse
 
     [JsonPropertyName("guest_stars")]
     public IList<TmdbCast>? GuestStars { get; set; }
-}
-
-internal sealed record TvChangesResponse : TmdbPagedResponse<TvChange>;
-
-internal sealed record TvChange
-{
-    [JsonPropertyName("id")]
-    public int Id { get; init; }
-
-    [JsonPropertyName("adult")]
-    public bool Adult { get; init; }
 }
 
 internal sealed record TvCreator
