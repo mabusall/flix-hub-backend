@@ -11,7 +11,7 @@ public class SendEmailConsumer(IAppSettingsKeyManagement appSettingsKeyManagemen
         var fromAddress = smtpEmailOptions!.SenderEmail;
         var mailMessage = new MailMessage
         {
-            From = new MailAddress(fromAddress, "XTeam - فريق العمل"),
+            From = new MailAddress(fromAddress, "FlixHub - فريق العمل"),
             Subject = @event.Subject,
             IsBodyHtml = true,
             Body = await RenderEmailBody(@event),

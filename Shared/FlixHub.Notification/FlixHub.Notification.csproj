@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Views\**" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-		<PackageReference Include="FirebaseAdmin" Version="3.3.0" />
+		<PackageReference Include="FirebaseAdmin" Version="3.4.0" />
 		<Content Update="Views\**\*.cshtml" />
 	</ItemGroup>
 
