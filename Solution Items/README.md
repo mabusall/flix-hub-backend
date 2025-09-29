@@ -72,13 +72,3 @@ FlixHub.Api/
 - **episode_cast** / **episode_crew** (optional, if you want detailed credits per episode).  
 
 ---
-
-## 🔹 File Structure Proposal
-We can break this into `.sql` files so history stays clean and modular:
-
-- `01_content.sql` → Main content table (movies + series).  
-- `02_genres.sql` → Genres + mapping.  
-- `03_people.sql` → People + cast/crew mapping.  
-- `04_media.sql` → Images + videos.  
-- `05_external.sql` → External IDs + ratings.  
-- `06_tv.sql` → Seasons + episodes (only for type=tv).  
