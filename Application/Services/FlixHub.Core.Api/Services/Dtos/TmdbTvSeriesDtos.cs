@@ -15,7 +15,7 @@ internal sealed record TvDetailsResponse
     public IList<int> EpisodeRunTime { get; set; } = [];
 
     [JsonPropertyName("first_air_date")]
-    public string? FirstAirDate { get; set; }
+    public DateTime? FirstAirDate { get; set; }
 
     [JsonPropertyName("genres")]
     public IList<TmdbGenre> Genres { get; set; } = [];
@@ -33,7 +33,7 @@ internal sealed record TvDetailsResponse
     public IList<string?> Languages { get; set; } = [];
 
     [JsonPropertyName("last_air_date")]
-    public string? LastAirDate { get; set; }
+    public DateTime? LastAirDate { get; set; }
 
     [JsonPropertyName("last_episode_to_air")]
     public TvEpisodeResponse? LastEpisodeToAir { get; set; }
@@ -111,7 +111,7 @@ internal sealed record TvKeywordsResponse
 internal sealed record TvSeasonResponse
 {
     [JsonPropertyName("air_date")]
-    public string? AirDate { get; set; }
+    public DateTime? AirDate { get; set; }
 
     [JsonPropertyName("episode_count")]
     public int EpisodeCount { get; set; }

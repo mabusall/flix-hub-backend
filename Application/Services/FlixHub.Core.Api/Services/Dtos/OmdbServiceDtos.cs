@@ -8,7 +8,7 @@ internal sealed record OmdbMovieDetailsResponse
 
     public string? Rated { get; set; }
 
-    public string? Released { get; set; }
+    public DateTime? Released { get; set; }
 
     public string? Runtime { get; set; }
 
