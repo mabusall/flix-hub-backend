@@ -18,6 +18,7 @@ interface IFlixHubDbUnitOfWork : IUnitOfWork
     IEpisodeCrewsRepository EpisodeCrewsRepository { get; }
     IWatchlistsRepository WatchlistsRepository { get; }
     IContentSyncLogsRepository ContentSyncLogsRepository { get; }
+    IDailyApiUsagesRepository DailyApiUsagesRepository { get; }
 }
 
 class FlixHubDbUnitOfWork(FlixHubDbContext context) : UnitOfWork(context), IFlixHubDbUnitOfWork
@@ -38,4 +39,5 @@ class FlixHubDbUnitOfWork(FlixHubDbContext context) : UnitOfWork(context), IFlix
     public IEpisodeCrewsRepository EpisodeCrewsRepository => new EpisodeCrewsRepository(context);
     public IWatchlistsRepository WatchlistsRepository => new WatchlistsRepository(context);
     public IContentSyncLogsRepository ContentSyncLogsRepository => new ContentSyncLogsRepository(context);
+    public IDailyApiUsagesRepository DailyApiUsagesRepository => new DailyApiUsagesRepository(context);
 }

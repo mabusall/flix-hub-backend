@@ -77,6 +77,27 @@ namespace FlixHub.Core.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DailyApiUsage",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for DailyApiUsage.")
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date of the API usage tracking (daily basis)."),
+                    ContentType = table.Column<int>(type: "integer", nullable: false, comment: "Content type for which requests were made: 1=Movie, 2=Series."),
+                    RequestCount = table.Column<int>(type: "integer", nullable: false, comment: "Number of API requests made for this content type on this date."),
+                    Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for DailyApiUsage."),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
+                    CreatedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who created the record."),
+                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true, comment: "Date and time when the record was last modified."),
+                    LastModifiedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who last modified the record.")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DailyApiUsage", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Genre",
                 schema: "public",
                 columns: table => new
@@ -606,6 +627,13 @@ namespace FlixHub.Core.Api.Migrations
                 column: "ContentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DailyApiUsage_Date_ContentType",
+                schema: "public",
+                table: "DailyApiUsage",
+                columns: new[] { "Date", "ContentType" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Episode_SeasonId_EpisodeNumber",
                 schema: "public",
                 table: "Episode",
@@ -706,6 +734,10 @@ namespace FlixHub.Core.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "ContentVideo",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "DailyApiUsage",
                 schema: "public");
 
             migrationBuilder.DropTable(

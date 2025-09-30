@@ -10,7 +10,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     private const int MaxDailyRequests = 1000;
     private const int MovieQuota = 500;
     private const int TvQuota = 500;
-    
+
     /// <summary>
     /// Professional SyncContents ExecuteAsync - Balanced Movie/TV Sync with ContentSyncLog Management
     /// </summary>
@@ -18,21 +18,21 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     {
         return;
         var totalRequestsToday = await GetTodayRequestCount();
-        
+
         if (totalRequestsToday >= MaxDailyRequests)
         {
             await LogSyncNote("Daily API quota of 1000 requests exhausted", ContentType.Movie);
             return;
         }
-        
+
         var remainingRequests = MaxDailyRequests - totalRequestsToday;
         var movieRequestsUsed = await GetTodayRequestCount(ContentType.Movie);
         var tvRequestsUsed = await GetTodayRequestCount(ContentType.Series);
-        
+
         // ✅ PROFESSIONAL BALANCED 50/50 ALLOCATION
-        var shouldSyncMovies = movieRequestsUsed < MovieQuota && 
+        var shouldSyncMovies = movieRequestsUsed < MovieQuota &&
                               (tvRequestsUsed >= TvQuota || movieRequestsUsed <= tvRequestsUsed);
-        
+
         if (shouldSyncMovies && movieRequestsUsed < MovieQuota)
         {
             await FetchNextMoviesBatch(Math.Min(remainingRequests, MovieQuota - movieRequestsUsed));
@@ -49,7 +49,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     private async Task FetchNextMoviesBatch(int maxRequests)
     {
         var requestsUsed = 0;
-        
+
         try
         {
             // ✅ FIND NEXT INCOMPLETE ContentSyncLog
@@ -69,7 +69,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             // ✅ PROFESSIONAL PAGINATION RESUME
             var nextPage = syncLog.LastCompletedPage + 1;
             var lastDayOfMonth = DateTime.DaysInMonth(syncLog.Year, syncLog.Month);
-            
+
             // ✅ PROFESSIONAL TMDb QUERY CONSTRUCTION
             var query = new Dictionary<string, string>
             {
@@ -99,12 +99,12 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             // ✅ PROCESS EACH MOVIE WITH NAVIGATION PROPERTIES
             foreach (var movieItem in discoverResponse.Results)
             {
-                if (requestsUsed >= maxRequests) 
+                if (requestsUsed >= maxRequests)
                 {
                     await LogSyncNote($"🚫 Quota limit ({maxRequests}) reached, stopping batch", ContentType.Movie);
                     break;
                 }
-                
+
                 try
                 {
                     await ProcessMovieWithNavigationProperties(movieItem.Id);
@@ -128,7 +128,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             {
                 await LogSyncNote($"📈 Progress: {nextPage}/{syncLog.TotalPages} for {syncLog.Year}-{syncLog.Month:D2}", ContentType.Movie);
             }
-            
+
             uow.ContentSyncLogsRepository.Update(syncLog);
             //await uow.SaveChangesAsync(appToken.Token);
         }
@@ -144,7 +144,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     private async Task FetchNextSeriesBatch(int maxRequests)
     {
         var requestsUsed = 0;
-        
+
         try
         {
             // ✅ FIND NEXT INCOMPLETE TV ContentSyncLog
@@ -163,7 +163,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
             var nextPage = syncLog.LastCompletedPage + 1;
             var lastDayOfMonth = DateTime.DaysInMonth(syncLog.Year, syncLog.Month);
-            
+
             var query = new Dictionary<string, string>
             {
                 ["first_air_date.gte"] = $"{syncLog.Year}-{syncLog.Month:D2}-01",
@@ -188,7 +188,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             foreach (var tvItem in discoverResponse.Results)
             {
                 if (requestsUsed >= maxRequests) break;
-                
+
                 try
                 {
                     await ProcessTvShowWithNavigationProperties(tvItem.Id);
@@ -207,7 +207,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 syncLog.IsCompleted = true;
                 syncLog.Notes = $"✅ Completed: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC, Pages: {syncLog.TotalPages}";
             }
-            
+
             uow.ContentSyncLogsRepository.Update(syncLog);
             //await uow.SaveChangesAsync(appToken.Token);
         }
@@ -259,13 +259,13 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
             // ✅ PROCESS ALL NAVIGATION PROPERTIES
             await ProcessContentGenres(content.Id, movieDetails.Genres);
-            
+
             // TODO: Add when TMDb service methods are available:
             // await ProcessContentCastCrew(content.Id, tmdbId, ContentType.Movie);
             // await ProcessContentImages(content.Id, tmdbId);
             // await ProcessContentVideos(content.Id, tmdbId);
             // await ProcessOMDbRatings(content.Id, movieDetails);
-            
+
         }
         catch (Exception ex)
         {
@@ -312,11 +312,11 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
             // ✅ PROCESS ALL TV NAVIGATION PROPERTIES
             await ProcessContentGenres(content.Id, tvDetails.Genres);
-            
+
             // TODO: Add comprehensive TV enrichment:
             // await ProcessTvSeasons(content.Id, tmdbId, tvDetails.NumberOfSeasons);
             // await ProcessContentCastCrew(content.Id, tmdbId, ContentType.Series);
-            
+
         }
         catch (Exception ex)
         {
@@ -348,33 +348,23 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
         }
     }
 
-    // Remove the unnecessary assignment of 'today' in GetTodayRequestCount
+    /// <summary>
+    /// ✅ PROFESSIONAL Accurate Daily API Request Count - Uses DailyApiUsage Table
+    /// </summary>
     private async Task<int> GetTodayRequestCount(ContentType? contentType = null)
     {
-        var query = uow.ContentSyncLogsRepository
+        var query = uow.DailyApiUsagesRepository
             .AsQueryable(false)
-            .Where(x => x.LastModified.HasValue && x.LastModified.Value.Date == DateTime.UtcNow.Date);
+            .Where(x => x.Date == DateTime.UtcNow.Date);
 
         if (contentType is not null)
-            query = query.Where(x => x.Type == contentType.Value);
+            query = query.Where(x => x.ContentType == contentType.Value);
 
-        var logs = await query.ToListAsync(appToken.Token);
-        var estimatedRequests = 0;
+        // ✅ ACCURATE: Sum actual request counts from DailyApiUsage table
+        var totalRequests = await query
+            .SumAsync(x => x.RequestCount, appToken.Token);
 
-        foreach (var log in logs)
-        {
-            var pagesProcessed = log.LastCompletedPage;
-            if (log.Type == ContentType.Movie)
-            {
-                estimatedRequests += pagesProcessed * 7; // 1 discover + ~6 enrichment per movie
-            }
-            else
-            {
-                estimatedRequests += pagesProcessed * 12; // TV uses more (seasons/episodes)
-            }
-        }
-
-        return estimatedRequests;
+        return totalRequests;
     }
 
     /// <summary>
@@ -391,17 +381,17 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
         if (recentLog is not null)
         {
             var timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-            recentLog.Notes = string.IsNullOrEmpty(recentLog.Notes) 
+            recentLog.Notes = string.IsNullOrEmpty(recentLog.Notes)
                 ? $"[{timestamp}] {note}"
                 : $"{recentLog.Notes}\n[{timestamp}] {note}";
-                
+
             // Keep notes manageable
             if (recentLog.Notes.Length > 500)
             {
                 var lines = recentLog.Notes.Split('\n');
                 recentLog.Notes = string.Join('\n', lines.TakeLast(5));
             }
-            
+
             uow.ContentSyncLogsRepository.Update(recentLog);
             //await uow.SaveChangesAsync(appToken.Token);
         }

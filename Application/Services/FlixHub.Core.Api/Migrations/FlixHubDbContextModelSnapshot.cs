@@ -13,7 +13,7 @@ namespace FlixHub.Core.Api.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "8.0.12")
+                .HasAnnotation("ProductVersion", "8.0.20")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -629,6 +629,58 @@ namespace FlixHub.Core.Api.Migrations
                     b.HasIndex("ContentId");
 
                     b.ToTable("ContentVideo", "public");
+                });
+
+            modelBuilder.Entity("FlixHub.Core.Api.Entities.DailyApiUsage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasComment("Internal primary key for DailyApiUsage.");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("ContentType")
+                        .HasColumnType("integer")
+                        .HasComment("Content type for which requests were made: 1=Movie, 2=Series.");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Date and time when the record was created.");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasComment("User who created the record.");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Date of the API usage tracking (daily basis).");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Date and time when the record was last modified.");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasComment("User who last modified the record.");
+
+                    b.Property<int>("RequestCount")
+                        .HasColumnType("integer")
+                        .HasComment("Number of API requests made for this content type on this date.");
+
+                    b.Property<Guid>("Uuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasComment("Unique UUID identifier for DailyApiUsage.");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Date", "ContentType")
+                        .IsUnique();
+
+                    b.ToTable("DailyApiUsage", "public");
                 });
 
             modelBuilder.Entity("FlixHub.Core.Api.Entities.Episode", b =>

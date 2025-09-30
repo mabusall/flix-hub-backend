@@ -18,6 +18,7 @@ interface IEpisodeCastsRepository : IGenericRepository<EpisodeCast, EpisodeCastD
 interface IEpisodeCrewsRepository : IGenericRepository<EpisodeCrew, EpisodeCrewDto> { }
 interface IWatchlistsRepository : IGenericRepository<Watchlist, WatchlistDto> { }
 interface IContentSyncLogsRepository : IGenericRepository<ContentSyncLog, ContentSyncLogDto> { }
+interface IDailyApiUsagesRepository : IGenericRepository<DailyApiUsage, DailyApiUsageDto> { }
 
 #endregion
 
@@ -85,6 +86,10 @@ class WatchlistsRepository(FlixHubDbContext context)
 
 class ContentSyncLogsRepository(FlixHubDbContext context)
    : GenericRepository<ContentSyncLog, ContentSyncLogDto>(context), IContentSyncLogsRepository
+{ }
+
+class DailyApiUsagesRepository(FlixHubDbContext context)
+   : GenericRepository<DailyApiUsage, DailyApiUsageDto>(context), IDailyApiUsagesRepository
 { }
 
 #endregion

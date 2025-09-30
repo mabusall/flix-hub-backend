@@ -726,3 +726,34 @@ class ContentSyncLogConfiguration : IEntityTypeConfiguration<ContentSyncLog>
         builder.Property(csl => csl.LastModifiedBy).HasComment("User who last modified the record.");
     }
 }
+
+class DailyApiUsageConfiguration : IEntityTypeConfiguration<DailyApiUsage>
+{
+    public void Configure(EntityTypeBuilder<DailyApiUsage> builder)
+    {
+        builder.Property(dau => dau.Id)
+            .HasComment("Internal primary key for DailyApiUsage.");
+        builder.Property(dau => dau.Uuid)
+            .HasComment("Unique UUID identifier for DailyApiUsage.");
+
+        builder.Property(dau => dau.Date)
+            .HasComment("Date of the API usage tracking (daily basis).");
+
+        builder.Property(dau => dau.ContentType)
+            .HasConversion<int>()
+            .HasComment("Content type for which requests were made: 1=Movie, 2=Series.");
+
+        builder.Property(dau => dau.RequestCount)
+            .HasComment("Number of API requests made for this content type on this date.");
+
+        // Ensure uniqueness → one record per (Date, ContentType)
+        builder.HasIndex(dau => new { dau.Date, dau.ContentType })
+            .IsUnique();
+
+        // Audit fields
+        builder.Property(dau => dau.Created).HasComment("Date and time when the record was created.");
+        builder.Property(dau => dau.CreatedBy).HasComment("User who created the record.");
+        builder.Property(dau => dau.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(dau => dau.LastModifiedBy).HasComment("User who last modified the record.");
+    }
+}
