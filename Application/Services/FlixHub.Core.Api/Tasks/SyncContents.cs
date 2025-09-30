@@ -16,6 +16,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     /// </summary>
     public async Task ExecuteAsync()
     {
+        return;
         var totalRequestsToday = await GetTodayRequestCount();
         
         if (totalRequestsToday >= MaxDailyRequests)
@@ -129,7 +130,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             }
             
             uow.ContentSyncLogsRepository.Update(syncLog);
-            await uow.SaveChangesAsync(appToken.Token);
+            //await uow.SaveChangesAsync(appToken.Token);
         }
         catch (Exception ex)
         {
@@ -208,7 +209,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             }
             
             uow.ContentSyncLogsRepository.Update(syncLog);
-            await uow.SaveChangesAsync(appToken.Token);
+            //await uow.SaveChangesAsync(appToken.Token);
         }
         catch (Exception ex)
         {
@@ -254,7 +255,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             };
 
             uow.ContentsRepository.Insert(content);
-            await uow.SaveChangesAsync(appToken.Token);
+            //await uow.SaveChangesAsync(appToken.Token);
 
             // ✅ PROCESS ALL NAVIGATION PROPERTIES
             await ProcessContentGenres(content.Id, movieDetails.Genres);
@@ -307,7 +308,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             };
 
             uow.ContentsRepository.Insert(content);
-            await uow.SaveChangesAsync(appToken.Token);
+            //await uow.SaveChangesAsync(appToken.Token);
 
             // ✅ PROCESS ALL TV NAVIGATION PROPERTIES
             await ProcessContentGenres(content.Id, tvDetails.Genres);
@@ -350,7 +351,8 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     // Remove the unnecessary assignment of 'today' in GetTodayRequestCount
     private async Task<int> GetTodayRequestCount(ContentType? contentType = null)
     {
-        var query = uow.ContentSyncLogsRepository.AsQueryable(false)
+        var query = uow.ContentSyncLogsRepository
+            .AsQueryable(false)
             .Where(x => x.LastModified.HasValue && x.LastModified.Value.Date == DateTime.UtcNow.Date);
 
         if (contentType is not null)
@@ -401,7 +403,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             }
             
             uow.ContentSyncLogsRepository.Update(recentLog);
-            await uow.SaveChangesAsync(appToken.Token);
+            //await uow.SaveChangesAsync(appToken.Token);
         }
     }
 
