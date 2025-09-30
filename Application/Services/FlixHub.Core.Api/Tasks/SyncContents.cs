@@ -16,7 +16,6 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     /// </summary>
     public async Task ExecuteAsync()
     {
-        var today = DateTime.UtcNow.Date;
         var totalRequestsToday = await GetTodayRequestCount();
         
         if (totalRequestsToday >= MaxDailyRequests)
@@ -60,7 +59,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 .ThenBy(x => x.Month)
                 .FirstOrDefaultAsync(appToken.Token);
 
-            if (syncLog == null)
+            if (syncLog is null)
             {
                 await LogSyncNote("✅ No incomplete movie sync logs - all movies synchronized", ContentType.Movie);
                 return;
@@ -89,7 +88,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             requestsUsed++;
 
             // ✅ PROFESSIONAL TOTAL PAGES TRACKING
-            if (syncLog.TotalPages == null)
+            if (syncLog.TotalPages is null)
             {
                 syncLog.TotalPages = discoverResponse.TotalPages;
                 uow.ContentSyncLogsRepository.Update(syncLog);
@@ -348,19 +347,14 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
         }
     }
 
-    /// <summary>
-    /// ✅ PROFESSIONAL Request Count Estimation for Balanced Quotas
-    /// </summary>
+    // Remove the unnecessary assignment of 'today' in GetTodayRequestCount
     private async Task<int> GetTodayRequestCount(ContentType? contentType = null)
     {
-        var today = DateTime.UtcNow.Date;
         var query = uow.ContentSyncLogsRepository.AsQueryable(false)
-            .Where(x => x.LastModified.HasValue && x.LastModified.Value.Date == today);
+            .Where(x => x.LastModified.HasValue && x.LastModified.Value.Date == DateTime.UtcNow.Date);
 
-        if (contentType.HasValue)
-        {
+        if (contentType is not null)
             query = query.Where(x => x.Type == contentType.Value);
-        }
 
         var logs = await query.ToListAsync(appToken.Token);
         var estimatedRequests = 0;
@@ -392,7 +386,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             .OrderByDescending(x => x.LastModified ?? x.Created)
             .FirstOrDefaultAsync(appToken.Token);
 
-        if (recentLog != null)
+        if (recentLog is not null)
         {
             var timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
             recentLog.Notes = string.IsNullOrEmpty(recentLog.Notes) 
