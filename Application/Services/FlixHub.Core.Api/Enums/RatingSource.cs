@@ -2,7 +2,8 @@
 
 public enum RatingSource
 {
-    InternetMovieDatabase = 1,
+    Unknown = 0,
+    InternetMovieDatabase,
     RottenTomatoes,
     Metacritic
 }

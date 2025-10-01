@@ -165,12 +165,13 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                     .GetMovieDetailsAsync(externalIds.ImdbId!);
 
                 // create content
-                var content = await BuildMediaContent(item.GenreIds,
-                                                      details,
-                                                      credits,
-                                                      videos,
-                                                      externalIds,
-                                                      omdbResponse);
+                var content = await BuildMovieMediaContent(item.GenreIds,
+                                                           details,
+                                                           credits,
+                                                           images,
+                                                           videos,
+                                                           externalIds,
+                                                           omdbResponse);
                 uow.ContentsRepository.Insert(content);
 
                 // increment page
@@ -187,17 +188,33 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
         }
     }
 
-    private async Task<Content> BuildMediaContent(IList<int> genreIds,
-                                                  MovieDetailsResponse movieDetails,
-                                                  TmdbCreditsResponse credits,
-                                                  TmdbVideosResponse videos,
-                                                  TmdbExternalIdsResponse externalIds,
-                                                  OmdbMovieDetailsResponse omdbMovieDetails)
+    private async Task<Content> BuildMovieMediaContent(IList<int> genreIds,
+                                                       MovieDetailsResponse movieDetails,
+                                                       TmdbCreditsResponse credits,
+                                                       TmdbImagesResponse images,
+                                                       TmdbVideosResponse videos,
+                                                       TmdbExternalIdsResponse externalIds,
+                                                       OmdbMovieDetailsResponse omdbMovieDetails)
     {
         if (movieDetails is null) return default!;
 
         var content = new Content
         {
+            TmdbId = movieDetails.Id,
+            ImdbId = externalIds?.ImdbId,
+            Type = ContentType.Movie,
+            Title = movieDetails.Title,
+            OriginalTitle = movieDetails.OriginalTitle,
+            Overview = movieDetails.Overview?.Length > 500 ? movieDetails.Overview[..500] : movieDetails.Overview,
+            OriginalLanguage = movieDetails.OriginalLanguage,
+            ReleaseDate = movieDetails.ReleaseDate,
+            Runtime = movieDetails.Runtime,
+            Popularity = movieDetails.Popularity != 0 ? (decimal)movieDetails.Popularity : null,
+            VoteAverage = movieDetails.VoteAverage != 0 ? (decimal)movieDetails.VoteAverage : null,
+            VoteCount = movieDetails.VoteCount,
+            Budget = movieDetails.Budget,
+            PosterPath = movieDetails.PosterPath,
+            BackdropPath = movieDetails.BackdropPath,
             Genres = await uow
                         .GenresRepository
                         .AsQueryable(false)
@@ -207,8 +224,11 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             GenreId = s.Id,
                         })
                         .ToListAsync(),
-            Awards = omdbMovieDetails.Awards,
+            Awards = omdbMovieDetails?.Awards,
             Status = ParseContentStatus(movieDetails.Status),
+            Ratings = ParseContentRatings(omdbMovieDetails?.Ratings),
+            Country = omdbMovieDetails?.Country,
+            LogoPath=images.Logos?.FirstOrDefault()?.FilePath,
         };
 
         return content;
@@ -265,6 +285,24 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             "returning series" => ContentStatus.Returning,
             _ => null
         };
+    }
+
+    private static IList<ContentRating> ParseContentRatings(IList<OmdbMovieDetailsResponseRating>? ratings)
+    {
+        if (ratings is null || ratings.Count == 0)
+            return null!;
+
+        return [.. ratings.Select(rating => new ContentRating
+        {
+            Value = rating.Value,
+            Source = rating.Source switch
+            {
+                "Internet Movie Database" => RatingSource.InternetMovieDatabase,
+                "Rotten Tomatoes" => RatingSource.RottenTomatoes,
+                "Metacritic" => RatingSource.Metacritic,
+                _ => RatingSource.Unknown
+            }
+        })];
     }
 
     /// <summary>
