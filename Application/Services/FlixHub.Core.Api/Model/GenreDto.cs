@@ -2,6 +2,6 @@
 
 public record GenreDto : AuditableDto
 {
-    public int TmdbId { get; set; }
+    public int TmdbReferenceId { get; set; }
     public string? Name { get; set; }
 }

@@ -153,14 +153,14 @@ class GenreConfiguration : IEntityTypeConfiguration<Genre>
 {
     public void Configure(EntityTypeBuilder<Genre> builder)
     {
-        builder.HasIndex(g => g.TmdbId).IsUnique();
+        builder.HasIndex(g => g.TmdbReferenceId).IsUnique();
 
         // Primary keys & identifiers
         builder.Property(p => p.Id)
             .HasComment("Internal primary key for Genre.");
         builder.Property(p => p.Uuid)
             .HasComment("Unique UUID identifier for Genre.");
-        builder.Property(g => g.TmdbId)
+        builder.Property(g => g.TmdbReferenceId)
             .HasComment("Optional TMDb genre id for mapping.");
         builder.Property(g => g.Name)
             .HasComment("Name of the genre (Drama, Action, etc.).");

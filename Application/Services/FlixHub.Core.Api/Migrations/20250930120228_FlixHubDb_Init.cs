@@ -104,7 +104,7 @@ namespace FlixHub.Core.Api.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for Genre.")
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TmdbId = table.Column<int>(type: "integer", nullable: false, comment: "Optional TMDb genre id for mapping."),
+                    TmdbReferenceId = table.Column<int>(type: "integer", nullable: false, comment: "Optional TMDb genre id for mapping."),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, comment: "Name of the genre (Drama, Action, etc.)."),
                     Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for Genre."),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
@@ -665,10 +665,10 @@ namespace FlixHub.Core.Api.Migrations
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genre_TmdbId",
+                name: "IX_Genre_TmdbReferenceId",
                 schema: "public",
                 table: "Genre",
-                column: "TmdbId",
+                column: "TmdbReferenceId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

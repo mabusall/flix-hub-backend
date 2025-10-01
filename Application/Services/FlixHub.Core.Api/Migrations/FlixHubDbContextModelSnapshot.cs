@@ -913,7 +913,7 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("character varying(50)")
                         .HasComment("Name of the genre (Drama, Action, etc.).");
 
-                    b.Property<int>("TmdbId")
+                    b.Property<int>("TmdbReferenceId")
                         .HasColumnType("integer")
                         .HasComment("Optional TMDb genre id for mapping.");
 
@@ -924,7 +924,7 @@ namespace FlixHub.Core.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TmdbId")
+                    b.HasIndex("TmdbReferenceId")
                         .IsUnique();
 
                     b.ToTable("Genre", "public");

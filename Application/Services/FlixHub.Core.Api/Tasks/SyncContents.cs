@@ -3,7 +3,6 @@
 internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             TmdbService tmdbService,
                             OmdbService omdbService,
-                            TraktService traktService,
                             IManagedCancellationToken appToken)
     : IHangfireJob
 {
@@ -16,30 +15,31 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     /// </summary>
     public async Task ExecuteAsync()
     {
-        return;
-        var totalRequestsToday = await GetTodayRequestCount();
+        var todayRequests = await GetTodayRequests();
+        var totalRequestsToday = todayRequests.Sum(sum => sum.RequestCount);
 
         if (totalRequestsToday >= MaxDailyRequests)
-        {
-            await LogSyncNote("Daily API quota of 1000 requests exhausted", ContentType.Movie);
             return;
-        }
 
         var remainingRequests = MaxDailyRequests - totalRequestsToday;
-        var movieRequestsUsed = await GetTodayRequestCount(ContentType.Movie);
-        var tvRequestsUsed = await GetTodayRequestCount(ContentType.Series);
+        var movieRequestsUsed = todayRequests
+                .Where(daily => daily.ContentType == ContentType.Movie)
+                .Sum(sum => sum.RequestCount);
+        var tvRequestsUsed = todayRequests
+                .Where(daily => daily.ContentType == ContentType.Series)
+                .Sum(sum => sum.RequestCount);
 
         // ✅ PROFESSIONAL BALANCED 50/50 ALLOCATION
         var shouldSyncMovies = movieRequestsUsed < MovieQuota &&
                               (tvRequestsUsed >= TvQuota || movieRequestsUsed <= tvRequestsUsed);
 
-        if (shouldSyncMovies && movieRequestsUsed < MovieQuota)
+        if (shouldSyncMovies)
         {
             await FetchNextMoviesBatch(Math.Min(remainingRequests, MovieQuota - movieRequestsUsed));
         }
         else if (!shouldSyncMovies && tvRequestsUsed < TvQuota)
         {
-            await FetchNextSeriesBatch(Math.Min(remainingRequests, TvQuota - tvRequestsUsed));
+            //await FetchNextSeriesBatch(Math.Min(remainingRequests, TvQuota - tvRequestsUsed));
         }
     }
 
@@ -50,26 +50,22 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     {
         var requestsUsed = 0;
 
-        try
+        // ✅ FIND NEXT INCOMPLETE ContentSyncLog
+        var syncLog = await uow.ContentSyncLogsRepository
+            .AsQueryable(true)
+            .Where(sync => sync.Type == ContentType.Movie && (sync.LastCompletedPage < sync.TotalPages || sync.TotalPages == null))
+            .OrderBy(x => x.Year)
+            .ThenBy(x => x.Month)
+            .FirstOrDefaultAsync(appToken.Token);
+
+        if (syncLog is null)
+            return;
+
+        var nextPage = syncLog.LastCompletedPage + 1;
+        var lastDayOfMonth = DateTime.DaysInMonth(syncLog.Year, syncLog.Month);
+
+        while (requestsUsed < maxRequests)
         {
-            // ✅ FIND NEXT INCOMPLETE ContentSyncLog
-            var syncLog = await uow.ContentSyncLogsRepository
-                .AsQueryable(false)
-                .Where(x => x.Type == ContentType.Movie && !x.IsCompleted)
-                .OrderBy(x => x.Year)
-                .ThenBy(x => x.Month)
-                .FirstOrDefaultAsync(appToken.Token);
-
-            if (syncLog is null)
-            {
-                await LogSyncNote("✅ No incomplete movie sync logs - all movies synchronized", ContentType.Movie);
-                return;
-            }
-
-            // ✅ PROFESSIONAL PAGINATION RESUME
-            var nextPage = syncLog.LastCompletedPage + 1;
-            var lastDayOfMonth = DateTime.DaysInMonth(syncLog.Year, syncLog.Month);
-
             // ✅ PROFESSIONAL TMDb QUERY CONSTRUCTION
             var query = new Dictionary<string, string>
             {
@@ -78,312 +74,220 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 ["primary_release_date.gte"] = $"{syncLog.Year}-{syncLog.Month:D2}-01",
                 ["primary_release_date.lte"] = $"{syncLog.Year}-{syncLog.Month:D2}-{lastDayOfMonth:D2}",
                 ["sort_by"] = "primary_release_date.asc",
-                ["include_adult"] = "false",
+                ["include_adult"] = "true",
                 ["include_video"] = "false"
             };
 
-            await LogSyncNote($"🎬 Processing movies {syncLog.Year}-{syncLog.Month:D2}, page {nextPage}", ContentType.Movie);
-
-            // ✅ PROFESSIONAL API CALL with ERROR HANDLING
-            var discoverResponse = await tmdbService.Movies.GetDiscoverAsync("en-US", query, nextPage);
-            requestsUsed++;
+            var discoverResponse = await tmdbService
+                .Movies
+                .GetDiscoverAsync("en-US", query, nextPage);
+            requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
 
             // ✅ PROFESSIONAL TOTAL PAGES TRACKING
-            if (syncLog.TotalPages is null)
+            if (discoverResponse.TotalPages > 0 &&
+                discoverResponse.TotalResults > 0 &&
+                syncLog.TotalPages is null)
             {
-                syncLog.TotalPages = discoverResponse.TotalPages;
-                uow.ContentSyncLogsRepository.Update(syncLog);
-                await LogSyncNote($"📊 Total pages: {discoverResponse.TotalPages} for {syncLog.Year}-{syncLog.Month:D2}", ContentType.Movie);
+                syncLog.TotalPages ??= discoverResponse.TotalPages;
+                syncLog.Notes = $"📊 Total pages: {discoverResponse.TotalPages} for {syncLog.Year}-{syncLog.Month:D2}";
+                LogSyncNote(syncLog);
+
+                // used for first time setup when TotalPages is null
+                await uow.SaveChangesAsync(appToken.Token);
             }
 
-            // ✅ PROCESS EACH MOVIE WITH NAVIGATION PROPERTIES
-            foreach (var movieItem in discoverResponse.Results)
-            {
-                if (requestsUsed >= maxRequests)
-                {
-                    await LogSyncNote($"🚫 Quota limit ({maxRequests}) reached, stopping batch", ContentType.Movie);
-                    break;
-                }
+            // always check the request used before asking for the next request
+            if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
 
-                try
-                {
-                    await ProcessMovieWithNavigationProperties(movieItem.Id);
-                    requestsUsed += 3; // Conservative estimate for now
-                }
-                catch (Exception ex)
-                {
-                    await LogSyncNote($"❌ Error processing movie {movieItem.Id}: {ex.Message}", ContentType.Movie);
-                }
-            }
-
-            // ✅ PROFESSIONAL PROGRESS UPDATE & COMPLETION
-            syncLog.LastCompletedPage = nextPage;
-            if (nextPage >= syncLog.TotalPages)
+            // check if the movie exists in the database, before sync it again
+            foreach (var item in discoverResponse.Results)
             {
-                syncLog.IsCompleted = true;
-                syncLog.Notes = $"✅ Completed: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC, Pages: {syncLog.TotalPages}";
-                await LogSyncNote($"🎉 COMPLETED sync for {syncLog.Year}-{syncLog.Month:D2}", ContentType.Movie);
-            }
-            else
-            {
-                await LogSyncNote($"📈 Progress: {nextPage}/{syncLog.TotalPages} for {syncLog.Year}-{syncLog.Month:D2}", ContentType.Movie);
-            }
+                // skip and check next movie
+                if (await ContentMediaExists(item.Id)) continue;
 
-            uow.ContentSyncLogsRepository.Update(syncLog);
-            //await uow.SaveChangesAsync(appToken.Token);
-        }
-        catch (Exception ex)
-        {
-            await LogSyncNote($"💥 CRITICAL MovieBatch error: {ex.Message}", ContentType.Movie);
+                #region [ fetch genres, casts, crews, ratings, images, videos ]
+
+                // genres
+                var genres = await uow
+                    .GenresRepository
+                    .AsQueryable(false)
+                    .Where(g => item.GenreIds.Contains(g.TmdbReferenceId))
+                    .Select(s => new ContentGenre
+                    {
+                        GenreId = s.Id,
+                    })
+                    .ToListAsync();
+
+                // always check the request used before asking for the next request
+                if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
+
+                // get movie details
+                var details = await tmdbService
+                    .Movies
+                    .GetDetailsAsync(item.Id);
+                requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
+
+                // always check the request used before asking for the next request
+                if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
+
+                // casts and crews
+                var credits = await tmdbService
+                    .Movies
+                    .GetCreditsAsync(item.Id);
+                requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
+
+                // always check the request used before asking for the next request
+                if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
+
+                // images
+                var images = await tmdbService
+                    .Movies
+                    .GetImagesAsync(item.Id);
+                requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
+
+                // always check the request used before asking for the next request
+                if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
+
+                // videos
+                var videos = await tmdbService
+                    .Movies
+                    .GetVideosAsync(item.Id);
+                requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
+
+                // external ids
+                var externalIds = await tmdbService
+                    .Movies
+                    .GetExternalIdsAsync(item.Id);
+                requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
+
+                // ratings
+                var ratings = await omdbService
+                    .GetMovieDetailsAsync(externalIds.ImdbId!);
+
+                // create content
+                // create method to build the content that accept
+                // item.GenreIds, details, credits, images, videos, externalIds, ratings
+
+                // increment page
+                nextPage++;
+                syncLog.LastCompletedPage = nextPage;
+                syncLog.Notes = $"🎬 Processing movies {syncLog.Year}-{syncLog.Month:D2}, page {nextPage}";
+                LogSyncNote(syncLog);
+
+                // commit database changes
+                // await uow.SaveChangesAsync(appToken.Token);
+
+                #endregion
+            }
         }
     }
 
     /// <summary>
     /// ✅ PROFESSIONAL TV Series Batch Processing with ContentSyncLog Management
     /// </summary>
-    private async Task FetchNextSeriesBatch(int maxRequests)
-    {
-        var requestsUsed = 0;
+    //private async Task FetchNextSeriesBatch(int maxRequests)
+    //{
+    //    var requestsUsed = 0;
 
-        try
-        {
-            // ✅ FIND NEXT INCOMPLETE TV ContentSyncLog
-            var syncLog = await uow.ContentSyncLogsRepository
-                .AsQueryable(false)
-                .Where(x => x.Type == ContentType.Series && !x.IsCompleted)
-                .OrderBy(x => x.Year)
-                .ThenBy(x => x.Month)
-                .FirstOrDefaultAsync(appToken.Token);
+    //    try
+    //    {
+    //        // ✅ FIND NEXT INCOMPLETE TV ContentSyncLog
+    //        var syncLog = await uow.ContentSyncLogsRepository
+    //            .AsQueryable(false)
+    //            .Where(x => x.Type == ContentType.Series && !x.IsCompleted)
+    //            .OrderBy(x => x.Year)
+    //            .ThenBy(x => x.Month)
+    //            .FirstOrDefaultAsync(appToken.Token);
 
-            if (syncLog == null)
-            {
-                await LogSyncNote("✅ No incomplete TV sync logs - all series synchronized", ContentType.Series);
-                return;
-            }
+    //        if (syncLog == null)
+    //        {
+    //            await LogSyncNote("✅ No incomplete TV sync logs - all series synchronized", ContentType.Series);
+    //            return;
+    //        }
 
-            var nextPage = syncLog.LastCompletedPage + 1;
-            var lastDayOfMonth = DateTime.DaysInMonth(syncLog.Year, syncLog.Month);
+    //        var nextPage = syncLog.LastCompletedPage + 1;
+    //        var lastDayOfMonth = DateTime.DaysInMonth(syncLog.Year, syncLog.Month);
 
-            var query = new Dictionary<string, string>
-            {
-                ["first_air_date.gte"] = $"{syncLog.Year}-{syncLog.Month:D2}-01",
-                ["first_air_date.lte"] = $"{syncLog.Year}-{syncLog.Month:D2}-{lastDayOfMonth:D2}",
-                ["sort_by"] = "first_air_date.asc",
-                ["include_adult"] = "false",
-                ["include_video"] = "false"
-            };
+    //        var query = new Dictionary<string, string>
+    //        {
+    //            ["first_air_date.gte"] = $"{syncLog.Year}-{syncLog.Month:D2}-01",
+    //            ["first_air_date.lte"] = $"{syncLog.Year}-{syncLog.Month:D2}-{lastDayOfMonth:D2}",
+    //            ["sort_by"] = "first_air_date.asc",
+    //            ["include_adult"] = "false",
+    //            ["include_video"] = "false"
+    //        };
 
-            await LogSyncNote($"📺 Processing TV series {syncLog.Year}-{syncLog.Month:D2}, page {nextPage}", ContentType.Series);
+    //        await LogSyncNote($"📺 Processing TV series {syncLog.Year}-{syncLog.Month:D2}, page {nextPage}", ContentType.Series);
 
-            var discoverResponse = await tmdbService.Tv.GetDiscoverAsync("en-US", query, nextPage);
-            requestsUsed++;
+    //        var discoverResponse = await tmdbService.Tv.GetDiscoverAsync("en-US", query, nextPage);
+    //        requestsUsed++;
 
-            if (syncLog.TotalPages == null)
-            {
-                syncLog.TotalPages = discoverResponse.TotalPages;
-                uow.ContentSyncLogsRepository.Update(syncLog);
-            }
+    //        if (syncLog.TotalPages == null)
+    //        {
+    //            syncLog.TotalPages = discoverResponse.TotalPages;
+    //            uow.ContentSyncLogsRepository.Update(syncLog);
+    //        }
 
-            // ✅ PROCESS EACH TV SHOW WITH SEASONS/EPISODES NAVIGATION
-            foreach (var tvItem in discoverResponse.Results)
-            {
-                if (requestsUsed >= maxRequests) break;
+    //        // ✅ PROCESS EACH TV SHOW WITH SEASONS/EPISODES NAVIGATION
+    //        foreach (var tvItem in discoverResponse.Results)
+    //        {
+    //            if (requestsUsed >= maxRequests) break;
 
-                try
-                {
-                    await ProcessTvShowWithNavigationProperties(tvItem.Id);
-                    requestsUsed += 5; // TV shows need more requests (seasons/episodes)
-                }
-                catch (Exception ex)
-                {
-                    await LogSyncNote($"❌ Error processing TV {tvItem.Id}: {ex.Message}", ContentType.Series);
-                }
-            }
+    //            try
+    //            {
+    //                await ProcessTvShowWithNavigationProperties(tvItem.Id);
+    //                requestsUsed += 5; // TV shows need more requests (seasons/episodes)
+    //            }
+    //            catch (Exception ex)
+    //            {
+    //                await LogSyncNote($"❌ Error processing TV {tvItem.Id}: {ex.Message}", ContentType.Series);
+    //            }
+    //        }
 
-            // ✅ PROFESSIONAL TV PROGRESS TRACKING
-            syncLog.LastCompletedPage = nextPage;
-            if (nextPage >= syncLog.TotalPages)
-            {
-                syncLog.IsCompleted = true;
-                syncLog.Notes = $"✅ Completed: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC, Pages: {syncLog.TotalPages}";
-            }
+    //        // ✅ PROFESSIONAL TV PROGRESS TRACKING
+    //        syncLog.LastCompletedPage = nextPage;
+    //        if (nextPage >= syncLog.TotalPages)
+    //        {
+    //            syncLog.IsCompleted = true;
+    //            syncLog.Notes = $"✅ Completed: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC, Pages: {syncLog.TotalPages}";
+    //        }
 
-            uow.ContentSyncLogsRepository.Update(syncLog);
-            //await uow.SaveChangesAsync(appToken.Token);
-        }
-        catch (Exception ex)
-        {
-            await LogSyncNote($"💥 CRITICAL TvBatch error: {ex.Message}", ContentType.Series);
-        }
-    }
-
-    /// <summary>
-    /// ✅ PROFESSIONAL Movie Processing with ALL NAVIGATION PROPERTIES
-    /// </summary>
-    private async Task ProcessMovieWithNavigationProperties(int tmdbId)
-    {
-        // Check if exists
-        var existingContent = await uow.ContentsRepository
-            .AsQueryable(false)
-            .FirstOrDefaultAsync(c => c.TmdbId == tmdbId && c.Type == ContentType.Movie, appToken.Token);
-
-        if (existingContent != null) return;
-
-        try
-        {
-            // Get movie details
-            var movieDetails = await tmdbService.Movies.GetDetailsAsync(tmdbId);
-
-            // ✅ CREATE CONTENT WITH ALL PROPERTIES
-            var content = new Content
-            {
-                TmdbId = tmdbId,
-                Type = ContentType.Movie,
-                Title = movieDetails.Title ?? movieDetails.OriginalTitle ?? "Unknown Movie",
-                OriginalTitle = movieDetails.OriginalTitle,
-                Overview = movieDetails.Overview?.Length > 500 ? movieDetails.Overview[..500] : movieDetails.Overview,
-                OriginalLanguage = movieDetails.OriginalLanguage,
-                Runtime = movieDetails.Runtime,
-                Status = ParseContentStatus(movieDetails.Status ?? ""),
-                ReleaseDate = movieDetails.ReleaseDate,
-                Budget = movieDetails.Budget,
-                Popularity = (decimal?)movieDetails.Popularity,
-                VoteAverage = (decimal?)movieDetails.VoteAverage,
-                VoteCount = movieDetails.VoteCount,
-                PosterPath = movieDetails.PosterPath,
-                BackdropPath = movieDetails.BackdropPath
-            };
-
-            uow.ContentsRepository.Insert(content);
-            //await uow.SaveChangesAsync(appToken.Token);
-
-            // ✅ PROCESS ALL NAVIGATION PROPERTIES
-            await ProcessContentGenres(content.Id, movieDetails.Genres);
-
-            // TODO: Add when TMDb service methods are available:
-            // await ProcessContentCastCrew(content.Id, tmdbId, ContentType.Movie);
-            // await ProcessContentImages(content.Id, tmdbId);
-            // await ProcessContentVideos(content.Id, tmdbId);
-            // await ProcessOMDbRatings(content.Id, movieDetails);
-
-        }
-        catch (Exception ex)
-        {
-            await LogSyncNote($"❌ ProcessMovie error {tmdbId}: {ex.Message}", ContentType.Movie);
-        }
-    }
+    //        uow.ContentSyncLogsRepository.Update(syncLog);
+    //        //await uow.SaveChangesAsync(appToken.Token);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        await LogSyncNote($"💥 CRITICAL TvBatch error: {ex.Message}", ContentType.Series);
+    //    }
+    //}
 
     /// <summary>
-    /// ✅ PROFESSIONAL TV Show Processing with SEASONS/EPISODES NAVIGATION
+    /// ✅ PROFESSIONAL Accurate Daily API Requests - Uses DailyApiUsage Table
     /// </summary>
-    private async Task ProcessTvShowWithNavigationProperties(int tmdbId)
-    {
-        var existingContent = await uow.ContentsRepository
-            .AsQueryable(false)
-            .FirstOrDefaultAsync(c => c.TmdbId == tmdbId && c.Type == ContentType.Series, appToken.Token);
-
-        if (existingContent != null) return;
-
-        try
-        {
-            var tvDetails = await tmdbService.Tv.GetDetailsAsync(tmdbId);
-
-            // ✅ CREATE TV CONTENT WITH ALL PROPERTIES
-            var content = new Content
-            {
-                TmdbId = tmdbId,
-                Type = ContentType.Series,
-                Title = tvDetails.Name ?? tvDetails.OriginalName ?? "Unknown Series",
-                OriginalTitle = tvDetails.OriginalName,
-                Overview = tvDetails.Overview?.Length > 500 ? tvDetails.Overview[..500] : tvDetails.Overview,
-                OriginalLanguage = tvDetails.OriginalLanguage,
-                Runtime = tvDetails.EpisodeRunTime?.FirstOrDefault(),
-                Status = ParseContentStatus(tvDetails.Status ?? ""),
-                ReleaseDate = tvDetails.FirstAirDate,
-                Popularity = (decimal?)tvDetails.Popularity,
-                VoteAverage = (decimal?)tvDetails.VoteAverage,
-                VoteCount = tvDetails.VoteCount,
-                PosterPath = tvDetails.PosterPath,
-                BackdropPath = tvDetails.BackdropPath
-            };
-
-            uow.ContentsRepository.Insert(content);
-            //await uow.SaveChangesAsync(appToken.Token);
-
-            // ✅ PROCESS ALL TV NAVIGATION PROPERTIES
-            await ProcessContentGenres(content.Id, tvDetails.Genres);
-
-            // TODO: Add comprehensive TV enrichment:
-            // await ProcessTvSeasons(content.Id, tmdbId, tvDetails.NumberOfSeasons);
-            // await ProcessContentCastCrew(content.Id, tmdbId, ContentType.Series);
-
-        }
-        catch (Exception ex)
-        {
-            await LogSyncNote($"❌ ProcessTv error {tmdbId}: {ex.Message}", ContentType.Series);
-        }
-    }
-
-    /// <summary>
-    /// ✅ PROFESSIONAL Genre Navigation Property Processing
-    /// </summary>
-    private async Task ProcessContentGenres(long contentId, IList<TmdbGenre> tmdbGenres)
-    {
-        foreach (var tmdbGenre in tmdbGenres)
-        {
-            var genre = await uow.GenresRepository
-                .AsQueryable(false)
-                .FirstOrDefaultAsync(g => g.TmdbId == tmdbGenre.Id, appToken.Token);
-
-            if (genre != null)
-            {
-                // ✅ CONTENT → GENRES NAVIGATION PROPERTY
-                var contentGenre = new ContentGenre
-                {
-                    ContentId = contentId,
-                    GenreId = genre.Id
-                };
-                uow.ContentGenresRepository.Insert(contentGenre);
-            }
-        }
-    }
-
-    /// <summary>
-    /// ✅ PROFESSIONAL Accurate Daily API Request Count - Uses DailyApiUsage Table
-    /// </summary>
-    private async Task<int> GetTodayRequestCount(ContentType? contentType = null)
+    private async Task<IList<DailyApiUsage>> GetTodayRequests()
     {
         var query = uow.DailyApiUsagesRepository
             .AsQueryable(false)
             .Where(x => x.Date == DateTime.UtcNow.Date);
 
-        if (contentType is not null)
-            query = query.Where(x => x.ContentType == contentType.Value);
-
-        // ✅ ACCURATE: Sum actual request counts from DailyApiUsage table
-        var totalRequests = await query
-            .SumAsync(x => x.RequestCount, appToken.Token);
-
-        return totalRequests;
+        return await query.ToListAsync(appToken.Token);
     }
 
     /// <summary>
     /// ✅ PROFESSIONAL ContentSyncLog Notes Management
     /// </summary>
-    private async Task LogSyncNote(string note, ContentType contentType)
+    private void LogSyncNote(ContentSyncLog recentLog,
+                             string note = null!)
     {
-        var recentLog = await uow.ContentSyncLogsRepository
-            .AsQueryable(false)
-            .Where(x => x.Type == contentType)
-            .OrderByDescending(x => x.LastModified ?? x.Created)
-            .FirstOrDefaultAsync(appToken.Token);
-
         if (recentLog is not null)
         {
-            var timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-            recentLog.Notes = string.IsNullOrEmpty(recentLog.Notes)
-                ? $"[{timestamp}] {note}"
-                : $"{recentLog.Notes}\n[{timestamp}] {note}";
+            if (string.IsNullOrEmpty(recentLog.Notes))
+            {
+                var timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+                recentLog.Notes = string.IsNullOrEmpty(recentLog.Notes)
+                    ? $"[{timestamp}] {note}"
+                    : $"{recentLog.Notes}\n[{timestamp}] {note}";
+            }
 
             // Keep notes manageable
             if (recentLog.Notes.Length > 500)
@@ -393,7 +297,6 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             }
 
             uow.ContentSyncLogsRepository.Update(recentLog);
-            //await uow.SaveChangesAsync(appToken.Token);
         }
     }
 
@@ -410,4 +313,84 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             _ => null
         };
     }
+
+    /// <summary>
+    /// <returns>A task representing the asynchronous database operation</returns>
+    /// <remarks>
+    /// The method performs the following operations:
+    /// - Increments the provided requestCount reference parameter
+    /// - Searches for existing daily usage record for today and the specified content type
+    /// - If found, increments the existing record's count and updates the ref parameter
+    /// - If not found, creates a new daily usage record starting with count of 1
+    /// - Updates the database through the unit of work pattern but does not save changes
+    /// </remarks>
+    /// </summary>
+    private async Task<int> IncrementDailyApiUsage(ContentType contentType)
+    {
+        int requestCount = 0;
+
+        var today = DateTime.UtcNow.Date;
+
+        // Try to find existing daily usage record for today and content type
+        var existingUsage = await uow.DailyApiUsagesRepository
+            .AsQueryable(true)
+            .FirstOrDefaultAsync(x => x.Date == DateTime.UtcNow.Date && x.ContentType == contentType, appToken.Token);
+
+        if (existingUsage is not null)
+        {
+            // Update existing record
+            existingUsage.RequestCount++;
+            requestCount = existingUsage.RequestCount;
+            uow.DailyApiUsagesRepository.Update(existingUsage);
+        }
+        else
+        {
+            // Create new record for today
+            var dailyUsage = new DailyApiUsage
+            {
+                Date = today,
+                ContentType = contentType,
+                RequestCount = 1 // Start with 1, not the total requestCount
+            };
+            requestCount = dailyUsage.RequestCount;
+            uow.DailyApiUsagesRepository.Insert(dailyUsage);
+        }
+
+        return requestCount;
+    }
+
+    /// <summary>
+    /// Validates whether additional API requests can be made within the allocated quota limit.
+    /// </summary>
+    /// <param name="requestsUsed">The number of API requests already consumed in the current batch</param>
+    /// <param name="maxRequests">The maximum number of requests allowed for the current batch</param>
+    /// <returns>
+    /// <c>true</c> if more requests can be made without exceeding the quota; 
+    /// <c>false</c> if the request limit has been reached
+    /// </returns>
+    /// <remarks>
+    /// This method serves as a rate limiting guard to prevent the sync process from exceeding 
+    /// daily API quotas for TMDb and OMDb services. It ensures graceful quota management and 
+    /// prevents potential service interruptions or additional charges from API providers.
+    /// </remarks>
+    private static bool ValidForNextRequest(int requestsUsed, int maxRequests)
+        => requestsUsed < maxRequests;
+
+    /// <summary>
+    /// Checks if content media already exists in the database by TMDB ID.
+    /// </summary>
+    /// <param name="tmdbId">The TMDB identifier to search for in the database</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains 
+    /// <c>true</c> if content with the specified TMDB ID exists; otherwise, <c>false</c>.
+    /// </returns>
+    /// <remarks>
+    /// This method performs a database query to prevent duplicate content synchronization 
+    /// by checking the Contents repository for existing records with the same TMDB reference ID.
+    /// Uses read-only query tracking for optimal performance during sync operations.
+    /// </remarks>
+    private async Task<bool> ContentMediaExists(int tmdbId)
+        => await uow.ContentsRepository
+            .AsQueryable(false)
+            .AnyAsync(c => c.TmdbId == tmdbId, appToken.Token);
 }

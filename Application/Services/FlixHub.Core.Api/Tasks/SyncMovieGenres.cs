@@ -22,13 +22,13 @@ internal class SyncMovieGenres(IFlixHubDbUnitOfWork uow,
             var existingGenre = await uow
                     .GenresRepository
                     .AsQueryable(false)
-                    .FirstOrDefaultAsync(g => g.TmdbId == genre.Id, applicationLifetime.Token);
+                    .FirstOrDefaultAsync(g => g.TmdbReferenceId == genre.Id, applicationLifetime.Token);
 
             if (existingGenre is null)
             {
                 var newGenre = new Genre
                 {
-                    TmdbId = genre.Id,
+                    TmdbReferenceId = genre.Id,
                     Name = genre.Name,
                 };
 
@@ -36,7 +36,7 @@ internal class SyncMovieGenres(IFlixHubDbUnitOfWork uow,
             }
             else if (existingGenre.Name != genre.Name)
             {
-                existingGenre.TmdbId = genre.Id;
+                existingGenre.TmdbReferenceId = genre.Id;
                 existingGenre.Name = genre.Name;
 
                 uow.GenresRepository.Update(existingGenre);

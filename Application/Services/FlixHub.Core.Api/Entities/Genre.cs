@@ -4,7 +4,7 @@
 class Genre : AuditableEntity
 {
     [Required]
-    public int TmdbId { get; set; }
+    public int TmdbReferenceId { get; set; }
 
     [Required, MaxLength(50)]
     public string? Name { get; set; }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FlixHub.Core.Api.Migrations
 {
     [DbContext(typeof(FlixHubDbContext))]
-    [Migration("20250930075755_FlixHubDb_Init")]
+    [Migration("20250930120228_FlixHubDb_Init")]
     partial class FlixHubDb_Init
     {
         /// <inheritdoc />
@@ -916,7 +916,7 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("character varying(50)")
                         .HasComment("Name of the genre (Drama, Action, etc.).");
 
-                    b.Property<int>("TmdbId")
+                    b.Property<int>("TmdbReferenceId")
                         .HasColumnType("integer")
                         .HasComment("Optional TMDb genre id for mapping.");
 
@@ -927,7 +927,7 @@ namespace FlixHub.Core.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TmdbId")
+                    b.HasIndex("TmdbReferenceId")
                         .IsUnique();
 
                     b.ToTable("Genre", "public");
