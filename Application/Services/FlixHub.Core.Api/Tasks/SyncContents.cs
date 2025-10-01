@@ -160,13 +160,18 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                     .GetExternalIdsAsync(item.Id);
                 requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
 
-                // ratings
-                var ratings = await omdbService
+                // ratings, awards
+                var omdbResponse = await omdbService
                     .GetMovieDetailsAsync(externalIds.ImdbId!);
 
                 // create content
-                // create method to build the content that accept
-                // item.GenreIds, details, credits, images, videos, externalIds, ratings
+                var content = await BuildMediaContent(item.GenreIds,
+                                                      details,
+                                                      credits,
+                                                      videos,
+                                                      externalIds,
+                                                      omdbResponse);
+                uow.ContentsRepository.Insert(content);
 
                 // increment page
                 nextPage++;
@@ -182,84 +187,32 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
         }
     }
 
-    /// <summary>
-    /// ✅ PROFESSIONAL TV Series Batch Processing with ContentSyncLog Management
-    /// </summary>
-    //private async Task FetchNextSeriesBatch(int maxRequests)
-    //{
-    //    var requestsUsed = 0;
+    private async Task<Content> BuildMediaContent(IList<int> genreIds,
+                                                  MovieDetailsResponse movieDetails,
+                                                  TmdbCreditsResponse credits,
+                                                  TmdbVideosResponse videos,
+                                                  TmdbExternalIdsResponse externalIds,
+                                                  OmdbMovieDetailsResponse omdbMovieDetails)
+    {
+        if (movieDetails is null) return default!;
 
-    //    try
-    //    {
-    //        // ✅ FIND NEXT INCOMPLETE TV ContentSyncLog
-    //        var syncLog = await uow.ContentSyncLogsRepository
-    //            .AsQueryable(false)
-    //            .Where(x => x.Type == ContentType.Series && !x.IsCompleted)
-    //            .OrderBy(x => x.Year)
-    //            .ThenBy(x => x.Month)
-    //            .FirstOrDefaultAsync(appToken.Token);
+        var content = new Content
+        {
+            Genres = await uow
+                        .GenresRepository
+                        .AsQueryable(false)
+                        .Where(g => genreIds.Contains(g.TmdbReferenceId))
+                        .Select(s => new ContentGenre
+                        {
+                            GenreId = s.Id,
+                        })
+                        .ToListAsync(),
+            Awards = omdbMovieDetails.Awards,
+            Status = ParseContentStatus(movieDetails.Status),
+        };
 
-    //        if (syncLog == null)
-    //        {
-    //            await LogSyncNote("✅ No incomplete TV sync logs - all series synchronized", ContentType.Series);
-    //            return;
-    //        }
-
-    //        var nextPage = syncLog.LastCompletedPage + 1;
-    //        var lastDayOfMonth = DateTime.DaysInMonth(syncLog.Year, syncLog.Month);
-
-    //        var query = new Dictionary<string, string>
-    //        {
-    //            ["first_air_date.gte"] = $"{syncLog.Year}-{syncLog.Month:D2}-01",
-    //            ["first_air_date.lte"] = $"{syncLog.Year}-{syncLog.Month:D2}-{lastDayOfMonth:D2}",
-    //            ["sort_by"] = "first_air_date.asc",
-    //            ["include_adult"] = "false",
-    //            ["include_video"] = "false"
-    //        };
-
-    //        await LogSyncNote($"📺 Processing TV series {syncLog.Year}-{syncLog.Month:D2}, page {nextPage}", ContentType.Series);
-
-    //        var discoverResponse = await tmdbService.Tv.GetDiscoverAsync("en-US", query, nextPage);
-    //        requestsUsed++;
-
-    //        if (syncLog.TotalPages == null)
-    //        {
-    //            syncLog.TotalPages = discoverResponse.TotalPages;
-    //            uow.ContentSyncLogsRepository.Update(syncLog);
-    //        }
-
-    //        // ✅ PROCESS EACH TV SHOW WITH SEASONS/EPISODES NAVIGATION
-    //        foreach (var tvItem in discoverResponse.Results)
-    //        {
-    //            if (requestsUsed >= maxRequests) break;
-
-    //            try
-    //            {
-    //                await ProcessTvShowWithNavigationProperties(tvItem.Id);
-    //                requestsUsed += 5; // TV shows need more requests (seasons/episodes)
-    //            }
-    //            catch (Exception ex)
-    //            {
-    //                await LogSyncNote($"❌ Error processing TV {tvItem.Id}: {ex.Message}", ContentType.Series);
-    //            }
-    //        }
-
-    //        // ✅ PROFESSIONAL TV PROGRESS TRACKING
-    //        syncLog.LastCompletedPage = nextPage;
-    //        if (nextPage >= syncLog.TotalPages)
-    //        {
-    //            syncLog.IsCompleted = true;
-    //            syncLog.Notes = $"✅ Completed: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC, Pages: {syncLog.TotalPages}";
-    //        }
-
-    //        uow.ContentSyncLogsRepository.Update(syncLog);
-    //        //await uow.SaveChangesAsync(appToken.Token);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        await LogSyncNote($"💥 CRITICAL TvBatch error: {ex.Message}", ContentType.Series);
-    //    }
-    //}
+        return content;
+    }
 
     /// <summary>
     /// ✅ PROFESSIONAL Accurate Daily API Requests - Uses DailyApiUsage Table
@@ -303,7 +256,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     /// <summary>
     /// ✅ PROFESSIONAL Status Parsing Helper
     /// </summary>
-    private static ContentStatus? ParseContentStatus(string status)
+    private static ContentStatus? ParseContentStatus(string? status)
     {
         return status?.ToLower() switch
         {
