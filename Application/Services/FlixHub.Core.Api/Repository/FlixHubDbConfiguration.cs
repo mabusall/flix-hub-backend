@@ -240,8 +240,11 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
         builder.Property(p => p.Biography)
             .HasComment("Person Biography.");
 
-        builder.Property(p => p.ProfilePath)
+        builder.Property(p => p.PersonalPhoto)
             .HasComment("Profile image path from TMDb.");
+
+        builder.Property(p => p.BirthPlace)
+            .HasComment("Birth place of the person.");
 
         // Audit fields
         builder.Property(p => p.Created).HasComment("Date and time when the record was created.");

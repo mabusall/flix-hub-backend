@@ -947,6 +947,10 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasComment("Birth date of the person.");
 
+                    b.Property<string>("BirthPlace")
+                        .HasColumnType("text")
+                        .HasComment("Birth place of the person.");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone")
                         .HasComment("Date and time when the record was created.");
@@ -984,9 +988,12 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("varchar(150)")
                         .HasComment("Full name of the person.");
 
-                    b.Property<string>("ProfilePath")
+                    b.Property<string>("PersonalPhoto")
                         .HasColumnType("text")
                         .HasComment("Profile image path from TMDb.");
+
+                    b.Property<long>("TmdbId")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("Uuid")
                         .ValueGeneratedOnAdd()

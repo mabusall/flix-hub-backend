@@ -3,6 +3,9 @@
 [Table(nameof(Person))]
 class Person : AuditableEntity
 {
+    [Required]
+    public long TmdbId { get; set; }
+
     [Required, MaxLength(150)]
     public string? Name { get; set; }
 
@@ -16,8 +19,9 @@ class Person : AuditableEntity
     public string? KnownForDepartment { get; set; } // Acting, Directing, Writing
 
     public string? Biography { get; set; }
+    public string? BirthPlace { get; set; }
 
-    public string? ProfilePath { get; set; } // TMDb image path
+    public string? PersonalPhoto { get; set; } // TMDb image path
 
     public virtual ICollection<PersonImage> Images { get; set; } = [];
 }

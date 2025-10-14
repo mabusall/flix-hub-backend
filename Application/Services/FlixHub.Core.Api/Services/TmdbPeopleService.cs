@@ -11,8 +11,8 @@ internal sealed class TmdbPeopleService(IApiClient apiClient,
         { "Authorization", $"Bearer {TmdbConf.Token.Decrypt()}" }
     };
 
-    public async Task<PersonResponse> GetPersonAsync(string id,
-                                                     string? language = "en-US")
+    public async Task<PersonResponse> GetDetailsAsync(string id,
+                                                      string? language = "en-US")
     {
         var query = new Dictionary<string, string>();
         if (!string.IsNullOrEmpty(language))

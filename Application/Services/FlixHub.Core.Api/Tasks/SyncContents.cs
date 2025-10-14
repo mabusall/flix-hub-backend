@@ -1,4 +1,6 @@
-﻿namespace FlixHub.Core.Api.Tasks;
+﻿using Mapster;
+
+namespace FlixHub.Core.Api.Tasks;
 
 internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             IManagedCancellationToken appToken,
@@ -238,10 +240,127 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             Status = ParseContentStatus(movieDetails.Status),
             Ratings = ParseContentRatings(omdbMovieDetails?.Ratings),
             Country = omdbMovieDetails?.Country,
-            LogoPath = logoPath
+            LogoPath = logoPath,
+            Casts = await MapCasts(credits.Cast),
+            Crews = await MapCrews(credits.Crew),
+            Videos = videos.Results
+                        .Where(w => w.Site == "YouTube" && (w.Type == "Trailer" || w.Type == "Teaser"))
+                        .OrderByDescending(o => o.Size)
+                        .Select(s => new ContentVideo
+                        {
+                            Name = s.Name,
+                            Key = s.Key,
+                            Site = s.Site == "YouTube" ? VideoSite.YouTube : VideoSite.Vimeo,
+                            Type = s.Type switch
+                            {
+                                "Trailer" => VideoType.Trailer,
+                                "Teaser" => VideoType.Teaser,
+                                "Clip" => VideoType.Clip,
+                                "Featurette" => VideoType.Featurette,
+                                _ => VideoType.Trailer
+                            },
+                            IsOfficial = s.Official,
+                        })
+                        .ToList()
         };
 
         return content;
+    }
+
+    /// <summary>
+    /// Maps a list of <see cref="TmdbCast"/> objects to a list of <see cref="ContentCast"/> objects.
+    /// </summary>
+    /// <param name="casts">The list of <see cref="TmdbCast"/> objects to be mapped. Cannot be null.</param>
+    /// <returns>A list of <see cref="ContentCast"/> objects corresponding to the input <paramref name="casts"/>.</returns>
+    private async Task<IList<ContentCast>> MapCasts(IList<TmdbCast> casts)
+    {
+        var contentCasts = new List<ContentCast>();
+
+        foreach (var cast in casts)
+        {
+            var contentCast = new ContentCast
+            {
+                Character = cast.Character,
+                Order = cast.Order,
+            };
+            // first, check if the person already exists in the database
+            var person = uow.PersonsRepository
+                .AsQueryable(false)
+                .FirstOrDefault(p => p.TmdbId == cast.Id);
+
+            if (person is null)
+            {
+                // get person details from TMDb
+                var personDetails = await tmdbService.People.GetDetailsAsync(cast.Id.ToString());
+
+                person = personDetails.Adapt<Person>();
+                person.TmdbId = personDetails.Id;
+
+                // get full url for profile path
+                if (!string.IsNullOrEmpty(personDetails.ProfilePath))
+                {
+                    person.PersonalPhoto = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{personDetails.ProfilePath}";
+                }
+
+                contentCast.Person = person;
+            }
+            else
+            {
+                contentCast.PersonId = person.Id;
+            }
+
+            contentCasts.Add(contentCast);
+        }
+
+        return contentCasts;
+    }
+
+    /// <summary>
+    /// Maps a list of TMDb crew members to a list of content cast members.
+    /// </summary>
+    /// <param name="crews">The list of TMDb crew members to be mapped. Cannot be null.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of content cast members.</returns>
+    private async Task<IList<ContentCrew>> MapCrews(IList<TmdbCrew> crews)
+    {
+        var contentCasts = new List<ContentCrew>();
+
+        foreach (var crew in crews)
+        {
+            var contentCast = new ContentCrew
+            {
+                Department = crew.Department,
+                Job = crew.Job,
+            };
+            // first, check if the person already exists in the database
+            var person = uow.PersonsRepository
+                .AsQueryable(false)
+                .FirstOrDefault(p => p.TmdbId == crew.Id);
+
+            if (person is null)
+            {
+                // get person details from TMDb
+                var personDetails = await tmdbService.People.GetDetailsAsync(crew.Id.ToString());
+
+                person = personDetails.Adapt<Person>();
+                person.TmdbId = personDetails.Id;
+
+                // get full url for profile path
+                if (!string.IsNullOrEmpty(personDetails.ProfilePath))
+                {
+                    person.PersonalPhoto = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{personDetails.ProfilePath}";
+                }
+
+                contentCast.Person = person;
+            }
+            else
+            {
+                contentCast.PersonId = person.Id;
+            }
+
+            contentCasts.Add(contentCast);
+        }
+
+        return contentCasts;
     }
 
     /// <summary>

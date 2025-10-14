@@ -121,7 +121,7 @@ internal sealed record PersonResponse
     public DateTime? Deathday { get; set; }
 
     [JsonPropertyName("gender")]
-    public GenderType? Gender { get; set; }
+    public GenderType Gender { get; set; }
 
     [JsonPropertyName("homepage")]
     public string? Homepage { get; set; }

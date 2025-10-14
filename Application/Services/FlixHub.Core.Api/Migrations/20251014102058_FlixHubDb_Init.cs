@@ -124,13 +124,15 @@ namespace FlixHub.Core.Api.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for Person.")
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TmdbId = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false, comment: "Full name of the person."),
                     Gender = table.Column<int>(type: "integer", nullable: false, comment: "Gender: 0=Unknown, 1=Female, 2=Male, 3=NonBinary."),
                     BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true, comment: "Birth date of the person."),
                     DeathDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true, comment: "Death date of the person."),
                     KnownForDepartment = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Department this person is best known for (Acting, Directing, Writing)."),
                     Biography = table.Column<string>(type: "text", nullable: true, comment: "Person Biography."),
-                    ProfilePath = table.Column<string>(type: "text", nullable: true, comment: "Profile image path from TMDb."),
+                    BirthPlace = table.Column<string>(type: "text", nullable: true, comment: "Birth place of the person."),
+                    PersonalPhoto = table.Column<string>(type: "text", nullable: true, comment: "Profile image path from TMDb."),
                     Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for Person."),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
                     CreatedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who created the record."),
