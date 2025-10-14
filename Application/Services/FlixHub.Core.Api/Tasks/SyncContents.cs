@@ -243,7 +243,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             LogoPath = logoPath,
             Casts = await MapCasts(credits.Cast),
             Crews = await MapCrews(credits.Crew),
-            Videos = videos.Results
+            Videos = [.. videos.Results
                         .Where(w => w.Site == "YouTube" && (w.Type == "Trailer" || w.Type == "Teaser"))
                         .OrderByDescending(o => o.Size)
                         .Select(s => new ContentVideo
@@ -260,8 +260,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                                 _ => VideoType.Trailer
                             },
                             IsOfficial = s.Official,
-                        })
-                        .ToList()
+                        })]
         };
 
         return content;
