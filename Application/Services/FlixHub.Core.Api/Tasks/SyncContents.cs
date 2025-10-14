@@ -13,36 +13,52 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     private const int MovieQuota = 500;
     private const int TvQuota = 500;
 
+    // ✅ Static semaphore to ensure only one execution at a time across all instances
+    private static readonly SemaphoreSlim _syncSemaphore = new(1, 1);
+
     /// <summary>
     /// Professional SyncContents ExecuteAsync - Balanced Movie/TV Sync with ContentSyncLog Management
+    /// Prevents concurrent execution using SemaphoreSlim
     /// </summary>
     public async Task ExecuteAsync()
     {
-        var todayRequests = await GetTodayRequests();
-        var totalRequestsToday = todayRequests.Sum(sum => sum.RequestCount);
-
-        if (totalRequestsToday >= MaxDailyRequests)
+        // Try to acquire the semaphore, but don't wait if another instance is running
+        if (!await _syncSemaphore.WaitAsync(0, appToken.Token))
+        {
+            // Another instance is already running, exit gracefully
             return;
-
-        var remainingRequests = MaxDailyRequests - totalRequestsToday;
-        var movieRequestsUsed = todayRequests
-                .Where(daily => daily.ContentType == ContentType.Movie)
-                .Sum(sum => sum.RequestCount);
-        var tvRequestsUsed = todayRequests
-                .Where(daily => daily.ContentType == ContentType.Series)
-                .Sum(sum => sum.RequestCount);
-
-        // ✅ PROFESSIONAL BALANCED 50/50 ALLOCATION
-        var shouldSyncMovies = movieRequestsUsed < MovieQuota &&
-                              (tvRequestsUsed >= TvQuota || movieRequestsUsed <= tvRequestsUsed);
-
-        if (shouldSyncMovies)
-        {
-            await FetchNextMoviesBatch(Math.Min(remainingRequests, MovieQuota - movieRequestsUsed));
         }
-        else if (!shouldSyncMovies && tvRequestsUsed < TvQuota)
+
+        try
         {
-            //await FetchNextSeriesBatch(Math.Min(remainingRequests, TvQuota - tvRequestsUsed));
+            var todayRequests = await GetTodayRequests();
+            var totalRequestsToday = todayRequests.Sum(sum => sum.RequestCount);
+
+            if (totalRequestsToday >= MaxDailyRequests)
+                return;
+
+            var remainingRequests = MaxDailyRequests - totalRequestsToday;
+            var movieRequestsUsed = todayRequests
+                    .Where(daily => daily.ContentType == ContentType.Movie)
+                    .Sum(sum => sum.RequestCount);
+            var tvRequestsUsed = todayRequests
+                    .Where(daily => daily.ContentType == ContentType.Series)
+                    .Sum(sum => sum.RequestCount);
+
+            // ✅ PROFESSIONAL BALANCED 50/50 ALLOCATION
+            if (movieRequestsUsed < MovieQuota)
+            {
+                await FetchNextMoviesBatch(Math.Min(remainingRequests, MovieQuota - movieRequestsUsed));
+            }
+            else if (tvRequestsUsed < TvQuota)
+            {
+                //await FetchNextSeriesBatch(Math.Min(remainingRequests, TvQuota - tvRequestsUsed));
+            }
+        }
+        finally
+        {
+            // Always release the semaphore
+            _syncSemaphore.Release();
         }
     }
 
@@ -67,20 +83,20 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
         var nextPage = syncLog.LastCompletedPage + 1;
         var lastDayOfMonth = DateTime.DaysInMonth(syncLog.Year, syncLog.Month);
 
+        // ✅ PROFESSIONAL TMDb QUERY CONSTRUCTION
+        var query = new Dictionary<string, string>
+        {
+            ["region"] = "US",
+            ["with_release_type"] = "2|3|4|5|6",
+            ["primary_release_date.gte"] = $"{syncLog.Year}-{syncLog.Month:D2}-01",
+            ["primary_release_date.lte"] = $"{syncLog.Year}-{syncLog.Month:D2}-{lastDayOfMonth:D2}",
+            ["sort_by"] = "primary_release_date.asc",
+            ["include_adult"] = "true",
+            ["include_video"] = "false"
+        };
+
         while (requestsUsed < maxRequests)
         {
-            // ✅ PROFESSIONAL TMDb QUERY CONSTRUCTION
-            var query = new Dictionary<string, string>
-            {
-                ["region"] = "US",
-                ["with_release_type"] = "2|3|4|5|6",
-                ["primary_release_date.gte"] = $"{syncLog.Year}-{syncLog.Month:D2}-01",
-                ["primary_release_date.lte"] = $"{syncLog.Year}-{syncLog.Month:D2}-{lastDayOfMonth:D2}",
-                ["sort_by"] = "primary_release_date.asc",
-                ["include_adult"] = "true",
-                ["include_video"] = "false"
-            };
-
             var discoverResponse = await tmdbService
                 .Movies
                 .GetDiscoverAsync("en-US", query, nextPage);
@@ -164,7 +180,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
 
                 // ratings, awards
-                var omdbResponse = await omdbService
+                var omdbResponse = externalIds.ImdbId is null ? default : await omdbService
                     .GetMovieDetailsAsync(externalIds.ImdbId!);
 
                 // create content
@@ -184,7 +200,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 LogSyncNote(syncLog);
 
                 // commit database changes
-                // await uow.SaveChangesAsync(appToken.Token);
+                await uow.SaveChangesAsync(appToken.Token);
 
                 #endregion
             }
@@ -197,7 +213,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                                                        TmdbImagesResponse images,
                                                        TmdbVideosResponse videos,
                                                        TmdbExternalIdsResponse externalIds,
-                                                       OmdbMovieDetailsResponse omdbMovieDetails)
+                                                       OmdbMovieDetailsResponse? omdbMovieDetails)
     {
         if (movieDetails is null) return default!;
 
@@ -208,7 +224,8 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                     images.Logos?
                     .OrderByDescending(l => l.VoteAverage)
                     .FirstOrDefault()?.FilePath;
-        logoPath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{logoPath}";
+        if (!string.IsNullOrWhiteSpace(logoPath))
+            logoPath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{logoPath}";
 
         var content = new Content
         {
@@ -238,7 +255,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                         .ToListAsync(),
             Awards = omdbMovieDetails?.Awards,
             Status = ParseContentStatus(movieDetails.Status),
-            Ratings = ParseContentRatings(omdbMovieDetails?.Ratings),
+            Ratings = omdbMovieDetails is null ? null! : ParseContentRatings(omdbMovieDetails?.Ratings),
             Country = omdbMovieDetails?.Country,
             LogoPath = logoPath,
             Casts = await MapCasts(credits.Cast),
