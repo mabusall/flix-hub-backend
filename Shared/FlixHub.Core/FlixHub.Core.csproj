@@ -8,8 +8,8 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-		<PackageReference Include="Azure.Identity" Version="1.16.0" />
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.25.1" />
+		<PackageReference Include="Azure.Identity" Version="1.17.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.26.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.20" />
 		<PackageReference Include="Mapster" Version="7.4.0" />
 		<PackageReference Include="MediatR" Version="13.0.0" />
