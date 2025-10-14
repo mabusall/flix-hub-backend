@@ -17,7 +17,8 @@ public class ApiClient(HttpClient httpClient) : IApiClient
                                      Dictionary<string, string> query = null,
                                      CancellationToken cancellationToken = default)
     {
-        var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
+        endpoint = endpoint ?? string.Empty;
+        var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}".TrimEnd('/');
 
         if (query != null && query.Count > 0)
         {
@@ -38,7 +39,7 @@ public class ApiClient(HttpClient httpClient) : IApiClient
         using var response = await httpClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        var json = await response.Content.ReadAsStringAsync();
+        var json = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonSerializerHandler.Deserialize<T>(json);
     }
 }

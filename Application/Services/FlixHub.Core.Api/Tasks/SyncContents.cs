@@ -199,10 +199,23 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 syncLog.Notes = $"🎬 Processing movies {syncLog.Year}-{syncLog.Month:D2}, page {nextPage}";
                 LogSyncNote(syncLog);
 
+                #endregion
+
+                if (nextPage > discoverResponse.TotalPages)
+                {
+                    syncLog.IsCompleted = true;
+                    syncLog.Notes = $"✅ Completed syncing movies for {syncLog.Year}-{syncLog.Month:D2}";
+                    LogSyncNote(syncLog);
+
+                    // commit database changes
+                    await uow.SaveChangesAsync(appToken.Token);
+
+                    // exit the foreach loop
+                    break;
+                }
+
                 // commit database changes
                 await uow.SaveChangesAsync(appToken.Token);
-
-                #endregion
             }
         }
     }
@@ -226,6 +239,49 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                     .FirstOrDefault()?.FilePath;
         if (!string.IsNullOrWhiteSpace(logoPath))
             logoPath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{logoPath}";
+        if (!string.IsNullOrWhiteSpace(movieDetails.PosterPath))
+            movieDetails.PosterPath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{movieDetails.PosterPath}";
+        var backdrops = images
+                            .Backdrops
+                            .OrderByDescending(o => o.VoteAverage)
+                            .Select(s => new ContentImage
+                            {
+                                FilePath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{s.FilePath}",
+                                Width = s.Width,
+                                Height = s.Height,
+                                Language = s.Iso6391,
+                                Type = ImageType.Backdrop
+                            })
+                            .ToList();
+        var posters = images
+                        .Posters
+                        .OrderByDescending(o => o.VoteAverage)
+                        .Select(s => new ContentImage
+                        {
+                            FilePath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{s.FilePath}",
+                            Width = s.Width,
+                            Height = s.Height,
+                            Language = s.Iso6391,
+                            Type = ImageType.Poster
+                        })
+                        .ToList();
+        var logos = images
+                        .Logos?
+                        .OrderByDescending(o => o.VoteAverage)
+                        .Select(s => new ContentImage
+                        {
+                            FilePath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{s.FilePath}",
+                            Width = s.Width,
+                            Height = s.Height,
+                            Language = s.Iso6391,
+                            Type = ImageType.Logo
+                        })
+                        .ToList();
+        List<ContentImage> allImages = [];
+        allImages.AddRange(backdrops);
+        allImages.AddRange(posters);
+        if (logos is not null)
+            allImages.AddRange(logos);
 
         var content = new Content
         {
@@ -238,8 +294,8 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             OriginalLanguage = movieDetails.OriginalLanguage,
             ReleaseDate = movieDetails.ReleaseDate,
             Runtime = movieDetails.Runtime,
-            Popularity = movieDetails.Popularity != 0 ? (decimal)movieDetails.Popularity : null,
-            VoteAverage = movieDetails.VoteAverage != 0 ? (decimal)movieDetails.VoteAverage : null,
+            Popularity = (decimal)movieDetails.Popularity,
+            VoteAverage = (decimal)movieDetails.VoteAverage,
             VoteCount = movieDetails.VoteCount,
             Budget = movieDetails.Budget,
             PosterPath = movieDetails.PosterPath,
@@ -258,6 +314,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             Ratings = omdbMovieDetails is null ? null! : ParseContentRatings(omdbMovieDetails?.Ratings),
             Country = omdbMovieDetails?.Country,
             LogoPath = logoPath,
+            Images = allImages,
             Casts = await MapCasts(credits.Cast),
             Crews = await MapCrews(credits.Crew),
             Videos = [.. videos.Results
@@ -491,6 +548,9 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             requestCount = dailyUsage.RequestCount;
             uow.DailyApiUsagesRepository.Insert(dailyUsage);
         }
+
+        // commit changes to the database
+        await uow.SaveChangesAsync(appToken.Token);
 
         return requestCount;
     }

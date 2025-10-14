@@ -24,7 +24,7 @@ class Content : AuditableEntity
     [MaxLength(500)]
     public string? Awards { get; set; }
 
-    [MaxLength(10)]
+    [MaxLength(100)]
     public string? OriginalLanguage { get; set; }
 
     public DateTime? ReleaseDate { get; set; }
@@ -32,7 +32,7 @@ class Content : AuditableEntity
     [Column(TypeName = "varchar(50)")]
     public ContentStatus? Status { get; set; }
 
-    [MaxLength(10)]
+    [MaxLength(100)]
     public string? Country { get; set; }
 
     public int? Runtime { get; set; }

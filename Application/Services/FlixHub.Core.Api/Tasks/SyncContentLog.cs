@@ -1,11 +1,21 @@
 ﻿namespace FlixHub.Core.Api.Tasks;
 
 internal class SyncContentLog(IFlixHubDbUnitOfWork uow,
-                              IManagedCancellationToken applicationLifetime)
+                              IManagedCancellationToken appToken)
     : IHangfireJob
 {
+    // ✅ Static semaphore to ensure only one execution at a time across all instances
+    private static readonly SemaphoreSlim _syncSemaphore = new(1, 1);
+
     public async Task ExecuteAsync()
     {
+        // Try to acquire the semaphore, but don't wait if another instance is running
+        if (!await _syncSemaphore.WaitAsync(0, appToken.Token))
+        {
+            // Another instance is already running, exit gracefully
+            return;
+        }
+
         var currentYear = DateTime.UtcNow.Year;
 
         // Movies: 1900 → current year
@@ -26,7 +36,10 @@ internal class SyncContentLog(IFlixHubDbUnitOfWork uow,
             }
         }
 
-        await uow.SaveChangesAsync(applicationLifetime.Token);
+        await uow.SaveChangesAsync(appToken.Token);
+
+        // Always release the semaphore
+        _syncSemaphore.Release();
     }
 
     private async Task InsertIfNotExists(ContentType type, int year, int month)

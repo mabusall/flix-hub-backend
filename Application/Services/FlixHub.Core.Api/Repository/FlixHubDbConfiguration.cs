@@ -95,11 +95,11 @@ class ContentConfiguration : IEntityTypeConfiguration<Content>
             .HasComment("Summary / description.");
 
         builder.Property(p => p.OriginalLanguage)
-            .HasMaxLength(10)
             .HasComment("ISO 639-1 language code.");
 
         // Dates
         builder.Property(p => p.ReleaseDate)
+            .HasColumnType("date")
             .HasComment("Movie: release_date / TV: first_air_date.");
 
         // Status
@@ -109,7 +109,6 @@ class ContentConfiguration : IEntityTypeConfiguration<Content>
 
         // Country
         builder.Property(p => p.Country)
-            .HasMaxLength(10)
             .HasComment("ISO 3166-1 country code.");
 
         // Runtime
@@ -230,8 +229,10 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
             .HasComment("Gender: 0=Unknown, 1=Female, 2=Male, 3=NonBinary.");
 
         builder.Property(p => p.BirthDate)
+            .HasColumnType("date")
             .HasComment("Birth date of the person.");
         builder.Property(p => p.DeathDate)
+            .HasColumnType("date")
             .HasComment("Death date of the person.");
 
         builder.Property(p => p.KnownForDepartment)
@@ -498,6 +499,7 @@ class ContentSeasonConfiguration : IEntityTypeConfiguration<ContentSeason>
             .HasComment("Overview/description of the season.");
 
         builder.Property(s => s.AirDate)
+            .HasColumnType("date")
             .HasComment("First air date of the season.");
 
         builder.Property(s => s.EpisodeCount)
@@ -545,6 +547,7 @@ class EpisodeConfiguration : IEntityTypeConfiguration<Episode>
             .HasComment("Overview/description of the episode.");
 
         builder.Property(e => e.AirDate)
+            .HasColumnType("date")
             .HasComment("Air date of the episode.");
 
         builder.Property(e => e.Runtime)
@@ -663,7 +666,7 @@ class WatchlistConfiguration : IEntityTypeConfiguration<Watchlist>
         builder.Property(w => w.ContentId)
             .HasComment("Foreign key to Content entity.");
 
-        builder.Property(w => w.AddedAt)
+        builder.Property(w => w.AddedAt)            
             .HasComment("Date and time when the content was added to the watchlist.");
 
         // Relationships

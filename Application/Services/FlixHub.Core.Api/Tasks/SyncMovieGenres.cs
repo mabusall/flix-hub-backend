@@ -2,11 +2,22 @@
 
 internal class SyncMovieGenres(IFlixHubDbUnitOfWork uow,
                                TmdbService tmdbService,
-                               IManagedCancellationToken applicationLifetime)
+                               IManagedCancellationToken appToken)
     : IHangfireJob
 {
+
+    // ✅ Static semaphore to ensure only one execution at a time across all instances
+    private static readonly SemaphoreSlim _syncSemaphore = new(1, 1);
+
     public async Task ExecuteAsync()
     {
+        // Try to acquire the semaphore, but don't wait if another instance is running
+        if (!await _syncSemaphore.WaitAsync(0, appToken.Token))
+        {
+            // Another instance is already running, exit gracefully
+            return;
+        }
+
         var currentDate = DateTime.UtcNow.Date;
         var movieGenres = await tmdbService.Movies.GetGenresAsync();
         var tvGenres = await tmdbService.Tv.GetGenresAsync();
@@ -22,7 +33,7 @@ internal class SyncMovieGenres(IFlixHubDbUnitOfWork uow,
             var existingGenre = await uow
                     .GenresRepository
                     .AsQueryable(false)
-                    .FirstOrDefaultAsync(g => g.TmdbReferenceId == genre.Id, applicationLifetime.Token);
+                    .FirstOrDefaultAsync(g => g.TmdbReferenceId == genre.Id, appToken.Token);
 
             if (existingGenre is null)
             {
@@ -42,6 +53,10 @@ internal class SyncMovieGenres(IFlixHubDbUnitOfWork uow,
                 uow.GenresRepository.Update(existingGenre);
             }
         }
-        await uow.SaveChangesAsync(applicationLifetime.Token);
+
+        await uow.SaveChangesAsync(appToken.Token);
+
+        // Always release the semaphore
+        _syncSemaphore.Release();
     }
 }

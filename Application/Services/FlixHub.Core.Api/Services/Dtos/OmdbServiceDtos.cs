@@ -8,7 +8,7 @@ internal sealed record OmdbMovieDetailsResponse
 
     public string? Rated { get; set; }
 
-    public DateTime? Released { get; set; }
+    public string? Released { get; set; }
 
     public string? Runtime { get; set; }
 
@@ -32,10 +32,10 @@ internal sealed record OmdbMovieDetailsResponse
 
     public IList<OmdbMovieDetailsResponseRating> Ratings { get; set; } = [];
 
-    public int? Metascore { get; set; }
+    public string? Metascore { get; set; }
 
     [JsonPropertyName("imdbRating")]
-    public double? ImdbRating { get; set; }
+    public string? ImdbRating { get; set; }
 
     [JsonPropertyName("imdbVotes")]
     public string? ImdbVotes { get; set; }

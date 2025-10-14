@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FlixHub.Core.Api.Migrations
 {
     [DbContext(typeof(FlixHubDbContext))]
-    [Migration("20251014102058_FlixHubDb_Init")]
+    [Migration("20251014185837_FlixHubDb_Init")]
     partial class FlixHubDb_Init
     {
         /// <inheritdoc />
@@ -45,8 +45,8 @@ namespace FlixHub.Core.Api.Migrations
                         .HasComment("Movie/TV Budget.");
 
                     b.Property<string>("Country")
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasComment("ISO 3166-1 country code.");
 
                     b.Property<DateTime>("Created")
@@ -78,8 +78,8 @@ namespace FlixHub.Core.Api.Migrations
                         .HasComment("Logo image path or URL.");
 
                     b.Property<string>("OriginalLanguage")
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasComment("ISO 639-1 language code.");
 
                     b.Property<string>("OriginalTitle")
@@ -102,7 +102,7 @@ namespace FlixHub.Core.Api.Migrations
                         .HasComment("Poster image path or URL.");
 
                     b.Property<DateTime?>("ReleaseDate")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("date")
                         .HasComment("Movie: release_date / TV: first_air_date.");
 
                     b.Property<int?>("Runtime")
@@ -437,7 +437,7 @@ namespace FlixHub.Core.Api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("AirDate")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("date")
                         .HasComment("First air date of the season.");
 
                     b.Property<long>("ContentId")
@@ -696,7 +696,7 @@ namespace FlixHub.Core.Api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("AirDate")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("date")
                         .HasComment("Air date of the episode.");
 
                     b.Property<DateTime>("Created")
@@ -947,7 +947,7 @@ namespace FlixHub.Core.Api.Migrations
                         .HasComment("Person Biography.");
 
                     b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("date")
                         .HasComment("Birth date of the person.");
 
                     b.Property<string>("BirthPlace")
@@ -964,7 +964,7 @@ namespace FlixHub.Core.Api.Migrations
                         .HasComment("User who created the record.");
 
                     b.Property<DateTime?>("DeathDate")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("date")
                         .HasComment("Death date of the person.");
 
                     b.Property<int>("Gender")
