@@ -1,9 +1,10 @@
 ﻿namespace FlixHub.Core.Api.Tasks;
 
 internal class SyncContents(IFlixHubDbUnitOfWork uow,
+                            IManagedCancellationToken appToken,
+                            IAppSettingsKeyManagement appSettings,
                             TmdbService tmdbService,
-                            OmdbService omdbService,
-                            IManagedCancellationToken appToken)
+                            OmdbService omdbService)
     : IHangfireJob
 {
     private const int MaxDailyRequests = 1000;
@@ -198,6 +199,15 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     {
         if (movieDetails is null) return default!;
 
+        var logoPath = images.Logos?
+                .Where(l => l.Iso6391 == "en")
+                .OrderByDescending(l => l.VoteAverage)
+                .FirstOrDefault()?.FilePath ??
+                    images.Logos?
+                    .OrderByDescending(l => l.VoteAverage)
+                    .FirstOrDefault()?.FilePath;
+        logoPath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{logoPath}";
+
         var content = new Content
         {
             TmdbId = movieDetails.Id,
@@ -228,7 +238,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             Status = ParseContentStatus(movieDetails.Status),
             Ratings = ParseContentRatings(omdbMovieDetails?.Ratings),
             Country = omdbMovieDetails?.Country,
-            LogoPath=images.Logos?.FirstOrDefault()?.FilePath,
+            LogoPath = logoPath
         };
 
         return content;
