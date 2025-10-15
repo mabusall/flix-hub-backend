@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FlixHub.Core.Api.Migrations
 {
     [DbContext(typeof(FlixHubDbContext))]
-    [Migration("20251014185837_FlixHubDb_Init")]
+    [Migration("20251015073916_FlixHubDb_Init")]
     partial class FlixHubDb_Init
     {
         /// <inheritdoc />
@@ -1008,72 +1008,6 @@ namespace FlixHub.Core.Api.Migrations
                     b.ToTable("Person", "public");
                 });
 
-            modelBuilder.Entity("FlixHub.Core.Api.Entities.PersonImage", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasComment("Internal primary key for PersonImage.");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone")
-                        .HasComment("Date and time when the record was created.");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasComment("User who created the record.");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)")
-                        .HasComment("File path for the person image from TMDb.");
-
-                    b.Property<int>("Height")
-                        .HasColumnType("integer")
-                        .HasComment("Image height in pixels.");
-
-                    b.Property<string>("Language")
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)")
-                        .HasComment("Language code (iso_639_1).");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp with time zone")
-                        .HasComment("Date and time when the record was last modified.");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasComment("User who last modified the record.");
-
-                    b.Property<long>("PersonId")
-                        .HasColumnType("bigint")
-                        .HasComment("Foreign key to Person entity.");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer")
-                        .HasComment("Image type: 5=Profile.");
-
-                    b.Property<Guid>("Uuid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasComment("Unique UUID identifier for PersonImage.");
-
-                    b.Property<int>("Width")
-                        .HasColumnType("integer")
-                        .HasComment("Image width in pixels.");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
-
-                    b.ToTable("PersonImage", "public");
-                });
-
             modelBuilder.Entity("FlixHub.Core.Api.Entities.SystemUser", b =>
                 {
                     b.Property<long>("Id")
@@ -1346,15 +1280,6 @@ namespace FlixHub.Core.Api.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("FlixHub.Core.Api.Entities.PersonImage", b =>
-                {
-                    b.HasOne("FlixHub.Core.Api.Entities.Person", null)
-                        .WithMany("Images")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FlixHub.Core.Api.Entities.Watchlist", b =>
                 {
                     b.HasOne("FlixHub.Core.Api.Entities.Content", "Content")
@@ -1399,11 +1324,6 @@ namespace FlixHub.Core.Api.Migrations
                     b.Navigation("Casts");
 
                     b.Navigation("Crews");
-                });
-
-            modelBuilder.Entity("FlixHub.Core.Api.Entities.Person", b =>
-                {
-                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("FlixHub.Core.Api.Entities.SystemUser", b =>

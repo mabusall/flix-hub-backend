@@ -400,37 +400,6 @@ namespace FlixHub.Core.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PersonImage",
-                schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for PersonImage.")
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PersonId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Person entity."),
-                    Type = table.Column<int>(type: "integer", nullable: false, comment: "Image type: 5=Profile."),
-                    FilePath = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false, comment: "File path for the person image from TMDb."),
-                    Language = table.Column<string>(type: "character varying(8)", maxLength: 8, nullable: true, comment: "Language code (iso_639_1)."),
-                    Width = table.Column<int>(type: "integer", nullable: false, comment: "Image width in pixels."),
-                    Height = table.Column<int>(type: "integer", nullable: false, comment: "Image height in pixels."),
-                    Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for PersonImage."),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
-                    CreatedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who created the record."),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true, comment: "Date and time when the record was last modified."),
-                    LastModifiedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who last modified the record.")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PersonImage", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PersonImage_Person_PersonId",
-                        column: x => x.PersonId,
-                        principalSchema: "public",
-                        principalTable: "Person",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Watchlist",
                 schema: "public",
                 columns: table => new
@@ -674,12 +643,6 @@ namespace FlixHub.Core.Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PersonImage_PersonId",
-                schema: "public",
-                table: "PersonImage",
-                column: "PersonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SystemUser_Email",
                 schema: "public",
                 table: "SystemUser",
@@ -748,10 +711,6 @@ namespace FlixHub.Core.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "EpisodeCrew",
-                schema: "public");
-
-            migrationBuilder.DropTable(
-                name: "PersonImage",
                 schema: "public");
 
             migrationBuilder.DropTable(

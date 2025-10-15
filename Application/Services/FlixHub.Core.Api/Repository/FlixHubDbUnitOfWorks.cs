@@ -11,7 +11,6 @@ interface IFlixHubDbUnitOfWork : IUnitOfWork
     IContentCrewsRepository ContentCrewsRepository { get; }
     IContentRatingsRepository ContentRatingsRepository { get; }
     IContentImagesRepository ContentImagesRepository { get; }
-    IPersonImagesRepository PersonImagesRepository { get; }
     IContentSeasonsRepository ContentSeasonsRepository { get; }
     IEpisodesRepository EpisodesRepository { get; }
     IEpisodeCastsRepository EpisodeCastsRepository { get; }
@@ -32,7 +31,6 @@ class FlixHubDbUnitOfWork(FlixHubDbContext context) : UnitOfWork(context), IFlix
     public IContentCrewsRepository ContentCrewsRepository => new ContentCrewsRepository(context);
     public IContentRatingsRepository ContentRatingsRepository => new ContentRatingsRepository(context);
     public IContentImagesRepository ContentImagesRepository => new ContentImagesRepository(context);
-    public IPersonImagesRepository PersonImagesRepository => new PersonImagesRepository(context);
     public IContentSeasonsRepository ContentSeasonsRepository => new ContentSeasonsRepository(context);
     public IEpisodesRepository EpisodesRepository => new EpisodesRepository(context);
     public IEpisodeCastsRepository EpisodeCastsRepository => new EpisodeCastsRepository(context);

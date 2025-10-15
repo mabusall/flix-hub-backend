@@ -394,47 +394,6 @@ class ContentImageConfiguration : IEntityTypeConfiguration<ContentImage>
         builder.Property(ci => ci.LastModifiedBy).HasComment("User who last modified the record.");
     }
 }
-
-class PersonImageConfiguration : IEntityTypeConfiguration<PersonImage>
-{
-    public void Configure(EntityTypeBuilder<PersonImage> builder)
-    {
-        builder.Property(pi => pi.Id)
-            .HasComment("Internal primary key for PersonImage.");
-        builder.Property(pi => pi.Uuid)
-            .HasComment("Unique UUID identifier for PersonImage.");
-
-        builder.Property(pi => pi.PersonId)
-            .HasComment("Foreign key to Person entity.");
-
-        builder.Property(pi => pi.Type)
-            .HasConversion<int>()
-            .HasComment("Image type: 5=Profile.");
-
-        builder.Property(pi => pi.FilePath)
-            .HasComment("File path for the person image from TMDb.");
-
-        builder.Property(pi => pi.Language)
-            .HasComment("Language code (iso_639_1).");
-
-        builder.Property(pi => pi.Width)
-            .HasComment("Image width in pixels.");
-        builder.Property(pi => pi.Height)
-            .HasComment("Image height in pixels.");
-
-        // Relationships
-        builder.HasOne<Person>()
-            .WithMany(c => c.Images)
-            .HasForeignKey(p => p.PersonId);
-
-        // Audit fields
-        builder.Property(pi => pi.Created).HasComment("Date and time when the record was created.");
-        builder.Property(pi => pi.CreatedBy).HasComment("User who created the record.");
-        builder.Property(pi => pi.LastModified).HasComment("Date and time when the record was last modified.");
-        builder.Property(pi => pi.LastModifiedBy).HasComment("User who last modified the record.");
-    }
-}
-
 class ContentVideoConfiguration : IEntityTypeConfiguration<ContentVideo>
 {
     public void Configure(EntityTypeBuilder<ContentVideo> builder)

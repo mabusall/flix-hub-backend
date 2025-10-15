@@ -11,5 +11,4 @@ public record PersonDto : AuditableDto
     public string? Biography { get; set; }
     public string? BirthPlace { get; set; }
     public string? PersonalPhoto { get; set; } // TMDb image path
-    public IList<PersonImageDto> Images { get; set; } = [];
 }

@@ -11,7 +11,6 @@ interface IContentCastsRepository : IGenericRepository<ContentCast, ContentCastD
 interface IContentCrewsRepository : IGenericRepository<ContentCrew, ContentCrewDto> { }
 interface IContentRatingsRepository : IGenericRepository<ContentRating, ContentRatingDto> { }
 interface IContentImagesRepository : IGenericRepository<ContentImage, ContentImageDto> { }
-interface IPersonImagesRepository : IGenericRepository<PersonImage, PersonImageDto> { }
 interface IContentSeasonsRepository : IGenericRepository<ContentSeason, ContentSeasonDto> { }
 interface IEpisodesRepository : IGenericRepository<Episode, EpisodeDto> { }
 interface IEpisodeCastsRepository : IGenericRepository<EpisodeCast, EpisodeCastDto> { }
@@ -58,10 +57,6 @@ class ContentRatingsRepository(FlixHubDbContext context)
 
 class ContentImagesRepository(FlixHubDbContext context)
    : GenericRepository<ContentImage, ContentImageDto>(context), IContentImagesRepository
-{ }
-
-class PersonImagesRepository(FlixHubDbContext context)
-   : GenericRepository<PersonImage, PersonImageDto>(context), IPersonImagesRepository
 { }
 
 class ContentSeasonsRepository(FlixHubDbContext context)

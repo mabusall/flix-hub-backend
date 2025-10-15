@@ -41,3 +41,35 @@ docker run --name postgres-dev --network flixhub-net -e POSTGRES_USER=sa -e POST
 docker run --name pgadmin-dev --network flixhub-net -e PGADMIN_DEFAULT_EMAIL=mohannad.xox@gmail.com -e PGADMIN_DEFAULT_PASSWORD=admin -p 5050:80 -d dpage/pgadmin4
 
 ```
+
+# backup & restore pstgresql
+```
+
+// Backup one database (logical, portable)
+// Replace FlixHubDb with your database name
+docker exec -t postgres-dev pg_dump -U postgres -d FlixHubDb -F c -f /tmp/FlixHubDb.dump
+
+// Copy the dump to Windows
+docker cp postgres-dev:/tmp/FlixHubDb.dump "C:\Backups\FlixHubDb.dump"
+
+// Restore one database (logical, portable)
+docker cp "C:\Backups\FlixHubDb.dump" postgres-dev:/tmp/FlixHubDb.dump
+
+// Create a fresh, empty DB (from template0)
+docker exec -it postgres-dev createdb -U postgres -T template0 FlixHubDb_restored
+
+// Restore with pg_restore
+docker exec -it postgres-dev pg_restore -U postgres -d FlixHubDb_restored --clean --if-exists /tmp/FlixHubDb.dump
+
+```
+
+# Where pgAdmin puts backup files (in Docker)
+```
+
+// Default path:
+/var/lib/pgadmin/storage/mohannad.xox_gmail.com
+
+// Quick way to find the file path
+docker exec -it pgadmin-dev bash -lc "ls -la /var/lib/pgadmin/storage/mohannad.xox_gmail.com
+
+```

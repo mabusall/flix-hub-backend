@@ -72,7 +72,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
         // ✅ FIND NEXT INCOMPLETE ContentSyncLog
         var syncLog = await uow.ContentSyncLogsRepository
             .AsQueryable(true)
-            .Where(sync => sync.Type == ContentType.Movie && (sync.LastCompletedPage < sync.TotalPages || sync.TotalPages == null))
+            .Where(sync => sync.Type == ContentType.Movie && !sync.IsCompleted && (sync.LastCompletedPage < sync.TotalPages || sync.TotalPages == null))
             .OrderBy(x => x.Year)
             .ThenBy(x => x.Month)
             .FirstOrDefaultAsync(appToken.Token);
@@ -193,30 +193,36 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                                                            omdbResponse);
                 uow.ContentsRepository.Insert(content);
 
-                // increment page
-                nextPage++;
-                syncLog.LastCompletedPage = nextPage;
-                syncLog.Notes = $"🎬 Processing movies {syncLog.Year}-{syncLog.Month:D2}, page {nextPage}";
-                LogSyncNote(syncLog);
-
                 #endregion
+            }
 
-                if (nextPage > discoverResponse.TotalPages)
-                {
-                    syncLog.IsCompleted = true;
-                    syncLog.Notes = $"✅ Completed syncing movies for {syncLog.Year}-{syncLog.Month:D2}";
-                    LogSyncNote(syncLog);
+            #region [ increment page, check and commit changes ]
 
-                    // commit database changes
-                    await uow.SaveChangesAsync(appToken.Token);
-
-                    // exit the foreach loop
-                    break;
-                }
+            // check if we reached the last page
+            if (nextPage == discoverResponse.TotalPages)
+            {
+                syncLog.LastCompletedPage = discoverResponse.TotalPages;
+                syncLog.IsCompleted = true;
+                syncLog.Notes = $"✅ Completed syncing movies for {syncLog.Year}-{syncLog.Month:D2}";
+                LogSyncNote(syncLog);
 
                 // commit database changes
                 await uow.SaveChangesAsync(appToken.Token);
+
+                // exit the while loop
+                break;
             }
+            else
+            {
+                // increment page
+                nextPage++;
+                syncLog.LastCompletedPage = nextPage;
+            }
+
+            // commit database changes
+            await uow.SaveChangesAsync(appToken.Token);
+
+            #endregion
         }
     }
 
@@ -231,16 +237,19 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
         if (movieDetails is null) return default!;
 
         var logoPath = images.Logos?
-                .Where(l => l.Iso6391 == "en")
-                .OrderByDescending(l => l.VoteAverage)
-                .FirstOrDefault()?.FilePath ??
-                    images.Logos?
-                    .OrderByDescending(l => l.VoteAverage)
-                    .FirstOrDefault()?.FilePath;
+                            .Where(l => l.Iso6391 == "en")
+                            .OrderByDescending(l => l.VoteAverage)
+                            .FirstOrDefault()?.FilePath ??
+                            images.Logos?
+                            .OrderByDescending(l => l.VoteAverage)
+                            .FirstOrDefault()?.FilePath;
+
         if (!string.IsNullOrWhiteSpace(logoPath))
             logoPath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{logoPath}";
+
         if (!string.IsNullOrWhiteSpace(movieDetails.PosterPath))
             movieDetails.PosterPath = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{movieDetails.PosterPath}";
+
         var backdrops = images
                             .Backdrops
                             .OrderByDescending(o => o.VoteAverage)
@@ -277,6 +286,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             Type = ImageType.Logo
                         })
                         .ToList();
+
         List<ContentImage> allImages = [];
         allImages.AddRange(backdrops);
         allImages.AddRange(posters);
@@ -414,14 +424,20 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 // get person details from TMDb
                 var personDetails = await tmdbService.People.GetDetailsAsync(crew.Id.ToString());
 
-                person = personDetails.Adapt<Person>();
-                person.TmdbId = personDetails.Id;
-
-                // get full url for profile path
-                if (!string.IsNullOrEmpty(personDetails.ProfilePath))
+                person = new Person
                 {
-                    person.PersonalPhoto = $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{personDetails.ProfilePath}";
-                }
+                    TmdbId = personDetails.Id,
+                    DeathDate = personDetails.Deathday,
+                    KnownForDepartment = personDetails.KnownForDepartment,
+                    Gender = personDetails.Gender,
+                    Biography = personDetails.Biography,
+                    BirthPlace = personDetails.PlaceOfBirth,
+                    BirthDate = personDetails.Birthday,
+                    Name = personDetails.Name,
+                    PersonalPhoto = string.IsNullOrEmpty(personDetails.ProfilePath)
+                    ? null
+                    : $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{personDetails.ProfilePath}"
+                };
 
                 contentCast.Person = person;
             }

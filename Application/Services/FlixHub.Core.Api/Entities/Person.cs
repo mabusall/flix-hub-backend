@@ -22,6 +22,4 @@ class Person : AuditableEntity
     public string? BirthPlace { get; set; }
 
     public string? PersonalPhoto { get; set; } // TMDb image path
-
-    public virtual ICollection<PersonImage> Images { get; set; } = [];
 }
