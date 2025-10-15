@@ -11,6 +11,5 @@ public record EpisodeDto : AuditableDto
     public string? StillPath { get; set; }
     public decimal? VoteAverage { get; set; }
     public int? VoteCount { get; set; }
-    public IList<EpisodeCastDto> Casts { get; set; } = [];
     public IList<EpisodeCrewDto> Crews { get; set; } = [];
 }

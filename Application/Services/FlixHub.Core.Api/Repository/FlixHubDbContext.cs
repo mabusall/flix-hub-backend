@@ -33,7 +33,6 @@ class FlixHubDbContext(DbContextOptions<FlixHubDbContext> options,
     public DbSet<ContentImage> ContentImages => Set<ContentImage>();
     public DbSet<ContentSeason> ContentSeasons => Set<ContentSeason>();
     public DbSet<Episode> Episodes => Set<Episode>();
-    public DbSet<EpisodeCast> EpisodeCasts => Set<EpisodeCast>();
     public DbSet<EpisodeCrew> EpisodeCrews => Set<EpisodeCrew>();
     public DbSet<Watchlist> Watchlists => Set<Watchlist>();
     public DbSet<ContentSyncLog> ContentSyncLogs => Set<ContentSyncLog>();

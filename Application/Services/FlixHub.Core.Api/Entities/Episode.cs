@@ -27,6 +27,5 @@ class Episode : AuditableEntity
 
     public int? VoteCount { get; set; }
 
-    public virtual ICollection<EpisodeCast> Casts { get; set; } = [];
     public virtual ICollection<EpisodeCrew> Crews { get; set; } = [];
 }

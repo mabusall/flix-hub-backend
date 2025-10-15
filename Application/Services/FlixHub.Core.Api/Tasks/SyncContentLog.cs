@@ -28,7 +28,7 @@ internal class SyncContentLog(IFlixHubDbUnitOfWork uow,
         }
 
         // Series: 1950 → current year (TV existed later)
-        for (int year = 1941; year <= currentYear; year++)
+        for (int year = 1950; year <= currentYear; year++)
         {
             for (int month = 1; month <= 12; month++)
             {

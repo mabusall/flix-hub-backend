@@ -9,7 +9,7 @@ class Content : AuditableEntity
     [MaxLength(20)]
     public string? ImdbId { get; set; }
 
-    [Required, Column(TypeName = "varchar(10)")]
+    [Required]
     public ContentType Type { get; set; }
 
     [Required]
@@ -29,7 +29,6 @@ class Content : AuditableEntity
 
     public DateTime? ReleaseDate { get; set; }
 
-    [Column(TypeName = "varchar(50)")]
     public ContentStatus? Status { get; set; }
 
     [MaxLength(100)]

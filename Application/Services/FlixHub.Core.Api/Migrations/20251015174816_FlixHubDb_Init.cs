@@ -23,14 +23,14 @@ namespace FlixHub.Core.Api.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TmdbId = table.Column<int>(type: "integer", nullable: false, comment: "TMDb ID (unique for movie/tv)."),
                     ImdbId = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true, comment: "IMDb ID."),
-                    Type = table.Column<string>(type: "varchar(10)", nullable: false, comment: "Content type: Movie or TV."),
+                    Type = table.Column<int>(type: "integer", nullable: false, comment: "Content type: Movie or TV."),
                     Title = table.Column<string>(type: "text", nullable: false, comment: "Display title of the content."),
                     OriginalTitle = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true, comment: "Original title or name in original language."),
                     Overview = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, comment: "Summary / description."),
                     Awards = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, comment: "Awards wining."),
                     OriginalLanguage = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "ISO 639-1 language code."),
                     ReleaseDate = table.Column<DateTime>(type: "date", nullable: true, comment: "Movie: release_date / TV: first_air_date."),
-                    Status = table.Column<string>(type: "varchar(50)", nullable: true, comment: "Release status: Released, Ended, Returning Series."),
+                    Status = table.Column<int>(type: "integer", nullable: true, comment: "Release status: Released, Ended, Returning Series."),
                     Country = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "ISO 3166-1 country code."),
                     Runtime = table.Column<int>(type: "integer", nullable: true, comment: "Runtime in minutes (movie or avg episode runtime)."),
                     Popularity = table.Column<decimal>(type: "numeric(12,6)", nullable: true, comment: "TMDb popularity score."),
@@ -336,7 +336,7 @@ namespace FlixHub.Core.Api.Migrations
                     ContentId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Content (movie or TV)."),
                     PersonId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Person."),
                     CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true, comment: "Credit ID from TMDb."),
-                    Character = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true, comment: "Character name played by the actor."),
+                    Character = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true, comment: "Character name played by the actor."),
                     Order = table.Column<int>(type: "integer", nullable: true, comment: "Billing order of the cast member from TMDb."),
                     Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for ContentCast.")
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
@@ -472,42 +472,6 @@ namespace FlixHub.Core.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EpisodeCast",
-                schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for EpisodeCast.")
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EpisodeId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Episode entity."),
-                    PersonId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Person entity."),
-                    Character = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true, comment: "Character name played by the actor in this episode."),
-                    Order = table.Column<int>(type: "integer", nullable: true, comment: "Billing order of the actor in this episode."),
-                    Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for EpisodeCast."),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
-                    CreatedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who created the record."),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true, comment: "Date and time when the record was last modified."),
-                    LastModifiedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who last modified the record.")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EpisodeCast", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EpisodeCast_Episode_EpisodeId",
-                        column: x => x.EpisodeId,
-                        principalSchema: "public",
-                        principalTable: "Episode",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EpisodeCast_Person_PersonId",
-                        column: x => x.PersonId,
-                        principalSchema: "public",
-                        principalTable: "Person",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EpisodeCrew",
                 schema: "public",
                 columns: table => new
@@ -516,6 +480,7 @@ namespace FlixHub.Core.Api.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     EpisodeId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Episode entity."),
                     PersonId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Person entity."),
+                    CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true, comment: "Credit ID from TMDb."),
                     Department = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Department of the crew member (Directing, Writing, etc.)."),
                     Job = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Specific job title of the crew member."),
                     Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for EpisodeCrew."),
@@ -615,18 +580,6 @@ namespace FlixHub.Core.Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_EpisodeCast_EpisodeId",
-                schema: "public",
-                table: "EpisodeCast",
-                column: "EpisodeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EpisodeCast_PersonId",
-                schema: "public",
-                table: "EpisodeCast",
-                column: "PersonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EpisodeCrew_EpisodeId",
                 schema: "public",
                 table: "EpisodeCrew",
@@ -713,10 +666,6 @@ namespace FlixHub.Core.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "DailyApiUsage",
-                schema: "public");
-
-            migrationBuilder.DropTable(
-                name: "EpisodeCast",
                 schema: "public");
 
             migrationBuilder.DropTable(

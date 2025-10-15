@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FlixHub.Core.Api.Migrations
 {
     [DbContext(typeof(FlixHubDbContext))]
-    [Migration("20251015112040_FlixHubDb_Init")]
+    [Migration("20251015174816_FlixHubDb_Init")]
     partial class FlixHubDb_Init
     {
         /// <inheritdoc />
@@ -112,8 +112,8 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("integer")
                         .HasComment("Runtime in minutes (movie or avg episode runtime).");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("varchar(50)")
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer")
                         .HasComment("Release status: Released, Ended, Returning Series.");
 
                     b.Property<string>("Title")
@@ -125,9 +125,8 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("integer")
                         .HasComment("TMDb ID (unique for movie/tv).");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("varchar(10)")
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
                         .HasComment("Content type: Movie or TV.");
 
                     b.Property<Guid>("Uuid")
@@ -162,8 +161,8 @@ namespace FlixHub.Core.Api.Migrations
                         .HasComment("Foreign key to Person.");
 
                     b.Property<string>("Character")
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
                         .HasComment("Character name played by the actor.");
 
                     b.Property<DateTime>("Created")
@@ -779,64 +778,6 @@ namespace FlixHub.Core.Api.Migrations
                     b.ToTable("Episode", "public");
                 });
 
-            modelBuilder.Entity("FlixHub.Core.Api.Entities.EpisodeCast", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasComment("Internal primary key for EpisodeCast.");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Character")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasComment("Character name played by the actor in this episode.");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone")
-                        .HasComment("Date and time when the record was created.");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasComment("User who created the record.");
-
-                    b.Property<long>("EpisodeId")
-                        .HasColumnType("bigint")
-                        .HasComment("Foreign key to Episode entity.");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp with time zone")
-                        .HasComment("Date and time when the record was last modified.");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasComment("User who last modified the record.");
-
-                    b.Property<int?>("Order")
-                        .HasColumnType("integer")
-                        .HasComment("Billing order of the actor in this episode.");
-
-                    b.Property<long>("PersonId")
-                        .HasColumnType("bigint")
-                        .HasComment("Foreign key to Person entity.");
-
-                    b.Property<Guid>("Uuid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasComment("Unique UUID identifier for EpisodeCast.");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EpisodeId");
-
-                    b.HasIndex("PersonId");
-
-                    b.ToTable("EpisodeCast", "public");
-                });
-
             modelBuilder.Entity("FlixHub.Core.Api.Entities.EpisodeCrew", b =>
                 {
                     b.Property<long>("Id")
@@ -854,6 +795,11 @@ namespace FlixHub.Core.Api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasComment("User who created the record.");
+
+                    b.Property<string>("CreditId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasComment("Credit ID from TMDb.");
 
                     b.Property<string>("Department")
                         .HasMaxLength(100)
@@ -1263,23 +1209,6 @@ namespace FlixHub.Core.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FlixHub.Core.Api.Entities.EpisodeCast", b =>
-                {
-                    b.HasOne("FlixHub.Core.Api.Entities.Episode", null)
-                        .WithMany("Casts")
-                        .HasForeignKey("EpisodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FlixHub.Core.Api.Entities.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-                });
-
             modelBuilder.Entity("FlixHub.Core.Api.Entities.EpisodeCrew", b =>
                 {
                     b.HasOne("FlixHub.Core.Api.Entities.Episode", null)
@@ -1338,8 +1267,6 @@ namespace FlixHub.Core.Api.Migrations
 
             modelBuilder.Entity("FlixHub.Core.Api.Entities.Episode", b =>
                 {
-                    b.Navigation("Casts");
-
                     b.Navigation("Crews");
                 });
 

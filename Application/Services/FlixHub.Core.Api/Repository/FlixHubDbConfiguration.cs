@@ -75,7 +75,7 @@ class ContentConfiguration : IEntityTypeConfiguration<Content>
 
         // Type (Movie/TV)
         builder.Property(p => p.Type)
-            .HasConversion<string>()
+            .HasConversion<int>()
             .HasComment("Content type: Movie or TV.");
 
         // Titles & descriptions
@@ -104,7 +104,7 @@ class ContentConfiguration : IEntityTypeConfiguration<Content>
 
         // Status
         builder.Property(p => p.Status)
-            .HasConversion<string>()
+            .HasConversion<int>()
             .HasComment("Release status: Released, Ended, Returning Series.");
 
         // Country
@@ -281,7 +281,6 @@ class ContentCastConfiguration : IEntityTypeConfiguration<ContentCast>
         builder.Property(cc => cc.CreditId)
             .HasComment("Credit ID from TMDb.");
         builder.Property(cc => cc.Character)
-            .HasMaxLength(150)
             .HasComment("Character name played by the actor.");
         builder.Property(cc => cc.Order)
             .HasComment("Billing order of the cast member from TMDb.");
@@ -546,43 +545,6 @@ class EpisodeConfiguration : IEntityTypeConfiguration<Episode>
     }
 }
 
-class EpisodeCastConfiguration : IEntityTypeConfiguration<EpisodeCast>
-{
-    public void Configure(EntityTypeBuilder<EpisodeCast> builder)
-    {
-        builder.Property(ec => ec.Id)
-            .HasComment("Internal primary key for EpisodeCast.");
-        builder.Property(ec => ec.Uuid)
-            .HasComment("Unique UUID identifier for EpisodeCast.");
-
-        builder.Property(ec => ec.EpisodeId)
-            .HasComment("Foreign key to Episode entity.");
-        builder.Property(ec => ec.PersonId)
-            .HasComment("Foreign key to Person entity.");
-
-        builder.Property(ec => ec.Character)
-            .HasComment("Character name played by the actor in this episode.");
-
-        builder.Property(ec => ec.Order)
-            .HasComment("Billing order of the actor in this episode.");
-
-        // Relationships
-        builder.HasOne<Episode>()
-            .WithMany(e => e.Casts)
-            .HasForeignKey(ec => ec.EpisodeId);
-
-        builder.HasOne(ec => ec.Person)
-            .WithMany()
-            .HasForeignKey(ec => ec.PersonId);
-
-        // Audit fields
-        builder.Property(ec => ec.Created).HasComment("Date and time when the record was created.");
-        builder.Property(ec => ec.CreatedBy).HasComment("User who created the record.");
-        builder.Property(ec => ec.LastModified).HasComment("Date and time when the record was last modified.");
-        builder.Property(ec => ec.LastModifiedBy).HasComment("User who last modified the record.");
-    }
-}
-
 class EpisodeCrewConfiguration : IEntityTypeConfiguration<EpisodeCrew>
 {
     public void Configure(EntityTypeBuilder<EpisodeCrew> builder)
@@ -596,7 +558,8 @@ class EpisodeCrewConfiguration : IEntityTypeConfiguration<EpisodeCrew>
             .HasComment("Foreign key to Episode entity.");
         builder.Property(ec => ec.PersonId)
             .HasComment("Foreign key to Person entity.");
-
+        builder.Property(cc => cc.CreditId)
+            .HasComment("Credit ID from TMDb.");
         builder.Property(ec => ec.Department)
             .HasComment("Department of the crew member (Directing, Writing, etc.).");
 
@@ -634,7 +597,7 @@ class WatchlistConfiguration : IEntityTypeConfiguration<Watchlist>
         builder.Property(w => w.ContentId)
             .HasComment("Foreign key to Content entity.");
 
-        builder.Property(w => w.AddedAt)            
+        builder.Property(w => w.AddedAt)
             .HasComment("Date and time when the content was added to the watchlist.");
 
         // Relationships
