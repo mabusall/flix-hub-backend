@@ -40,6 +40,7 @@ namespace FlixHub.Core.Api.Migrations
                     PosterPath = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, comment: "Poster image path or URL."),
                     BackdropPath = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, comment: "Backdrop image path or URL."),
                     LogoPath = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, comment: "Logo image path or URL."),
+                    IsAdult = table.Column<bool>(type: "boolean", nullable: false),
                     Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for Content."),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
                     CreatedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "Username or identifier of the user who created the record."),
@@ -124,7 +125,7 @@ namespace FlixHub.Core.Api.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for Person.")
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TmdbId = table.Column<long>(type: "bigint", nullable: false),
+                    TmdbId = table.Column<long>(type: "bigint", nullable: false, comment: "TMDb ID (unique for person)."),
                     Name = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false, comment: "Full name of the person."),
                     Gender = table.Column<int>(type: "integer", nullable: false, comment: "Gender: 0=Unknown, 1=Female, 2=Male, 3=NonBinary."),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: true, comment: "Birth date of the person."),
@@ -334,6 +335,7 @@ namespace FlixHub.Core.Api.Migrations
                 {
                     ContentId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Content (movie or TV)."),
                     PersonId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Person."),
+                    CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true, comment: "Credit ID from TMDb."),
                     Character = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true, comment: "Character name played by the actor."),
                     Order = table.Column<int>(type: "integer", nullable: true, comment: "Billing order of the cast member from TMDb."),
                     Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for ContentCast.")
@@ -370,6 +372,7 @@ namespace FlixHub.Core.Api.Migrations
                 {
                     ContentId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Content (movie or TV)."),
                     PersonId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Person."),
+                    CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true, comment: "Credit ID from TMDb."),
                     Department = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Department this person worked in (Directing, Writing, Production)."),
                     Job = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Specific job title (Director, Writer, Producer)."),
                     Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for ContentCrew.")
@@ -640,6 +643,13 @@ namespace FlixHub.Core.Api.Migrations
                 schema: "public",
                 table: "Genre",
                 column: "TmdbReferenceId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Person_TmdbId",
+                schema: "public",
+                table: "Person",
+                column: "TmdbId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

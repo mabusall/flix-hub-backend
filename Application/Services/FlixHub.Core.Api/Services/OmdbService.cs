@@ -6,7 +6,7 @@ internal sealed class OmdbService(IApiClient apiClient,
 {
     public IntegrationApi OmdbConf { get; set; } = appSettings.IntegrationApisOptions.Apis["OMDB"];
 
-    public async Task<OmdbMovieDetailsResponse> GetMovieDetailsAsync(string imdbId)
+    public async Task<OmdbImdbDetailsResponse> GetImdbDetailsAsync(string imdbId)
     {
         var query = new Dictionary<string, string>
         {
@@ -14,7 +14,7 @@ internal sealed class OmdbService(IApiClient apiClient,
             { "apikey", OmdbConf.Token.Decrypt() }
         };
 
-        return await apiClient.GetAsync<OmdbMovieDetailsResponse>(OmdbConf.BaseUrl,
+        return await apiClient.GetAsync<OmdbImdbDetailsResponse>(OmdbConf.BaseUrl,
                                                                   null,
                                                                   null,
                                                                   query,

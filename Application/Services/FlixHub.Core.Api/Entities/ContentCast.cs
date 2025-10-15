@@ -9,6 +9,9 @@ class ContentCast : AuditableEntity
     [ForeignKey(nameof(Person))]
     public long PersonId { get; set; }
 
+    [MaxLength(50)]
+    public string? CreditId { get; set; }
+
     [MaxLength(150)]
     public string? Character { get; set; } // Name of the character played
 

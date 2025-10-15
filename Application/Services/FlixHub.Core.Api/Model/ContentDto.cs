@@ -21,6 +21,7 @@ public record ContentDto : AuditableDto
     public string? PosterPath { get; set; }
     public string? BackdropPath { get; set; }
     public string? LogoPath { get; set; }
+    public bool IsAdult { get; set; }
 
     public IList<ContentGenreDto> Genres { get; set; } = [];
     public IList<ContentCastDto> Casts { get; set; } = [];

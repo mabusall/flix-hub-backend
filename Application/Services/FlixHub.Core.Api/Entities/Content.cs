@@ -56,6 +56,8 @@ class Content : AuditableEntity
     [MaxLength(500)]
     public string? LogoPath { get; set; }
 
+    public bool IsAdult { get; set; }
+
     public virtual ICollection<ContentGenre> Genres { get; set; } = [];
     public virtual ICollection<ContentCast> Casts { get; set; } = [];
     public virtual ICollection<ContentCrew> Crews { get; set; } = [];

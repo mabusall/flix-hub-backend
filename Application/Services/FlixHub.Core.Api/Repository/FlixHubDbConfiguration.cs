@@ -220,7 +220,6 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
 
         builder.Property(p => p.Name)
             .IsRequired()
-            .HasMaxLength(150)
             .HasColumnType("varchar(150)")
             .HasComment("Full name of the person.");
 
@@ -246,6 +245,12 @@ class PersonConfiguration : IEntityTypeConfiguration<Person>
 
         builder.Property(p => p.BirthPlace)
             .HasComment("Birth place of the person.");
+
+        builder.Property(p => p.TmdbId)
+            .HasComment("TMDb ID (unique for person).");
+
+        // Indexes
+        builder.HasIndex(p => p.TmdbId).IsUnique();
 
         // Audit fields
         builder.Property(p => p.Created).HasComment("Date and time when the record was created.");
@@ -273,6 +278,8 @@ class ContentCastConfiguration : IEntityTypeConfiguration<ContentCast>
             .HasComment("Foreign key to Content (movie or TV).");
         builder.Property(cc => cc.PersonId)
             .HasComment("Foreign key to Person.");
+        builder.Property(cc => cc.CreditId)
+            .HasComment("Credit ID from TMDb.");
         builder.Property(cc => cc.Character)
             .HasMaxLength(150)
             .HasComment("Character name played by the actor.");
@@ -306,6 +313,8 @@ class ContentCrewConfiguration : IEntityTypeConfiguration<ContentCrew>
             .HasComment("Foreign key to Content (movie or TV).");
         builder.Property(cc => cc.PersonId)
             .HasComment("Foreign key to Person.");
+        builder.Property(cc => cc.CreditId)
+            .HasComment("Credit ID from TMDb.");
         builder.Property(cc => cc.Department)
             .HasMaxLength(100)
             .HasComment("Department this person worked in (Directing, Writing, Production).");

@@ -60,6 +60,9 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("character varying(20)")
                         .HasComment("IMDb ID.");
 
+                    b.Property<bool>("IsAdult")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("timestamp with time zone")
                         .HasComment("Date and time when the record was last modified.");
@@ -169,6 +172,11 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("varchar(50)")
                         .HasComment("Username or identifier of the user who created the record.");
 
+                    b.Property<string>("CreditId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasComment("Credit ID from TMDb.");
+
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
@@ -219,6 +227,11 @@ namespace FlixHub.Core.Api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasComment("Username or identifier of the user who created the record.");
+
+                    b.Property<string>("CreditId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasComment("Credit ID from TMDb.");
 
                     b.Property<string>("Department")
                         .HasMaxLength(100)
@@ -993,7 +1006,8 @@ namespace FlixHub.Core.Api.Migrations
                         .HasComment("Profile image path from TMDb.");
 
                     b.Property<long>("TmdbId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasComment("TMDb ID (unique for person).");
 
                     b.Property<Guid>("Uuid")
                         .ValueGeneratedOnAdd()
@@ -1001,6 +1015,9 @@ namespace FlixHub.Core.Api.Migrations
                         .HasComment("Unique UUID identifier for Person.");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TmdbId")
+                        .IsUnique();
 
                     b.ToTable("Person", "public");
                 });

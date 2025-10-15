@@ -9,6 +9,9 @@ class ContentCrew : AuditableEntity
     [ForeignKey(nameof(Person))]
     public long PersonId { get; set; }
 
+    [MaxLength(50)]
+    public string? CreditId { get; set; }
+
     [MaxLength(100)]
     public string? Department { get; set; } // Directing, Writing, Production
 

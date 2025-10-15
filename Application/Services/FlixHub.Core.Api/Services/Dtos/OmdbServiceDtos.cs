@@ -1,6 +1,6 @@
 namespace FlixHub.Core.Api.Services.Dtos;
 
-internal sealed record OmdbMovieDetailsResponse
+internal sealed record OmdbImdbDetailsResponse
 {
     public string? Title { get; set; }
 
