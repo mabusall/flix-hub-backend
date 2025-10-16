@@ -88,11 +88,21 @@ public static class DependencyInjection
             {
                 var timeout = TimeSpan.Parse(configuration["TokenTimeout"]);
                 var lifetime = provider.GetRequiredService<IHostApplicationLifetime>();
-                var cts = timeout.Ticks == 0 ? null : new CancellationTokenSource(timeout);
 
+                // Infinite: run as long as the app is alive (still cancels on app shutdown)
+                if (timeout <= TimeSpan.Zero || timeout == Timeout.InfiniteTimeSpan)
+                {
+                    return new ManagedCancellationToken(lifetime.ApplicationStopping);
+                }
+
+                // Finite timeout: cancel either on timeout OR app stopping
+                var cts = new CancellationTokenSource(timeout);
+                //var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(lifetime.ApplicationStopping,
+                //                                                                cts.Token);
+                //return new ManagedCancellationToken(linkedCts.Token);
+                
                 // Configure the managed cancellation token
-                return new ManagedCancellationToken
-                    (cts is null ? lifetime.ApplicationStopping : cts.Token);
+                return new ManagedCancellationToken(cts.Token);
             })
 
             .AddMessageBus(rabbitMqConfig);

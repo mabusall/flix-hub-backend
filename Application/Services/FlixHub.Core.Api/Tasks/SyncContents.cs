@@ -7,9 +7,9 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             OmdbService omdbService)
     : IHangfireJob
 {
-    private const int MaxDailyRequests = 2000;
-    private const int MovieQuota = 1000;
-    private const int TvQuota = 1000;
+    private const int MaxDailyRequests = 4000;
+    private const int MovieQuota = 2000;
+    private const int TvQuota = 2000;
 
     // ✅ Static semaphore to ensure only one execution at a time across all instances
     private static readonly SemaphoreSlim _syncSemaphore = new(1, 1);
