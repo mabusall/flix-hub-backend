@@ -73,3 +73,10 @@ docker exec -it postgres-dev pg_restore -U postgres -d FlixHubDb_restored --clea
 docker exec -it pgadmin-dev bash -lc "ls -la /var/lib/pgadmin/storage/mohannad.xox_gmail.com
 
 ```
+
+# Upgrade pgAdmin Docker image
+```
+
+docker run -d --name pgadmin-dev -p 5050:80 -e PGADMIN_DEFAULT_EMAIL=mohannad.xox@gmail.com -e PGADMIN_DEFAULT_PASSWORD=admin -v pgadmin-ta:/var/lib/pgadmin dpage/pgadmin4:9.9
+
+```

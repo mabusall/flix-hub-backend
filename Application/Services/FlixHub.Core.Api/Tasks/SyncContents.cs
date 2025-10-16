@@ -7,9 +7,9 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             OmdbService omdbService)
     : IHangfireJob
 {
-    private const int MaxDailyRequests = 3000;
-    private const int MovieQuota = 1500;
-    private const int TvQuota = 1500;
+    private const int MaxDailyRequests = 2000;
+    private const int MovieQuota = 1000;
+    private const int TvQuota = 1000;
 
     // ✅ Static semaphore to ensure only one execution at a time across all instances
     private static readonly SemaphoreSlim _syncSemaphore = new(1, 1);
@@ -532,8 +532,8 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             Country = omdbResponse?.Country,
             LogoPath = logoPath,
             Images = allImages,
-            Casts = await MapCasts(credits.Cast),
-            Crews = await MapCrews(credits.Crew),
+            Casts = await MapCastMembers(credits.Cast),
+            Crews = await MapCrewMembers(credits.Crew),
             Videos = [.. videos.Results
                         .Where(w => w.Site == "YouTube" && (w.Type == "Trailer" || w.Type == "Teaser"))
                         .OrderByDescending(o => o.Size)
@@ -656,8 +656,8 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             Country = omdbResponse?.Country,
             LogoPath = logoPath,
             Images = allImages,
-            Casts = await MapCasts(credits.Cast),
-            Crews = await MapCrews(credits.Crew),
+            Casts = await MapCastMembers(credits.Cast),
+            Crews = await MapCrewMembers(credits.Crew),
             Seasons = seasonDetails,
             Videos = [.. videos.Results
                         .Where(w => w.Site == "YouTube" && (w.Type == "Trailer" || w.Type == "Teaser"))
@@ -713,7 +713,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 {
                     foreach (var e in seasonDetails.Episodes)
                     {
-                        var crews = e.Crew is not null && e.Crew.Count > 0 ? await MapEpisodeCrews(e.Crew) : [];
+                        var crews = e.Crew is not null && e.Crew.Count > 0 ? await MapEpisodeCrewMembers(e.Crew) : [];
 
                         var episode = new Episode
                         {
@@ -749,42 +749,42 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
         return (lstSeasonDetails, requestsUsed);
     }
 
-    private async Task<IList<EpisodeCrew>> MapEpisodeCrews(IList<TmdbCrew> crew)
+    private async Task<IList<EpisodeCrew>> MapEpisodeCrewMembers(IList<TmdbCrew> crew)
     {
-        var episodeCrews = new List<EpisodeCrew>();
+        var episodeCrewMembers = new List<EpisodeCrew>();
 
-        foreach (var c in crew.DistinctBy(d => d.Id))
+        foreach (var crewMember in crew.DistinctBy(d => d.Id))
         {
             var episodeCrew = new EpisodeCrew
             {
-                Department = c.Department,
-                Job = c.Job,
-                CreditId = c.CreditId
+                Department = crewMember.Department,
+                Job = crewMember.Job,
+                CreditId = crewMember.CreditId
             };
 
             // Try to find in the current context first (unsaved / tracked)
             var person = uow.Context()
                 .Set<Person>().Local
-                .FirstOrDefault(p => p.TmdbId == c.Id);
+                .FirstOrDefault(p => p.TmdbId == crewMember.Id);
 
             // If not found locally, check the database
             person ??= uow
                 .PersonsRepository
-                .AsQueryable(false)
-                .FirstOrDefault(p => p.TmdbId == c.Id);
+                .AsQueryable(true)
+                .FirstOrDefault(p => p.TmdbId == crewMember.Id);
 
             if (person is null)
             {
                 // get person details from TMDb
-                var personDetails = await tmdbService.People.GetDetailsAsync(c.Id.ToString());
+                var personDetails = await tmdbService.People.GetDetailsAsync(crewMember.Id.ToString());
                 person = MapPerson(personDetails);
             }
 
             episodeCrew.Person = person;
-            episodeCrews.Add(episodeCrew);
+            episodeCrewMembers.Add(episodeCrew);
         }
 
-        return episodeCrews;
+        return episodeCrewMembers;
     }
 
     /// <summary>
@@ -792,9 +792,9 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     /// </summary>
     /// <param name="casts">The list of <see cref="TmdbCast"/> objects to be mapped. Cannot be null.</param>
     /// <returns>A list of <see cref="ContentCast"/> objects corresponding to the input <paramref name="casts"/>.</returns>
-    private async Task<IList<ContentCast>> MapCasts(IList<TmdbCast> casts)
+    private async Task<IList<ContentCast>> MapCastMembers(IList<TmdbCast> casts)
     {
-        var contentCasts = new List<ContentCast>();
+        var contentCastMembers = new List<ContentCast>();
 
         foreach (var cast in casts.Distinct())
         {
@@ -815,10 +815,9 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             // If not found locally, check the database
             person ??= uow
                 .PersonsRepository
-                .AsQueryable(false)
+                .AsQueryable(true)
                 .FirstOrDefault(p => p.TmdbId == cast.Id);
 
-            // check person 2614044
             if (person is null)
             {
                 // get person details from TMDb
@@ -827,10 +826,10 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             }
 
             contentCast.Person = person;
-            contentCasts.Add(contentCast);
+            contentCastMembers.Add(contentCast);
         }
 
-        return contentCasts;
+        return contentCastMembers;
     }
 
     /// <summary>
@@ -838,9 +837,9 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     /// </summary>
     /// <param name="crews">The list of TMDb crew members to be mapped. Cannot be null.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of content cast members.</returns>
-    private async Task<IList<ContentCrew>> MapCrews(IList<TmdbCrew> crews)
+    private async Task<IList<ContentCrew>> MapCrewMembers(IList<TmdbCrew> crews)
     {
-        var contentCrews = new List<ContentCrew>();
+        var contentCrewMembers = new List<ContentCrew>();
 
         foreach (var crew in crews.DistinctBy(d => d.Id))
         {
@@ -853,17 +852,18 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
             // first, check if the person already exists in the database
             // Try to find in the current context first (unsaved / tracked)
-            var person = uow.Context()
-                .Set<Person>().Local
+            var person = uow
+                .Context()
+                .Set<Person>()
+                .Local
                 .FirstOrDefault(p => p.TmdbId == crew.Id);
 
             // If not found locally, check the database
             person ??= uow
-                .PersonsRepository
-                .AsQueryable(false)
-                .FirstOrDefault(p => p.TmdbId == crew.Id);
+                    .PersonsRepository
+                    .AsQueryable(true)
+                    .FirstOrDefault(p => p.TmdbId == crew.Id);
 
-            // check person 2614044
             if (person is null)
             {
                 // get person details from TMDb
@@ -872,10 +872,10 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             }
 
             contentCrew.Person = person;
-            contentCrews.Add(contentCrew);
+            contentCrewMembers.Add(contentCrew);
         }
 
-        return contentCrews;
+        return contentCrewMembers;
     }
 
     /// <summary>
