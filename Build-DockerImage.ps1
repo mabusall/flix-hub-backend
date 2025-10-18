@@ -76,7 +76,7 @@ param(
     
     [Parameter(Mandatory=$false)]
     [ValidateSet("Development", "Staging", "Production")]
-    [string]$Environment = "Production",
+    [string]$Environment = "Docker",
     
     [Parameter(Mandatory=$false)]
     [string]$VaultKey1 = "h8LqW9z0+DpXMg2y+Q7kRw==",

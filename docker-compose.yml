@@ -7,12 +7,12 @@ services:
       dockerfile: Application/Services/FlixHub.Api/Dockerfile
     container_name: flixhub-api
     ports:
-      - "2535:80"
-      - "6979:443"
+      - "2535:8080"
+      - "6979:8081"
     env_file:
       - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Docker
     dns:
       - 8.8.8.8
       - 8.8.4.4
