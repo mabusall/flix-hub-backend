@@ -90,14 +90,14 @@ powershell
 # IMPORTANT: Run from repository root directory (D:\Source Code\Git\flix-hub-backend\)
 
 # --- STEP 1: Define Variables ---
-$ImageName = "flixhub-api"                    # Docker image name
-$Version = "latest"                           # Image version/tag (e.g., "1.0.0", "latest")
-$ContainerName = "flixhub-api"               # Container name
-$HttpPort = 2535                             # HTTP port on host
-$HttpsPort = 6979                            # HTTPS port on host
-$Protocol = "Production"                      # ASPNETCORE_ENVIRONMENT (Development/Staging/Production)
-$VaultKey1 = "h8LqW9z0+DpXMg2y+Q7kRw=="     # FlixHubKeys:VaultKey1
-$VaultKey2 = "Q9@h]n3zT!mV^2Lf"              # FlixHubKeys:VaultKey2
+$ImageName = "flixhub-api"						# Docker image name
+$Version = "latest"								# Image version/tag (e.g., "1.0.0", "latest")
+$ContainerName = "flixhub-api"					# Container name
+$HttpPort = 2535								# HTTP port on host
+$HttpsPort = 6979								# HTTPS port on host
+$Protocol = "Production"						# ASPNETCORE_ENVIRONMENT (Development/Staging/Production)
+$VaultKey1 = "h8LqW9z0+DpXMg2y+Q7kRw=="			# FlixHubKeys:VaultKey1
+$VaultKey2 = "Q9@h]n3zT!mV^2Lf"					# FlixHubKeys:VaultKey2
 
 # --- STEP 2: Restore NuGet Packages (Required for Docker build) ---
 Write-Host "Step 1: Restoring NuGet packages..." -ForegroundColor Cyan
