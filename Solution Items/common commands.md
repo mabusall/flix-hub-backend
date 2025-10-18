@@ -80,3 +80,10 @@ docker exec -it pgadmin-dev bash -lc "ls -la /var/lib/pgadmin/storage/mohannad.x
 docker run -d --name pgadmin-dev -p 5050:80 -e PGADMIN_DEFAULT_EMAIL=mohannad.xox@gmail.com -e PGADMIN_DEFAULT_PASSWORD=admin -v pgadmin-ta:/var/lib/pgadmin dpage/pgadmin4:9.9
 
 ```
+
+# Execute powershell commands
+```
+
+.\Build-DockerImage.ps1 -CleanBuild
+
+```

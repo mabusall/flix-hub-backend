@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Application/Services/FlixHub.Api/Dockerfile
+      network: host
     container_name: flixhub-api
     ports:
       - "2535:8080"

@@ -14,7 +14,7 @@ $Version = "latest"								# Image version/tag (e.g., "1.0.0", "latest")
 $ContainerName = "flixhub-api"					# Container name
 $HttpPort = 2535								# HTTP port on host
 $HttpsPort = 6979								# HTTPS port on host
-$Protocol = "Production"						# ASPNETCORE_ENVIRONMENT (Development/Staging/Production)
+$Protocol = "Docker"							# ASPNETCORE_ENVIRONMENT (Development/Staging/Production)
 $VaultKey1 = "h8LqW9z0+DpXMg2y+Q7kRw=="			# FlixHubKeys:VaultKey1
 $VaultKey2 = "Q9@h]n3zT!mV^2Lf"					# FlixHubKeys:VaultKey2
 
@@ -35,8 +35,10 @@ docker rm $ContainerName 2>$null
 Write-Host "Step 4: Starting container: $ContainerName..." -ForegroundColor Cyan
 docker run -d `
   --name $ContainerName `
-  -p "${HttpPort}:80" `
-  -p "${HttpsPort}:443" `
+  -p "${HttpPort}:8080" `
+  -p "${HttpsPort}:8081" `
+  --dns 8.8.8.8 `
+  --dns 8.8.4.4 `
   -e ASPNETCORE_ENVIRONMENT=$Protocol `
   -e "FlixHubKeys__VaultKey1=$VaultKey1" `
   -e "FlixHubKeys__VaultKey2=$VaultKey2" `
