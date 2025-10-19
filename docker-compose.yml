@@ -1,11 +1,13 @@
 version: '3.8'
 
+name: flixhub-api  # Optional: sets project name explicitly
+
 services:
   flixhub-api:
     build:
       context: .
       dockerfile: Application/Services/FlixHub.Api/Dockerfile
-      network: host
+    image: flixhub:latest
     container_name: flixhub-api
     ports:
       - "2535:8080"
@@ -14,13 +16,4 @@ services:
       - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
     restart: unless-stopped
-    networks:
-      - flixhub-network
-
-networks:
-  flixhub-network:
-    driver: bridge

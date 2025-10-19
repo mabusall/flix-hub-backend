@@ -100,7 +100,7 @@ public static class DependencyInjection
                 //var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(lifetime.ApplicationStopping,
                 //                                                                cts.Token);
                 //return new ManagedCancellationToken(linkedCts.Token);
-                
+
                 // Configure the managed cancellation token
                 return new ManagedCancellationToken(cts.Token);
             })
@@ -283,17 +283,10 @@ public static class DependencyInjection
                     options.MaskValue = new string('*', 10);
                 })
 
-                // plain text formatter
-                //.WriteTo.File(@$"c:\logs\{elasticConfig.Application}-.log",
-                //              rollingInterval: RollingInterval.Day,
-                //              rollOnFileSizeLimit: true,
-                //              fileSizeLimitBytes: 1073741824, //1GB
-                //              retainedFileCountLimit: null)
-
                 // write logs into console
                 .WriteTo.Async(a => a.Console())
                 // json text formatter
-                .WriteTo.Async(a => a.File(path: @$"c:\logs\{elasticConfig.Application}-.json",
+                .WriteTo.Async(a => a.File(path: @$"{elasticConfig.FolderPath}\{elasticConfig.Application}-.json",
                               formatter: new CompactJsonFormatter(),
                               rollingInterval: RollingInterval.Day,
                               rollOnFileSizeLimit: true,

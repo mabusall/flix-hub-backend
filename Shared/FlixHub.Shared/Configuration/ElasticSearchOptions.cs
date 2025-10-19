@@ -11,4 +11,5 @@ public class ElasticSearchOptions
     public string ApiId { get; set; }
     public string ApiKey { get; set; }
     public string Environment { get; set; }
+    public string FolderPath { get; set; }
 }
