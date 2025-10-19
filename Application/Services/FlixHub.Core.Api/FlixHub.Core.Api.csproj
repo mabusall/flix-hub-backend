@@ -12,8 +12,4 @@
 	  <ProjectReference Include="..\..\..\Shared\FlixHub.Resources\FlixHub.Resources.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Features\" />
-	</ItemGroup>
-
 </Project>
