@@ -1,6 +1,6 @@
 namespace FlixHub.Core.Authorization;
 
-public class AllowAllAuthorizationFilter : IDashboardAuthorizationFilter
+public class HangfireDashboardAllowAllAuthorizationFilter : IDashboardAuthorizationFilter
 {
     public bool Authorize(DashboardContext context)
     {

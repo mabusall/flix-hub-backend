@@ -339,7 +339,7 @@ public static class DependencyInjection
         if (hangfireOptions.IsEnabled)
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
-                Authorization = [new AllowAllAuthorizationFilter()],
+                Authorization = [new HangfireDashboardAllowAllAuthorizationFilter()],
                 DashboardTitle = "FlixHub Jobs Dashboard"
             });
 
