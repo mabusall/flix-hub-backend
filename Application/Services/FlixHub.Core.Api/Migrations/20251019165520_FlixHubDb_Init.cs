@@ -154,7 +154,7 @@ namespace FlixHub.Core.Api.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Username = table.Column<string>(type: "varchar", maxLength: 150, nullable: false, comment: "Username of the system user."),
                     Email = table.Column<string>(type: "varchar", maxLength: 150, nullable: false, comment: "Email address of the system user."),
-                    KeycloakUserId = table.Column<Guid>(type: "uuid", nullable: true, comment: "Unique identifier for the user in the Keycloak system."),
+                    Password = table.Column<string>(type: "varchar", maxLength: 150, nullable: false, comment: "Hashed password of the system user."),
                     FirstName = table.Column<string>(type: "varchar", maxLength: 150, nullable: false, comment: "First name of the system user."),
                     LastName = table.Column<string>(type: "varchar", maxLength: 150, nullable: false, comment: "Last name of the system user."),
                     EmailVerificationCode = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true, comment: "Email verification code for user."),

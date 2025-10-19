@@ -1011,10 +1011,6 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("boolean")
                         .HasComment("Indicates whether the user is verified.");
 
-                    b.Property<Guid?>("KeycloakUserId")
-                        .HasColumnType("uuid")
-                        .HasComment("Unique identifier for the user in the Keycloak system.");
-
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("timestamp with time zone")
                         .HasComment("Date and time when the record was last modified.");
@@ -1029,6 +1025,12 @@ namespace FlixHub.Core.Api.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("varchar")
                         .HasComment("Last name of the system user.");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar")
+                        .HasComment("Hashed password of the system user.");
 
                     b.Property<string>("Preferences")
                         .HasColumnType("jsonb")

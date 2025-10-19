@@ -9,7 +9,8 @@ class SystemUser : AuditableEntity
     [Required, MaxLength(150), Column(TypeName = "varchar")]
     public string? Email { get; set; }
 
-    public Guid? KeycloakUserId { get; set; }
+    [Required, MaxLength(150), Column(TypeName = "varchar")]
+    public string? Password { get; set; }
 
     [Required, MaxLength(150), Column(TypeName = "varchar")]
     public string? FirstName { get; set; }

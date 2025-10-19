@@ -18,8 +18,9 @@ class SystemUserConfiguration : IEntityTypeConfiguration<SystemUser>
             .HasComment("Email address of the system user.")
             .HasConversion<DbEncryptionProvider>();
 
-        builder.Property(p => p.KeycloakUserId)
-            .HasComment("Unique identifier for the user in the Keycloak system.");
+        builder.Property(p => p.Password)
+            .HasComment("Hashed password of the system user.")
+            .HasConversion<DbEncryptionProvider>();
 
         builder.Property(p => p.FirstName)
             .HasComment("First name of the system user.")

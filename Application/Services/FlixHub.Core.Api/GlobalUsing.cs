@@ -1,4 +1,5 @@
 ﻿global using EntityFramework.Exceptions.PostgreSQL;
+global using FlixHub.Caching.MemoryCacheProvider;
 global using FlixHub.Core.Api.Entities;
 global using FlixHub.Core.Api.Enums;
 global using FlixHub.Core.Api.Model;
@@ -10,6 +11,7 @@ global using FlixHub.Core.CQRS;
 global using FlixHub.Core.Database;
 global using FlixHub.Core.Tasks;
 global using FlixHub.Core.WebApplicationExtension;
+global using FlixHub.Resources;
 global using FlixHub.Shared.Configuration;
 global using FlixHub.Shared.DataProtection;
 global using FlixHub.Shared.Helper;
@@ -19,6 +21,7 @@ global using Hangfire;
 global using MediatR;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Routing;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -31,5 +34,3 @@ global using System.Reflection;
 global using System.Runtime.CompilerServices;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
-
-
