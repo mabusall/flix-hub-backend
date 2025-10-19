@@ -286,7 +286,7 @@ public static class DependencyInjection
                 // write logs into console
                 .WriteTo.Async(a => a.Console())
                 // json text formatter
-                .WriteTo.Async(a => a.File(path: @$"{elasticConfig.FolderPath}\{elasticConfig.Application}-.json",
+                .WriteTo.Async(a => a.File(path: Path.Combine(elasticConfig.FolderPath, $"{elasticConfig.Application}-.json"),
                               formatter: new CompactJsonFormatter(),
                               rollingInterval: RollingInterval.Day,
                               rollOnFileSizeLimit: true,

@@ -43,7 +43,7 @@ app.RegisterEndpoints();
 app.MapPing();
 
 app
-    //.RegisterTypedTasks()
+    .RegisterTypedTasks()
     .UseCoreServices(builder.Configuration)
     .UseApiHealthChecks();
 
