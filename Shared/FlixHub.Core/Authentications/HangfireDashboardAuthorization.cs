@@ -1,4 +1,4 @@
-namespace FlixHub.Core.Authorization;
+namespace FlixHub.Core.Authentications;
 
 public class HangfireDashboardAllowAllAuthorizationFilter : IDashboardAuthorizationFilter
 {
