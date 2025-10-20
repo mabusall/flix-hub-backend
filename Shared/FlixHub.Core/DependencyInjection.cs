@@ -361,6 +361,7 @@ public static class DependencyInjection
         Dictionary<string, bool> appFeatures = [];
         FirebaseOptions firebaseOptions = new();
         IntegrationApisOptions integrationApisOptions = new();
+        DailySyncRequestsOptions dailySyncRequestsOptions = new();
 
         configuration
             .GetSection(ElasticApmOptions.ConfigurationKey)
@@ -401,6 +402,9 @@ public static class DependencyInjection
         configuration
            .GetSection(IntegrationApisOptions.ConfigurationKey)
            .Bind(integrationApisOptions);
+        configuration
+           .GetSection(DailySyncRequestsOptions.ConfigurationKey)
+           .Bind(dailySyncRequestsOptions);
 
         return new AppSettingsKeyManagement(elasticApmOptions,
                                             elasticSearchOptions,
@@ -414,6 +418,7 @@ public static class DependencyInjection
                                             rateLimitOptions,
                                             appFeatures,
                                             firebaseOptions,
-                                            integrationApisOptions);
+                                            integrationApisOptions,
+                                            dailySyncRequestsOptions);
     }
 }

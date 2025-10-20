@@ -335,7 +335,7 @@ namespace FlixHub.Core.Api.Migrations
                 {
                     ContentId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Content (movie or TV)."),
                     PersonId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Person."),
-                    CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true, comment: "Credit ID from TMDb."),
+                    CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, comment: "Credit ID from TMDb."),
                     Character = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true, comment: "Character name played by the actor."),
                     Order = table.Column<int>(type: "integer", nullable: true, comment: "Billing order of the cast member from TMDb."),
                     Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for ContentCast.")
@@ -348,7 +348,7 @@ namespace FlixHub.Core.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContentCast", x => new { x.ContentId, x.PersonId });
+                    table.PrimaryKey("PK_ContentCast", x => new { x.ContentId, x.PersonId, x.CreditId });
                     table.ForeignKey(
                         name: "FK_ContentCast_Content_ContentId",
                         column: x => x.ContentId,
@@ -372,7 +372,7 @@ namespace FlixHub.Core.Api.Migrations
                 {
                     ContentId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Content (movie or TV)."),
                     PersonId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Person."),
-                    CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true, comment: "Credit ID from TMDb."),
+                    CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, comment: "Credit ID from TMDb."),
                     Department = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Department this person worked in (Directing, Writing, Production)."),
                     Job = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Specific job title (Director, Writer, Producer)."),
                     Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for ContentCrew.")
@@ -385,7 +385,7 @@ namespace FlixHub.Core.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContentCrew", x => new { x.ContentId, x.PersonId });
+                    table.PrimaryKey("PK_ContentCrew", x => new { x.ContentId, x.PersonId, x.CreditId });
                     table.ForeignKey(
                         name: "FK_ContentCrew_Content_ContentId",
                         column: x => x.ContentId,
@@ -476,13 +476,13 @@ namespace FlixHub.Core.Api.Migrations
                 schema: "public",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for EpisodeCrew.")
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     EpisodeId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Episode entity."),
                     PersonId = table.Column<long>(type: "bigint", nullable: false, comment: "Foreign key to Person entity."),
-                    CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true, comment: "Credit ID from TMDb."),
+                    CreditId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, comment: "Credit ID from TMDb."),
                     Department = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Department of the crew member (Directing, Writing, etc.)."),
                     Job = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Specific job title of the crew member."),
+                    Id = table.Column<long>(type: "bigint", nullable: false, comment: "Internal primary key for EpisodeCrew.")
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Uuid = table.Column<Guid>(type: "uuid", nullable: false, comment: "Unique UUID identifier for EpisodeCrew."),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Date and time when the record was created."),
                     CreatedBy = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "User who created the record."),
@@ -491,7 +491,7 @@ namespace FlixHub.Core.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EpisodeCrew", x => x.Id);
+                    table.PrimaryKey("PK_EpisodeCrew", x => new { x.EpisodeId, x.PersonId, x.CreditId });
                     table.ForeignKey(
                         name: "FK_EpisodeCrew_Episode_EpisodeId",
                         column: x => x.EpisodeId,
@@ -516,10 +516,22 @@ namespace FlixHub.Core.Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ContentCast_ContentId_PersonId",
+                schema: "public",
+                table: "ContentCast",
+                columns: new[] { "ContentId", "PersonId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ContentCast_PersonId",
                 schema: "public",
                 table: "ContentCast",
                 column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContentCrew_ContentId_PersonId",
+                schema: "public",
+                table: "ContentCrew",
+                columns: new[] { "ContentId", "PersonId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContentCrew_PersonId",
@@ -580,10 +592,10 @@ namespace FlixHub.Core.Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_EpisodeCrew_EpisodeId",
+                name: "IX_EpisodeCrew_EpisodeId_PersonId",
                 schema: "public",
                 table: "EpisodeCrew",
-                column: "EpisodeId");
+                columns: new[] { "EpisodeId", "PersonId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_EpisodeCrew_PersonId",

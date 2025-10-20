@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FlixHub.Core.Api.Migrations
 {
     [DbContext(typeof(FlixHubDbContext))]
-    [Migration("20251019165520_FlixHubDb_Init")]
+    [Migration("20251020085546_FlixHubDb_Init")]
     partial class FlixHubDb_Init
     {
         /// <inheritdoc />
@@ -160,6 +160,11 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("bigint")
                         .HasComment("Foreign key to Person.");
 
+                    b.Property<string>("CreditId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasComment("Credit ID from TMDb.");
+
                     b.Property<string>("Character")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
@@ -173,11 +178,6 @@ namespace FlixHub.Core.Api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasComment("Username or identifier of the user who created the record.");
-
-                    b.Property<string>("CreditId")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasComment("Credit ID from TMDb.");
 
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,9 +204,11 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("uuid")
                         .HasComment("Unique UUID identifier for ContentCast.");
 
-                    b.HasKey("ContentId", "PersonId");
+                    b.HasKey("ContentId", "PersonId", "CreditId");
 
                     b.HasIndex("PersonId");
+
+                    b.HasIndex("ContentId", "PersonId");
 
                     b.ToTable("ContentCast", "public");
                 });
@@ -221,6 +223,11 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("bigint")
                         .HasComment("Foreign key to Person.");
 
+                    b.Property<string>("CreditId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasComment("Credit ID from TMDb.");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone")
                         .HasComment("Date and time when the record was created.");
@@ -229,11 +236,6 @@ namespace FlixHub.Core.Api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasComment("Username or identifier of the user who created the record.");
-
-                    b.Property<string>("CreditId")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasComment("Credit ID from TMDb.");
 
                     b.Property<string>("Department")
                         .HasMaxLength(100)
@@ -266,9 +268,11 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("uuid")
                         .HasComment("Unique UUID identifier for ContentCrew.");
 
-                    b.HasKey("ContentId", "PersonId");
+                    b.HasKey("ContentId", "PersonId", "CreditId");
 
                     b.HasIndex("PersonId");
+
+                    b.HasIndex("ContentId", "PersonId");
 
                     b.ToTable("ContentCrew", "public");
                 });
@@ -780,12 +784,18 @@ namespace FlixHub.Core.Api.Migrations
 
             modelBuilder.Entity("FlixHub.Core.Api.Entities.EpisodeCrew", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<long>("EpisodeId")
                         .HasColumnType("bigint")
-                        .HasComment("Internal primary key for EpisodeCrew.");
+                        .HasComment("Foreign key to Episode entity.");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<long>("PersonId")
+                        .HasColumnType("bigint")
+                        .HasComment("Foreign key to Person entity.");
+
+                    b.Property<string>("CreditId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasComment("Credit ID from TMDb.");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone")
@@ -796,19 +806,17 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("varchar(50)")
                         .HasComment("User who created the record.");
 
-                    b.Property<string>("CreditId")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasComment("Credit ID from TMDb.");
-
                     b.Property<string>("Department")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasComment("Department of the crew member (Directing, Writing, etc.).");
 
-                    b.Property<long>("EpisodeId")
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasComment("Foreign key to Episode entity.");
+                        .HasComment("Internal primary key for EpisodeCrew.");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Job")
                         .HasMaxLength(100)
@@ -824,20 +832,16 @@ namespace FlixHub.Core.Api.Migrations
                         .HasColumnType("varchar(50)")
                         .HasComment("User who last modified the record.");
 
-                    b.Property<long>("PersonId")
-                        .HasColumnType("bigint")
-                        .HasComment("Foreign key to Person entity.");
-
                     b.Property<Guid>("Uuid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasComment("Unique UUID identifier for EpisodeCrew.");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("EpisodeId");
+                    b.HasKey("EpisodeId", "PersonId", "CreditId");
 
                     b.HasIndex("PersonId");
+
+                    b.HasIndex("EpisodeId", "PersonId");
 
                     b.ToTable("EpisodeCrew", "public");
                 });

@@ -15,6 +15,7 @@ public interface IAppSettingsKeyManagement
     Dictionary<string, bool> AppFeatures { get; }
     FirebaseOptions FirebaseOptions { get; }
     IntegrationApisOptions IntegrationApisOptions { get; }
+    DailySyncRequestsOptions DailySyncRequestsOptions { get; }
 }
 
 public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
@@ -29,7 +30,8 @@ public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
                                       RateLimitOptions rateLimitOptions,
                                       Dictionary<string, bool> appFeatures,
                                       FirebaseOptions firebaseOptions,
-                                      IntegrationApisOptions integrationApisOptions)
+                                      IntegrationApisOptions integrationApisOptions,
+                                      DailySyncRequestsOptions dailySyncRequestsOptions)
     : IAppSettingsKeyManagement
 {
     public ElasticApmOptions ElasticApmOptions { get; } = elasticApmOptions;
@@ -55,5 +57,8 @@ public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
     public Dictionary<string, bool> AppFeatures { get; } = appFeatures;
 
     public FirebaseOptions FirebaseOptions { get; } = firebaseOptions;
+
     public IntegrationApisOptions IntegrationApisOptions { get; } = integrationApisOptions;
+
+    public DailySyncRequestsOptions DailySyncRequestsOptions { get; } = dailySyncRequestsOptions;
 }

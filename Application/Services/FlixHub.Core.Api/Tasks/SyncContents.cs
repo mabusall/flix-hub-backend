@@ -7,9 +7,9 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             OmdbService omdbService)
     : IHangfireJob
 {
-    private const int MaxDailyRequests = 4000;
-    private const int MovieQuota = 2000;
-    private const int TvQuota = 2000;
+    private readonly int _maxDailyRequests = appSettings.DailySyncRequestsOptions.Limit;
+    private readonly int _movieQuota = appSettings.DailySyncRequestsOptions.MovieQuota;
+    private readonly int _tvQuota = appSettings.DailySyncRequestsOptions.SeriesQuota;
 
     // ✅ Static semaphore to ensure only one execution at a time across all instances
     private static readonly SemaphoreSlim _syncSemaphore = new(1, 1);
@@ -32,7 +32,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             var todayRequests = await GetTodayRequests();
             var totalRequestsToday = todayRequests.Sum(sum => sum.RequestCount);
 
-            if (totalRequestsToday >= MaxDailyRequests)
+            if (totalRequestsToday >= _maxDailyRequests)
                 return;
 
             var movieRequestsUsed = todayRequests
@@ -43,13 +43,13 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                     .Sum(sum => sum.RequestCount);
 
             // ✅ PROFESSIONAL BALANCED 50/50 ALLOCATION
-            if (movieRequestsUsed < MovieQuota)
+            if (movieRequestsUsed < _movieQuota)
             {
-                await FetchNextMoviesBatch(MovieQuota);
+                await FetchNextMoviesBatch(_movieQuota);
             }
-            else if (tvRequestsUsed < TvQuota)
+            else if (tvRequestsUsed < _tvQuota)
             {
-                await FetchNextSeriesBatch(TvQuota);
+                await FetchNextSeriesBatch(_tvQuota);
             }
         }
         finally
@@ -753,7 +753,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     {
         var episodeCrewMembers = new List<EpisodeCrew>();
 
-        foreach (var crewMember in crew.DistinctBy(d => d.Id))
+        foreach (var crewMember in crew)
         {
             var episodeCrew = new EpisodeCrew
             {
@@ -796,7 +796,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     {
         var contentCastMembers = new List<ContentCast>();
 
-        foreach (var cast in casts.Distinct())
+        foreach (var cast in casts)
         {
             var contentCast = new ContentCast
             {
@@ -841,7 +841,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     {
         var contentCrewMembers = new List<ContentCrew>();
 
-        foreach (var crew in crews.DistinctBy(d => d.Id))
+        foreach (var crew in crews)
         {
             var contentCrew = new ContentCrew
             {

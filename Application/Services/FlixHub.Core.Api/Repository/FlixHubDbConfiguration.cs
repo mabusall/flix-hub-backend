@@ -265,7 +265,11 @@ class ContentCastConfiguration : IEntityTypeConfiguration<ContentCast>
 {
     public void Configure(EntityTypeBuilder<ContentCast> builder)
     {
-        builder.HasKey(cc => new { cc.ContentId, cc.PersonId });
+        // Primary key includes the credit
+        builder.HasKey(cc => new { cc.ContentId, cc.PersonId, cc.CreditId });
+
+        // Useful non-unique index to fetch “all casts for a person in a content”
+        builder.HasIndex(cc => new { cc.ContentId, cc.PersonId }).IsUnique(false);
 
         builder.HasOne(cc => cc.Person)
             .WithMany()
@@ -300,7 +304,11 @@ class ContentCrewConfiguration : IEntityTypeConfiguration<ContentCrew>
 {
     public void Configure(EntityTypeBuilder<ContentCrew> builder)
     {
-        builder.HasKey(cc => new { cc.ContentId, cc.PersonId });
+        // Primary key includes the credit
+        builder.HasKey(cc => new { cc.ContentId, cc.PersonId, cc.CreditId });
+
+        // Useful non-unique index to fetch “all casts for a person in a content”
+        builder.HasIndex(cc => new { cc.ContentId, cc.PersonId }).IsUnique(false);
 
         builder.HasOne(cc => cc.Person)
             .WithMany()
@@ -329,6 +337,50 @@ class ContentCrewConfiguration : IEntityTypeConfiguration<ContentCrew>
         builder.Property(p => p.CreatedBy).HasComment("Username or identifier of the user who created the record.");
         builder.Property(p => p.LastModified).HasComment("Date and time when the record was last modified.");
         builder.Property(p => p.LastModifiedBy).HasComment("Username or identifier of the user who last modified the record.");
+    }
+}
+
+class EpisodeCrewConfiguration : IEntityTypeConfiguration<EpisodeCrew>
+{
+    public void Configure(EntityTypeBuilder<EpisodeCrew> builder)
+    {
+        builder.Property(ec => ec.Id)
+            .HasComment("Internal primary key for EpisodeCrew.");
+        builder.Property(ec => ec.Uuid)
+            .HasComment("Unique UUID identifier for EpisodeCrew.");
+
+        // Primary key includes the credit
+        builder.HasKey(cc => new { cc.EpisodeId, cc.PersonId, cc.CreditId });
+
+        // Useful non-unique index to fetch “all casts for a person in a content”
+        builder.HasIndex(cc => new { cc.EpisodeId, cc.PersonId }).IsUnique(false);
+
+        builder.Property(ec => ec.EpisodeId)
+            .HasComment("Foreign key to Episode entity.");
+        builder.Property(ec => ec.PersonId)
+            .HasComment("Foreign key to Person entity.");
+        builder.Property(cc => cc.CreditId)
+            .HasComment("Credit ID from TMDb.");
+        builder.Property(ec => ec.Department)
+            .HasComment("Department of the crew member (Directing, Writing, etc.).");
+
+        builder.Property(ec => ec.Job)
+            .HasComment("Specific job title of the crew member.");
+
+        // Relationships
+        builder.HasOne<Episode>()
+            .WithMany(e => e.Crews)
+            .HasForeignKey(ec => ec.EpisodeId);
+
+        builder.HasOne(ec => ec.Person)
+            .WithMany()
+            .HasForeignKey(ec => ec.PersonId);
+
+        // Audit fields
+        builder.Property(ec => ec.Created).HasComment("Date and time when the record was created.");
+        builder.Property(ec => ec.CreatedBy).HasComment("User who created the record.");
+        builder.Property(ec => ec.LastModified).HasComment("Date and time when the record was last modified.");
+        builder.Property(ec => ec.LastModifiedBy).HasComment("User who last modified the record.");
     }
 }
 
@@ -546,44 +598,6 @@ class EpisodeConfiguration : IEntityTypeConfiguration<Episode>
     }
 }
 
-class EpisodeCrewConfiguration : IEntityTypeConfiguration<EpisodeCrew>
-{
-    public void Configure(EntityTypeBuilder<EpisodeCrew> builder)
-    {
-        builder.Property(ec => ec.Id)
-            .HasComment("Internal primary key for EpisodeCrew.");
-        builder.Property(ec => ec.Uuid)
-            .HasComment("Unique UUID identifier for EpisodeCrew.");
-
-        builder.Property(ec => ec.EpisodeId)
-            .HasComment("Foreign key to Episode entity.");
-        builder.Property(ec => ec.PersonId)
-            .HasComment("Foreign key to Person entity.");
-        builder.Property(cc => cc.CreditId)
-            .HasComment("Credit ID from TMDb.");
-        builder.Property(ec => ec.Department)
-            .HasComment("Department of the crew member (Directing, Writing, etc.).");
-
-        builder.Property(ec => ec.Job)
-            .HasComment("Specific job title of the crew member.");
-
-        // Relationships
-        builder.HasOne<Episode>()
-            .WithMany(e => e.Crews)
-            .HasForeignKey(ec => ec.EpisodeId);
-
-        builder.HasOne(ec => ec.Person)
-            .WithMany()
-            .HasForeignKey(ec => ec.PersonId);
-
-        // Audit fields
-        builder.Property(ec => ec.Created).HasComment("Date and time when the record was created.");
-        builder.Property(ec => ec.CreatedBy).HasComment("User who created the record.");
-        builder.Property(ec => ec.LastModified).HasComment("Date and time when the record was last modified.");
-        builder.Property(ec => ec.LastModifiedBy).HasComment("User who last modified the record.");
-    }
-}
-
 class WatchlistConfiguration : IEntityTypeConfiguration<Watchlist>
 {
     public void Configure(EntityTypeBuilder<Watchlist> builder)
@@ -611,7 +625,8 @@ class WatchlistConfiguration : IEntityTypeConfiguration<Watchlist>
             .HasForeignKey(w => w.ContentId);
 
         // Unique constraint: a user cannot add the same content twice
-        builder.HasIndex(w => new { w.UserId, w.ContentId })
+        builder
+            .HasIndex(w => new { w.UserId, w.ContentId })
             .IsUnique();
 
         // Audit fields
