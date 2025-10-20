@@ -17,6 +17,6 @@ public class FeatureBehavior<TRequest, TResponse>
                 throw new FeatureDisabledException($"The feature {featureName} is not available for now.");
         }
 
-        return await next();
+        return await next(cancellationToken);
     }
 }

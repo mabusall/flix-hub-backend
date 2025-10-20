@@ -21,6 +21,6 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
 
         if (failures.Count != 0) throw new FluentValidation.ValidationException(failures);
 
-        return await next();
+        return await next(cancellationToken);
     }
 }
