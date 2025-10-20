@@ -118,34 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Team" xml:space="preserve">
-    <value>فريق تشغيل شركات الحج،</value>
+    <value>فريق تشغيل منصة فليكس هب،</value>
   </data>
   <data name="DoNotReplyToThisMail" xml:space="preserve">
     <value>تم إنشاء هذا الإشعار الإلكتروني تلقائيًا. يرجى عدم الرد على هذه الرسالة.</value>
   </data>
   <data name="Copyright" xml:space="preserve">
-    <value>جميع الحقوق محفوظة لوزارة الحج و العمرة</value>
+    <value>جميع الحقوق محفوظة لمنصة فليكس هب</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>مرحبا بك في منصة تشغيل شركات الحج</value>
-  </data>
-  <data name="VerifyOtpTemplate_YourOtpLabel" xml:space="preserve">
-    <value>رمز الدخول لمرة واحدة هو</value>
-  </data>
-  <data name="VerifyOtpTemplate_PleaseDoNotShareOTP" xml:space="preserve">
-    <value>يرجى عدم مشاركة هذا الرقم لأي شخص.</value>
-  </data>
-  <data name="VerifyOtpTemplate_Title" xml:space="preserve">
-    <value>رمز سري لمرة واحدة</value>
-  </data>
-  <data name="VerifyOtpTemplate_OtpValidFor5min" xml:space="preserve">
-    <value>هذا الرقم صالح لمدة 5 دقائق.</value>
-  </data>
-  <data name="VerifyEmailTemplate_Title" xml:space="preserve">
-    <value>إدارة مقدم خدمة</value>
-  </data>
-  <data name="VerifyEmailTemplate_SpAdmin_Body" xml:space="preserve">
-    <value>عزيزي المستخدم,&lt;br&gt;&lt;br&gt;تم تعيينكم كمشرف نظام لمقدم خدمة الحج {0} في برنامج الحج المباشر، يرجى الضغط على الرابط &lt;a href="{1}"&gt;هنا&lt;/a&gt; حتى يتم تفعيل حسابكم. </value>
+    <value>مرحبا بك في منصة فليكس هب</value>
   </data>
   <data name="ForgetPasswordTemplate_Title" xml:space="preserve">
     <value>إعادة تعيين كلمة المرور</value>
@@ -170,37 +152,26 @@
   <data name="NeedHelp" xml:space="preserve">
     <value>هل تحتاج إلى مساعدة؟</value>
   </data>
-  <data name="VerifyEmailTemplate_SpUser_Body" xml:space="preserve">
-    <value>عزيزي المستخدم،&lt;br&gt;&lt;br&gt;تم تعيينكم كموظف لدى مقدم خدمة الحج {0} في برنامج الحج المباشر، يرجى الضغط على الرابط &lt;a href="{1}"&gt;هنا&lt;/a&gt; حتى يتم تفعيل حسابكم.</value>
+  <data name="ActivateAccountTemplate_Title" xml:space="preserve">
+    <value>تفعيل الحساب</value>
   </data>
-  <data name="ActivateSubscriptionTemplate_Title" xml:space="preserve">
-    <value>تفعيل إشتراك</value>
-  </data>
-  <data name="ActivateSubscriptionTemplate_Body" xml:space="preserve">
-    <value>عزيزي المستخدم, تم تفعيل الاشتراك الخاص بمقدم الخدمة التابع لك على باقة '{0}'. يمكنك الآن تسجيل الدخول على المنصة واستخدام الخدمات حسب الباقة المحددة.</value>
-  </data>
-  <data name="RoomDistribution_MessageTitle" xml:space="preserve">
-    <value>تحديث حالة السكن</value>
-  </data>
-  <data name="RoomDistribution_MessageBody" xml:space="preserve">
-    <value>تم تحديث الغرفة في "{0}" الخاصة بك, الرجاء الدخول على صفحة سكني للاطلاع على التحديث</value>
-  </data>
-  <data name="ActivityAdded_MessageTitle" xml:space="preserve">
-    <value>إضافة نشاط</value>
-  </data>
-  <data name="ActivityAdded_MessageBody" xml:space="preserve">
-    <value>تم إضافتك إلى نشاط "{0}" من قبل مقدم الخدمة، يمكنك استعراض تفاصيل النشاط عن طريق الدخول إلى التطبيق</value>
-  </data>
-  <data name="ActivityUpdated_MessageTitle" xml:space="preserve">
-    <value>تعديل نشاط</value>
-  </data>
-  <data name="ActivityUpdated_MessageBody" xml:space="preserve">
-    <value>تم تعديل النشاط "{0}" الذي تم إضافتك عليه مسبقاً، يمكنك استعراض تفاصيل النشاط عن طريق الدخول إلى التطبيق</value>
-  </data>
-  <data name="ActivityRemoved_MessageTitle" xml:space="preserve">
-    <value>حذف نشاط</value>
-  </data>
-  <data name="ActivityRemoved_MessageBody" xml:space="preserve">
-    <value>تم حذف النشاط "{0}" الذي تم إضافتك عليه مسبقاً، يمكنك استعراض تفاصيل النشاط عن طريق الدخول إلى التطبيق</value>
+  <data name="ActivateAccountTemplate_Body" xml:space="preserve">
+    <value>&lt;p&gt;عزيزي {0},&lt;/p&gt;
+
+&lt;p&gt;
+شكرًا لتسجيلك معنا. لإكمال إعداد حسابك، يُرجى التحقق من عنوان بريدك الإلكتروني.
+&lt;/p&gt;
+
+&lt;p&gt;
+يمكنك استخدام رمز التحقق أدناه:
+&lt;/p&gt;
+
+&lt;p style="font-size: 18px; font-weight: bold; letter-spacing: 2px; color: #0078D7;"&gt;
+  {1}
+&lt;/p&gt;
+
+&lt;p&gt;
+هذا الرمز صالح لمدة 15 دقيقة فقط. إذا لم تطلب تفعيل الحساب، يُرجى تجاهل هذه الرسالة.
+&lt;/p&gt;</value>
   </data>
 </root>

@@ -135,4 +135,16 @@
   <data name="UserManagement_EmailNotFound" xml:space="preserve">
     <value>البريد الإلكتروني غير موجود</value>
   </data>
+  <data name="UserManagement_WeakPassword" xml:space="preserve">
+    <value>يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على حرف كبير واحد وحرف صغير واحد ورقم واحد ورمز خاص واحد (@$!%*?&amp;)</value>
+  </data>
+  <data name="UserManagement_InvalidEmailAddress" xml:space="preserve">
+    <value>صيغة البريد الإلكتروني غير صحيحة</value>
+  </data>
+  <data name="UserManagement_EmailAlreadyExists" xml:space="preserve">
+    <value>البريد الإلكتروني مسجل بالفعل</value>
+  </data>
+  <data name="UserManagement_UsernameAlreadyExists" xml:space="preserve">
+    <value>اسم المستخدم مستخدم بالفعل</value>
+  </data>
 </root>

@@ -1,164 +1,111 @@
-﻿<!DOCTYPE html>
-<html lang='@(ViewBag.IsArabic ? "ar" : "en")' xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
-      xmlns:o="urn:schemas-microsoft-com:office:office">
+@{
+    var isAr = (bool)(ViewBag.IsArabic ?? false);
+    var lang = isAr ? "ar" : "en";
+    var dir = isAr ? "rtl" : "ltr";
+}
+<!DOCTYPE html>
+<html lang="@lang" dir="@dir" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="format-detection" content="date=no">
-    <meta name="format-detection" content="address=no">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="x-apple-disable-message-reformatting">
-
-    <style type="text/css" media="screen">
-        body {
-            padding: 0 !important;
-            margin: 0 auto !important;
-            display: block !important;
-            background: #f4f4f4;
-            -webkit-text-size-adjust: none;
-            font-size: 18px;
-            font-family: system-ui, sans-serif;
-            line-height: 24px;
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>@ViewBag.EmailTitle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body, table, td, a {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
         }
 
-        a {
-            text-decoration: none;
-        }
-
-        p {
-            padding: 0 !important;
-            margin: 0 !important;
+        table {
+            border-collapse: collapse !important;
         }
 
         img {
-            margin: 0 !important;
-            -ms-interpolation-mode: bicubic;
-        }
-
-        a[x-apple-data-detectors] {
-            color: inherit !important;
-            text-decoration: inherit !important;
-            font-size: inherit !important;
-            font-family: inherit !important;
-            font-weight: inherit !important;
-            line-height: inherit !important;
-        }
-
-        .btn-16 a {
-            display: block;
-            padding: 15px 35px;
+            border: 0;
+            outline: none;
             text-decoration: none;
+            max-width: 100%;
+            height: auto;
         }
 
-        .d-n {
-            display: none;
+        body {
+            background-color: #f6f7fb;
+            margin: 0;
+            padding: 0;
         }
 
-        .wrapper-tbl {
-            width: 600px !important;
+        .email-card {
+            max-width: 680px;
         }
 
-        .text-primary {
-            color: #282828;
+        [dir="rtl"] .text-start {
+            text-align: right !important;
         }
 
-        .header_img_td {
-            text-align: right;
+        [dir="rtl"] .text-end {
+            text-align: left !important;
         }
-
-        /* Mobile styles */
-        @@media (max-width: 768px) {
-            body
-                {
-                    width: 100% !important;
-                    min-width: 100% !important;
-                }
-
-            .wrapper-tbl {
-                width: 96% !important;
-                margin: auto;
-            }
-        }
-
-        @@media (max-width: 480px) {
-            .header_bg
-            {
-                width: 75%;
-            }
+        /* Inline SVG sizing */
+        .brand-svg {
+            height: 48px;
+            width: auto;
+            display: block;
         }
     </style>
 </head>
+<body class="bg-light">
+    <div class="container py-4">
+        <!-- Header with inline SVG logo -->
+        <div class="email-card mx-auto">
+            <div class="d-flex align-items-center justify-content-center py-3">
+                <a href="@ViewBag.SiteUrl" class="text-decoration-none" aria-label="Home">
+                    <div class="brand-svg">
+                        <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="flixGradientLarge" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" /><stop offset="30%" style="stop-color:#7c3aed;stop-opacity:1" /><stop offset="70%" style="stop-color:#8b5cf6;stop-opacity:1" /><stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" /></linearGradient><linearGradient id="playGradientLarge" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" /><stop offset="100%" style="stop-color:#e0e7ff;stop-opacity:0.9" /></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur" /><feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs><!-- Outer glow --><circle cx="20" cy="20" r="18" fill="url(#flixGradientLarge)" opacity="0.3" filter="url(#glow)" /><!-- Main circle background --><circle cx="20" cy="20" r="18" fill="url(#flixGradientLarge)" stroke="rgba(255,255,255,0.3)" stroke-width="1" /><!-- Play button triangle --><polygon points="15,12 15,28 28,20" fill="url(#playGradientLarge)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5" /><!-- Decorative elements --><circle cx="10" cy="10" r="2.5" fill="rgba(255,255,255,0.4)" opacity="0.7" /><circle cx="30" cy="30" r="2" fill="rgba(255,255,255,0.3)" opacity="0.8" /><circle cx="32" cy="12" r="1.5" fill="rgba(255,255,255,0.2)" opacity="0.6" /><!-- Inner highlight --><circle cx="20" cy="20" r="15" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" opacity="0.5" /></svg>
+                    </div>
+                </a>
+            </div>
+        </div>
 
-<body class="body" dir='@(ViewBag.IsArabic?"rtl":"ltr")'>
-    <table border="0" class="wrapper-tbl" cellspacing="0" cellpadding="0" style="padding: 0 !important;margin: 0 auto !important;background: #ffffff;-webkit-text-size-adjust: none;" dir='@(ViewBag.IsArabic?"rtl":"ltr")'>
-        <tbody>
-            <tr>
-                <td style="background-color: #13488C;">
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0"
-                           style="margin: 0; padding: 0; width: 100%; height: 100%">
-                        <tr>
-                            <td class="header_img_td" style="background-color: #13488C;">
-                                <img src="@ViewBag.SiteUrl/img/tasheer_email_pattern.png" border="0" alt="">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-right: 1.5rem;padding-left: 1.5rem;" dir='@(ViewBag.IsArabic ? "rtl" : "ltr")'>
-                                <h1 style="color:#FFFFFF; font-size: 3rem; line-height: 4rem;">@ViewBag.EmailTitle</h1>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 1.5rem; background-color: #FFFFFF;">
-                    @RenderBody()
-                </td>
-            <tr>
-                <td style="padding-top: 40px; padding: 1.5rem; background-color: #FFFFFF; text-align: start;">
-                    <p>
-                        @ViewBag.Team
-                        <br />
-                        @ViewBag.DoNotReplyToThisMail
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td style="background-color: #13488C;">
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0"
-                           style="margin: 0;  padding: 0; width: 100%; text-align: center;">
-                        <tr>
-                            <td style="color:#FFFFFF; padding: 1.5rem;" dir='@(ViewBag.IsArabic ? "rtl" : "ltr")'>
-                                <h1 style="font-size: 2.5rem; line-height: 3rem; font-weight: normal;">@ViewBag.NeedHelp</h1>
-                                <p>
-                                    @ViewBag.NeedForHelpMessage
-                                </p>
-                                <div style="display:flex; align-items:center; justify-content: center; gap:1.5rem; margin-top: 2rem; margin-bottom: 2rem;">
-                                    <a href="#">
-                                        <img src="@ViewBag.SiteUrl/img/tasheer_email_twitter_icon.png" border="0" alt="">
-                                    </a>
-                                    <a href="#">
-                                        <img src="@ViewBag.SiteUrl/img/tasheer_email_linkedin_icon.png" border="0" alt="">
-                                    </a>
-                                    <a href="#">
-                                        <img src="@ViewBag.SiteUrl/img/tasheer_email_phone_icon.png" border="0" alt="">
-                                    </a>
-                                    <a href="#">
-                                        <img src="@ViewBag.SiteUrl/img/tasheer_email_email_icon.png" border="0" alt="">
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 1.5rem; background-color: #FFFFFF; ">
-                    @ViewBag.Copyright
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <!-- Title -->
+        <div class="email-card mx-auto text-center">
+            <h1 class="h4 mb-3">@ViewBag.EmailTitle</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="email-card mx-auto bg-white rounded-3 shadow-sm p-1">
+            @RenderBody()
+        </div>
+
+        <!-- Help + Contacts (preserved exactly) -->
+        <div class="email-card mx-auto bg-white rounded-3 shadow-sm p-4 mt-3">
+            <div class="text-center">
+                <h2 class="h5 mb-2">@ViewBag.NeedHelp</h2>
+                <p class="mb-3">@ViewBag.NeedForHelpMessage</p>
+                <div class="d-flex align-items-center justify-content-center gap-4 my-2">
+                    <a href="https://www.linkedin.com/in/mabusall" class="text-white fs-3">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                    <a href="mailto:mabusall.developer@gmail.com" class="text-white fs-3">
+                        <i class="bi bi-envelope-fill"></i>
+                    </a>
+                </div>
+                <div class="mt-2">
+                    <a href="@ViewBag.SiteUrl" class="link-primary">@ViewBag.SiteUrl</a>
+                </div>
+                <div class="small text-muted mt-2">
+                    @ViewBag.DoNotReplyToThisMail
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-card mx-auto text-center text-secondary small mt-3">
+            <div>&copy; @DateTime.UtcNow.Year @ViewBag.Team</div>
+            <div>@ViewBag.Copyright</div>
+        </div>
+    </div>
 </body>
 </html>

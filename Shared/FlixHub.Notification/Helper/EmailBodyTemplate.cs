@@ -2,7 +2,6 @@
 
 public enum EmailBodyTemplate : int
 {
-    VerifyOTP = 1,
-    VerifyEmail,
+    ActivateAccount,
     ForgetPassword,
 }

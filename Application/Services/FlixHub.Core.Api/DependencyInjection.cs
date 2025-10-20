@@ -1,6 +1,4 @@
-﻿using FlixHub.Core.Api.Tasks;
-
-[assembly: InternalsVisibleTo("FlixHub.Api")]
+﻿[assembly: InternalsVisibleTo("FlixHub.Api")]
 
 namespace FlixHub.Core.Api;
 

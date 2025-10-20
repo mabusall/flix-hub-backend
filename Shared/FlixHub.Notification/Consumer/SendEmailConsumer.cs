@@ -62,25 +62,15 @@ public class SendEmailConsumer(IAppSettingsKeyManagement appSettingsKeyManagemen
 
         switch (model.Template)
         {
-            case EmailBodyTemplate.VerifyOTP:
+            case EmailBodyTemplate.ActivateAccount:
                 emailBody = await emailTemplateRenderer.
-                       RenderRazorTemplateFromPathAsStringAsync($"~/Views/Account/VerifyOtp.cshtml",
-                       new VerifyOtpModel
+                       RenderRazorTemplateFromPathAsStringAsync($"~/Views/Account/ActivateAccount.cshtml",
+                       new ActivateAccountModel
                        {
-                           OtpValue = extraData.GetPropertyValue("otpValue"),
-                           SiteUrl = model.SiteUrl,
-                           LanguageIsoCode = model.LanguageIsoCode
-                       });
-                break;
-
-            case EmailBodyTemplate.VerifyEmail:
-                emailBody = await emailTemplateRenderer.
-                       RenderRazorTemplateFromPathAsStringAsync($"~/Views/Account/VerifyEmail.cshtml",
-                       new VerifyEmailModel
-                       {
-                           RedirectUrl = extraData.GetPropertyValue("redirectUrl"),
-                           ServiceProviderName = extraData.GetPropertyValue("name"),
-                           UserTypeId = int.Parse(extraData.GetPropertyValue("userTypeId")!),
+                           Name = extraData.GetPropertyValue("name"),
+                           ActivationCode = extraData.GetPropertyValue("activationCode"),
+                           Account = extraData.GetPropertyValue("account"),
+                           Email = extraData.GetPropertyValue("email"),
                            SiteUrl = model.SiteUrl,
                            LanguageIsoCode = model.LanguageIsoCode
                        });
@@ -92,7 +82,6 @@ public class SendEmailConsumer(IAppSettingsKeyManagement appSettingsKeyManagemen
                        new ForgetPasswordModel
                        {
                            RedirectUrl = extraData.GetPropertyValue("redirectUrl"),
-                           SiteUrl = model.SiteUrl,
                            LanguageIsoCode = model.LanguageIsoCode
                        });
                 break;

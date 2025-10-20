@@ -55,4 +55,16 @@ public class ErrorMessageResources
 
     public static string UserManagement_EmailNotFound
         => ResourceManager.GetString("UserManagement_EmailNotFound", resourceCulture)!;
+
+    public static string UserManagement_WeakPassword
+        => ResourceManager.GetString("UserManagement_WeakPassword", resourceCulture)!;
+
+    public static string UserManagement_InvalidEmailAddress
+        => ResourceManager.GetString("UserManagement_InvalidEmailAddress", resourceCulture)!;
+
+    public static string UserManagement_EmailAlreadyExists
+        => ResourceManager.GetString("UserManagement_EmailAlreadyExists", resourceCulture)!;
+
+    public static string UserManagement_UsernameAlreadyExists
+        => ResourceManager.GetString("UserManagement_UsernameAlreadyExists", resourceCulture)!;
 }

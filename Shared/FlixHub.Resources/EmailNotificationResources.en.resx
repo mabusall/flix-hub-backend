@@ -121,28 +121,13 @@
     <value>This E-Notification was automatically generated. Please do not reply to this mail.</value>
   </data>
   <data name="Copyright" xml:space="preserve">
-    <value>All Rights Reserved To Ministry of Hajj and Umrah</value>
+    <value>All Rights Reserved To FlixHub portal</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welcome to Service provider portal</value>
-  </data>
-  <data name="VerifyOtpTemplate_YourOtpLabel" xml:space="preserve">
-    <value>Your OTP is</value>
-  </data>
-  <data name="VerifyOtpTemplate_PleaseDoNotShareOTP" xml:space="preserve">
-    <value>Please do not share this number with anyone.</value>
-  </data>
-  <data name="VerifyOtpTemplate_Title" xml:space="preserve">
-    <value>One Time Password</value>
-  </data>
-  <data name="VerifyOtpTemplate_OtpValidFor5min" xml:space="preserve">
-    <value>This number is valid for 5 minutes.</value>
-  </data>
-  <data name="VerifyEmailTemplate_Title" xml:space="preserve">
-    <value>Service provider management</value>
+    <value>Welcome to FlixHub portal</value>
   </data>
   <data name="Team" xml:space="preserve">
-    <value>The Hajj service provider portal team,</value>
+    <value>The FlixHub portal team,</value>
   </data>
   <data name="ForgetPasswordTemplate_Title" xml:space="preserve">
     <value>إعادة تعيين كلمة المرور</value>
@@ -167,40 +152,19 @@
   <data name="NeedHelp" xml:space="preserve">
     <value>Need help?</value>
   </data>
-  <data name="VerifyEmailTemplate_SpAdmin_Body" xml:space="preserve">
-    <value>Dear user,&lt;br&gt;&lt;br&gt;You have been assigned as a system supervisor for the Hajj service provider {0} in the direct Hajj program, please click the link &lt;a href = "{1}"&gt;here&lt;/a&gt; to activate your account.</value>
+  <data name="ActivateAccountTemplate_Title" xml:space="preserve">
+    <value>Account Activation</value>
   </data>
-  <data name="VerifyEmailTemplate_SpUser_Body" xml:space="preserve">
-    <value>Dear user,&lt;br&gt;&lt;br&gt;You have been assigned as an employee with the Hajj service provider {0} in the direct Hajj program, please click the link &lt;a href = "{1}"&gt;here&lt;/a&gt; to activate your account.</value>
-  </data>
-  <data name="ActivateSubscriptionTemplate_Title" xml:space="preserve">
-    <value>Activate your subscription</value>
-  </data>
-  <data name="ActivateSubscriptionTemplate_Body" xml:space="preserve">
-    <value>Dear user, the subscription plan '{0}' for you has been activated. You can now log in to the platform and use services according to the specified subscription.</value>
-  </data>
-  <data name="RoomDistribution_MessageTitle" xml:space="preserve">
-    <value>Update housing status</value>
-  </data>
-  <data name="RoomDistribution_MessageBody" xml:space="preserve">
-    <value>The room has been updated in your "{0}", please log on on a residential page to see the update</value>
-  </data>
-  <data name="ActivityAdded_MessageTitle" xml:space="preserve">
-    <value>Activity Added</value>
-  </data>
-  <data name="ActivityAdded_MessageBody" xml:space="preserve">
-    <value>You have been added to the activity "{0}" by the service provider. You can view the activity details by logging into the app.</value>
-  </data>
-  <data name="ActivityUpdated_MessageTitle" xml:space="preserve">
-    <value>Activity Updated</value>
-  </data>
-  <data name="ActivityUpdated_MessageBody" xml:space="preserve">
-    <value>The activity "{0}" that you were previously added to has been modified. You can view the activity details by logging into the application.</value>
-  </data>
-  <data name="ActivityRemoved_MessageTitle" xml:space="preserve">
-    <value>Activity Deleted</value>
-  </data>
-  <data name="ActivityRemoved_MessageBody" xml:space="preserve">
-    <value>The activity "{0}" that you were previously added to has been deleted. You can view the activity details by logging into the app.</value>
+  <data name="ActivateAccountTemplate_Body" xml:space="preserve">
+    <value>&lt;p&gt;Dear {0},&lt;/p&gt;
+
+&lt;p&gt;Thank you for registering with us. To complete your account '{1}' setup, please verify your email '{2}' address.&lt;/p&gt;
+
+&lt;p&gt;You can use the verification code below:&lt;/p&gt;
+
+&lt;p style="font-size: 18px; font-weight: bold; letter-spacing: 2px; color: #0078D7;"&gt;{3}
+&lt;/p&gt;
+
+&lt;p&gt;This code is valid for the next 15 minutes. If you did not request this activation, please ignore this email.&lt;/p&gt;</value>
   </data>
 </root>

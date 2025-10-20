@@ -5,7 +5,7 @@ public abstract class IBusEvent
     /// <summary>
     /// Set IsOutbox = true incase you want to publish the message using outbox pattern
     /// </summary>
-    public bool IsOutbox { get; set; } = false;
+    public bool IsOutbox { get; set; } = true;
 
     public DateTime Created { get; set; } = DateTime.UtcNow;
 }

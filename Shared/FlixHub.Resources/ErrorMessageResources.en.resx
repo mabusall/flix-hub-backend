@@ -135,4 +135,16 @@
   <data name="UserManagement_EmailNotFound" xml:space="preserve">
     <value>Email not found</value>
   </data>
+  <data name="UserManagement_WeakPassword" xml:space="preserve">
+    <value>Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character (@$!%*?&amp;)</value>
+  </data>
+  <data name="UserManagement_InvalidEmailAddress" xml:space="preserve">
+    <value>Invalid email address format</value>
+  </data>
+  <data name="UserManagement_EmailAlreadyExists" xml:space="preserve">
+    <value>Email address is already registered</value>
+  </data>
+  <data name="UserManagement_UsernameAlreadyExists" xml:space="preserve">
+    <value>Username is already taken</value>
+  </data>
 </root>
