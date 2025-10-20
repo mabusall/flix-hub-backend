@@ -5,7 +5,7 @@ public class CreateSystemUserCommandValidator : AbstractValidator<CreateSystemUs
     public CreateSystemUserCommandValidator(IServiceProvider serviceProvider,
                                             IManagedCancellationToken appToken)
     {
-        var sppContext = serviceProvider.GetRequiredService<IFlixHubDbUnitOfWork>();
+        var uow = serviceProvider.GetRequiredService<IFlixHubDbUnitOfWork>();
 
         RuleFor(r => r.FirstName)
             .NotEmpty()
@@ -33,7 +33,7 @@ public class CreateSystemUserCommandValidator : AbstractValidator<CreateSystemUs
                 RuleFor(r => r.Email)
                     .MustAsync(async (email, _) =>
                     {
-                        var exists = await sppContext
+                        var exists = await uow
                             .SystemUsersRepository
                             .AsQueryable(false)
                             .AnyAsync(u => u.Email == email, appToken.Token);
@@ -51,7 +51,7 @@ public class CreateSystemUserCommandValidator : AbstractValidator<CreateSystemUs
                 RuleFor(r => r.Username)
                     .MustAsync(async (username, _) =>
                     {
-                        var exists = await sppContext
+                        var exists = await uow
                         .SystemUsersRepository
                             .AsQueryable(false)
                             .AnyAsync(u => u.Username == username, appToken.Token);

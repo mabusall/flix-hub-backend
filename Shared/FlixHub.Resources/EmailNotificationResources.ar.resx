@@ -158,20 +158,20 @@
   <data name="ActivateAccountTemplate_Body" xml:space="preserve">
     <value>&lt;p&gt;عزيزي {0},&lt;/p&gt;
 
-&lt;p&gt;
-شكرًا لتسجيلك معنا. لإكمال إعداد حسابك، يُرجى التحقق من عنوان بريدك الإلكتروني.
-&lt;/p&gt;
+  &lt;p&gt;
+    شكرًا لتسجيلك معنا. لإكمال إعداد حسابك 
+    &lt;strong&gt;'{1}'&lt;/strong&gt;، يُرجى التحقق من عنوان بريدك الإلكتروني 
+    &lt;strong&gt;'{2}'&lt;/strong&gt;.
+  &lt;/p&gt;
 
-&lt;p&gt;
-يمكنك استخدام رمز التحقق أدناه:
-&lt;/p&gt;
+  &lt;p&gt;يمكنك استخدام رمز التحقق أدناه:&lt;/p&gt;
 
-&lt;p style="font-size: 18px; font-weight: bold; letter-spacing: 2px; color: #0078D7;"&gt;
-  {1}
-&lt;/p&gt;
+  &lt;p style="font-size: 18px; font-weight: bold; letter-spacing: 2px; color: #0078D7;"&gt;
+    {3}
+  &lt;/p&gt;
 
-&lt;p&gt;
-هذا الرمز صالح لمدة 15 دقيقة فقط. إذا لم تطلب تفعيل الحساب، يُرجى تجاهل هذه الرسالة.
-&lt;/p&gt;</value>
+  &lt;p&gt;
+    هذا الرمز صالح لمدة 15 دقيقة فقط. إذا لم تطلب تفعيل الحساب، يُرجى تجاهل هذه الرسالة.
+  &lt;/p&gt;</value>
   </data>
 </root>

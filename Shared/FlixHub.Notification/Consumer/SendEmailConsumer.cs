@@ -71,8 +71,8 @@ public class SendEmailConsumer(IAppSettingsKeyManagement appSettingsKeyManagemen
                            ActivationCode = extraData.GetPropertyValue("activationCode"),
                            Account = extraData.GetPropertyValue("account"),
                            Email = extraData.GetPropertyValue("email"),
-                           SiteUrl = model.SiteUrl,
-                           LanguageIsoCode = model.LanguageIsoCode
+                           LanguageIsoCode = model.LanguageIsoCode,
+                           SiteUrl = model.SiteUrl
                        });
                 break;
 

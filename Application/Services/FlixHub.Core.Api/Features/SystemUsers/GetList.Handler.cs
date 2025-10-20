@@ -1,11 +1,11 @@
 ﻿namespace FlixHub.Core.Api.Features.SystemUsers;
 
-internal class GetListSystemUserCommandHandler(IFlixHubDbUnitOfWork uofContext)
+internal class GetListSystemUserCommandHandler(IFlixHubDbUnitOfWork uow)
     : IQueryHandler<GetListSystemUserQuery, PaginatedList<SystemUserDto>>
 {
     public async Task<PaginatedList<SystemUserDto>> Handle(GetListSystemUserQuery query, CancellationToken cancellationToken)
     {
-        var querable = uofContext
+        var querable = uow
             .SystemUsersRepository
             .AsQueryable(false);
 
@@ -31,7 +31,7 @@ internal class GetListSystemUserCommandHandler(IFlixHubDbUnitOfWork uofContext)
             querable = querable.Where(w => w.IsVerified == query.IsVerified);
 
         // execute query on db
-        return await uofContext
+        return await uow
             .SystemUsersRepository
             .GetPaginatedListAsync(querable,
                                    query.PageNumber,

@@ -158,13 +158,20 @@
   <data name="ActivateAccountTemplate_Body" xml:space="preserve">
     <value>&lt;p&gt;Dear {0},&lt;/p&gt;
 
-&lt;p&gt;Thank you for registering with us. To complete your account '{1}' setup, please verify your email '{2}' address.&lt;/p&gt;
+&lt;p&gt;
+  Thank you for registering with us. To complete your account 
+  &lt;strong&gt;'{1}'&lt;/strong&gt; setup, please verify your email 
+  &lt;strong&gt;'{2}'&lt;/strong&gt; address.
+&lt;/p&gt;
 
 &lt;p&gt;You can use the verification code below:&lt;/p&gt;
 
-&lt;p style="font-size: 18px; font-weight: bold; letter-spacing: 2px; color: #0078D7;"&gt;{3}
+&lt;p style="font-size: 18px; font-weight: bold; letter-spacing: 2px; color: #0078D7;"&gt;
+  {3}
 &lt;/p&gt;
 
-&lt;p&gt;This code is valid for the next 15 minutes. If you did not request this activation, please ignore this email.&lt;/p&gt;</value>
+&lt;p&gt;
+  This code is valid for the next 15 minutes. If you did not request this activation, please ignore this email.
+&lt;/p&gt;</value>
   </data>
 </root>

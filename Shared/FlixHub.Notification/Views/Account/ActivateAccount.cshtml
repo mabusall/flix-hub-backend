@@ -24,17 +24,18 @@
     ViewBag.NeedHelp = EmailNotificationResources.NeedHelp;
     ViewBag.NeedForHelpMessage = EmailNotificationResources.NeedForHelpMessage;
     ViewBag.EmailTitle = EmailNotificationResources.ActivateAccountTemplate_Title;
+    ViewBag.SiteUrl = viewModel.SiteUrl;
 }
 
 <table>
     <tbody>
         <tr>
-            <td>
+            <td style="font-size: 20px; line-height: 40px; color: #282828;">
                 <p>@EmailNotificationResources.WelcomeMessage,</p>
             </td>
         </tr>
         <tr>
-            <td>
+            <td style="font-size: 16px;" dir='@(isArabic ? "rtl" : "ltr")'>
                 <p>
                     @Html.Raw(message)
                 </p>

@@ -3,18 +3,31 @@
 public class LoginSystemUserCommandValidator : AbstractValidator<LoginSystemUserCommand>
 {
     public LoginSystemUserCommandValidator(IServiceProvider serviceProvider,
-                                           ISender sender,
-                                           IManagedCancellationToken applicationLifetime)
+                                           IManagedCancellationToken appToken)
     {
-        var sppContext = serviceProvider.GetRequiredService<IFlixHubDbUnitOfWork>();
+        var uow = serviceProvider.GetRequiredService<IFlixHubDbUnitOfWork>();
 
-        RuleFor(r => r.Email)
+        RuleFor(r => r.Password)
             .NotEmpty()
-            .WithMessage(ErrorMessageResources.NotEmpty)
+            .WithMessage(ErrorMessageResources.NotEmpty);
 
-            // check if the sign in is mobile user
-            .DependentRules(() =>
+        RuleFor(r => r.EmailOrAccount)
+            .NotEmpty()
+            .WithMessage(ErrorMessageResources.NotEmpty);
+
+        RuleFor(command => command)
+            .MustAsync(async (cmd, _) =>
             {
-            });
+                // Look up user by email
+                var exists = await uow
+                        .SystemUsersRepository
+                        .AnyAsync(a => (a.Email == cmd.EmailOrAccount || a.Username == cmd.EmailOrAccount) &&
+                                  a.Password == cmd.Password.Decrypt() &&
+                                  a.IsActive && a.IsVerified, appToken.Token);
+
+                return exists;
+            })
+            .WithMessage(ErrorMessageResources.UserManagement_InvalidEmailOrPassword)
+            .When(w => w.EmailOrAccount is not null && w.Password is not null);
     }
 }

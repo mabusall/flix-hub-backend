@@ -20,7 +20,7 @@ internal class CreateSystemUserCommandHandler(IFlixHubDbUnitOfWork uow,
         uow.SystemUsersRepository.Insert(user);
 
         // commit the changes
-        //await uow.SaveChangesAsync(cancellationToken);
+        await uow.SaveChangesAsync(cancellationToken);
 
         // send email verification request
         await busService.Publish(new EmailNotificationEvent
@@ -33,7 +33,7 @@ internal class CreateSystemUserCommandHandler(IFlixHubDbUnitOfWork uow,
             SiteUrl = siteUrl,
             ExtraData = new
             {
-                Name = string.Join(user.FirstName, user.LastName),
+                Name = string.Join(' ', user.FirstName, user.LastName),
                 Account = user.Username,
                 user.Email,
                 ActivationCode = user.EmailVerificationCode,

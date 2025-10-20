@@ -147,4 +147,13 @@
   <data name="UserManagement_UsernameAlreadyExists" xml:space="preserve">
     <value>Username is already taken</value>
   </data>
+  <data name="UserManagement_EmailNotRegistered" xml:space="preserve">
+    <value>Email not registered</value>
+  </data>
+  <data name="UserManagement_InvalidVerificationCode" xml:space="preserve">
+    <value>Invalid verification code</value>
+  </data>
+  <data name="UserManagement_InvalidEmailOrPassword" xml:space="preserve">
+    <value>Invalid email or password</value>
+  </data>
 </root>
