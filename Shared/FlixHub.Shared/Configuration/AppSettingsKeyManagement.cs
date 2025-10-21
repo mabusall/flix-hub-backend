@@ -16,6 +16,7 @@ public interface IAppSettingsKeyManagement
     FirebaseOptions FirebaseOptions { get; }
     IntegrationApisOptions IntegrationApisOptions { get; }
     DailySyncRequestsOptions DailySyncRequestsOptions { get; }
+    JwtSecurityTokenOptions JwtSecurityToken { get; }
 }
 
 public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
@@ -31,7 +32,8 @@ public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
                                       Dictionary<string, bool> appFeatures,
                                       FirebaseOptions firebaseOptions,
                                       IntegrationApisOptions integrationApisOptions,
-                                      DailySyncRequestsOptions dailySyncRequestsOptions)
+                                      DailySyncRequestsOptions dailySyncRequestsOptions,
+                                      JwtSecurityTokenOptions jwtSecurityToken)
     : IAppSettingsKeyManagement
 {
     public ElasticApmOptions ElasticApmOptions { get; } = elasticApmOptions;
@@ -61,4 +63,6 @@ public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
     public IntegrationApisOptions IntegrationApisOptions { get; } = integrationApisOptions;
 
     public DailySyncRequestsOptions DailySyncRequestsOptions { get; } = dailySyncRequestsOptions;
+
+    public JwtSecurityTokenOptions JwtSecurityToken { get; } = jwtSecurityToken;
 }

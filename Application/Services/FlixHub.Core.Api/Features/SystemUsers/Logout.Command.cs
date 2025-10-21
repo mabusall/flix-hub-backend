@@ -2,7 +2,7 @@
 
 public record LogoutSystemUserCommand
 (
-    string RefreshToken
+    string EmailOrAccount
 ) : ICommand<LogoutSystemUserResult>;
 
 public record LogoutSystemUserResult

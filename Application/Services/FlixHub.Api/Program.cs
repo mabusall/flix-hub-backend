@@ -17,9 +17,7 @@ builder
     .AddNotificationModule(builder.Configuration)
     .AddCoreServices(builder.Configuration)
     .AddFlixHubModule(builder.Configuration, builder.Environment.IsDevelopment())
-    .AddKeycloakModule()
-    .AddApiHealthChecks(builder.Configuration)
-    .AddKeyclockAuthentication(builder.Configuration);
+    .AddApiHealthChecks(builder.Configuration);
 
 var app = builder.Build();
 

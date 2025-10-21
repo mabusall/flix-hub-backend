@@ -21,9 +21,14 @@ public static class DependencyInjection
             .GetSection(RateLimitOptions.ConfigurationKey)
             .Get<RateLimitOptions>();
 
+        var jwtSecurityTokenOptions = configuration
+            .GetSection(JwtSecurityTokenOptions.ConfigurationKey)
+            .Get<JwtSecurityTokenOptions>();
+
         services
             .AddHttpClient()
             .AddHttpContextAccessor()
+            .AddJwtBearerAuthentication(jwtSecurityTokenOptions)
             .AddSingleton<IIdGeneratorService, IdGeneratorService>()
             .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddScoped<ICorrelationIdService, CorrelationIdService>()
@@ -362,6 +367,7 @@ public static class DependencyInjection
         FirebaseOptions firebaseOptions = new();
         IntegrationApisOptions integrationApisOptions = new();
         DailySyncRequestsOptions dailySyncRequestsOptions = new();
+        JwtSecurityTokenOptions jwtSecurityToken = new();
 
         configuration
             .GetSection(ElasticApmOptions.ConfigurationKey)
@@ -405,6 +411,9 @@ public static class DependencyInjection
         configuration
            .GetSection(DailySyncRequestsOptions.ConfigurationKey)
            .Bind(dailySyncRequestsOptions);
+        configuration
+           .GetSection(JwtSecurityTokenOptions.ConfigurationKey)
+           .Bind(jwtSecurityToken);
 
         return new AppSettingsKeyManagement(elasticApmOptions,
                                             elasticSearchOptions,
@@ -419,6 +428,7 @@ public static class DependencyInjection
                                             appFeatures,
                                             firebaseOptions,
                                             integrationApisOptions,
-                                            dailySyncRequestsOptions);
+                                            dailySyncRequestsOptions,
+                                            jwtSecurityToken);
     }
 }

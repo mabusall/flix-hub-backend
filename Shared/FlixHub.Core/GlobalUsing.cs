@@ -2,6 +2,7 @@
 global using Azure.Storage.Blobs.Models;
 global using FlixHub.Caching;
 global using FlixHub.Caching.Helpers;
+global using FlixHub.Caching.MemoryCacheProvider;
 global using FlixHub.Core.Authentications;
 global using FlixHub.Core.CQRS;
 global using FlixHub.Core.MessageBus;
@@ -56,4 +57,3 @@ global using System.Text;
 global using System.Text.Encodings.Web;
 global using System.Text.Json.Serialization;
 global using System.Threading.RateLimiting;
-

@@ -43,8 +43,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Api", "Application\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Core.Api", "Application\Services\FlixHub.Core.Api\FlixHub.Core.Api.csproj", "{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlixHub.Keycloak.Api", "Application\Services\FlixHub.Keycloak.Api\FlixHub.Keycloak.Api.csproj", "{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,10 +81,6 @@ Global
 		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,7 +96,6 @@ Global
 		{D92313EE-8481-E599-F156-281E7F0BB0FB} = {24B44810-E1A1-4295-9116-BCD4626DB115}
 		{ED6844AE-D920-E1AE-90CF-C5A1650F4D29} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
 		{4446BD97-5C64-B876-AFF6-6E83C2F8E4D7} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
-		{F89D3A11-D1A3-ED88-F0F5-6705CE5F8EA0} = {B8055EBD-F44C-4BA1-BF75-07A7BA62AB52}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8FF911D2-13DD-4F54-B882-12DC7F2D7C65}

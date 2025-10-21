@@ -4,4 +4,4 @@ public record LoginSystemUserCommand(
     string EmailOrAccount,
     string Password
 ) : ICommand<LoginSystemUserResult>;
-public record LoginSystemUserResult(Guid UserId);
+public record LoginSystemUserResult(string Token);

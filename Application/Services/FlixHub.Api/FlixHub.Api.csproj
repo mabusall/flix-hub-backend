@@ -21,7 +21,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\FlixHub.Core.Api\FlixHub.Core.Api.csproj" />
-		<ProjectReference Include="..\FlixHub.Keycloak.Api\FlixHub.Keycloak.Api.csproj" />
 	</ItemGroup>
 
 </Project>

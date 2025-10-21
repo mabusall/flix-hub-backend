@@ -1,9 +1,7 @@
 ﻿global using FlixHub.Api.Extensions;
 global using FlixHub.Core;
 global using FlixHub.Core.Api;
-global using FlixHub.Core.Authentications;
 global using FlixHub.Core.WebApplicationExtension;
-global using FlixHub.Keycloak.Api;
 global using FlixHub.Notification;
 global using FlixHub.Shared.Configuration;
 global using FlixHub.Shared.DataProtection;
