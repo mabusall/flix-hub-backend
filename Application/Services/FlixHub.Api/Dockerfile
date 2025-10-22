@@ -13,7 +13,6 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Application/Services/FlixHub.Api/FlixHub.Api.csproj", "Application/Services/FlixHub.Api/"]
 COPY ["Application/Services/FlixHub.Core.Api/FlixHub.Core.Api.csproj", "Application/Services/FlixHub.Core.Api/"]
-COPY ["Application/Services/FlixHub.Keycloak.Api/FlixHub.Keycloak.Api.csproj", "Application/Services/FlixHub.Keycloak.Api/"]
 COPY ["Shared/FlixHub.Resources/FlixHub.Resources.csproj", "Shared/FlixHub.Resources/"]
 COPY ["Shared/FlixHub.Notification/FlixHub.Notification.csproj", "Shared/FlixHub.Notification/"]
 COPY ["Shared/FlixHub.Shared/FlixHub.Shared.csproj", "Shared/FlixHub.Shared/"]
