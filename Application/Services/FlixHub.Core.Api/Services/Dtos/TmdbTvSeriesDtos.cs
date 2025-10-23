@@ -48,7 +48,7 @@ internal sealed record TvDetailsResponse
     public IList<TmdbNetwork> Networks { get; set; } = [];
 
     [JsonPropertyName("number_of_episodes")]
-    public int NumberOfEpisodes { get; set; }
+    public int? NumberOfEpisodes { get; set; }
 
     [JsonPropertyName("number_of_seasons")]
     public int NumberOfSeasons { get; set; }
