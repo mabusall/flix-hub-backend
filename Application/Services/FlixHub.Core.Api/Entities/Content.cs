@@ -31,7 +31,7 @@ class Content : AuditableEntity
 
     public ContentStatus? Status { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(200)]
     public string? Country { get; set; }
 
     public int? Runtime { get; set; }
