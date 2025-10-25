@@ -8,7 +8,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
 
     private Dictionary<string, string> BuildHeaders() => new()
     {
-        { "Authorization", $"Bearer {TmdbConf.Token.Decrypt()}" }
+        { "Authorization", $"Bearer {TmdbConf.Tokens.First().Decrypt()}" }
     };
 
     public async Task<TmdbMediaListResponse> GetDiscoverAsync(string? language = "en-US",

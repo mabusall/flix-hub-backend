@@ -8,7 +8,7 @@ internal sealed class TraktService(IApiClient apiClient,
 
     private Dictionary<string, string> BuildHeaders() => new()
     {
-        { "Authorization", $"Bearer {TraktConf.Token.Decrypt()}" }
+        { "Authorization", $"Bearer {TraktConf.Tokens.First().Decrypt()}" }
     };
 
     public async Task<TraktMovieDetailsResponse> GetMovieDetailsAsync(string imdbId)

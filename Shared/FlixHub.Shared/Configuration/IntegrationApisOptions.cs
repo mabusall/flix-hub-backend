@@ -10,6 +10,6 @@ public record IntegrationApisOptions
 public record IntegrationApi
 {
     public string BaseUrl { get; set; }
-    public string Token { get; set; }
+    public IList<string> Tokens { get; set; }
     public string ResourcesUrl { get; set; }
 }

@@ -1,23 +1,52 @@
-namespace FlixHub.Core.Api.Services;
-
 internal sealed class OmdbService(IApiClient apiClient,
                                   IAppSettingsKeyManagement appSettings,
-                                  IManagedCancellationToken managedCancellationToken)
+                                  IManagedCancellationToken appToken,
+                                  ITokenRing tokenRing)
 {
-    public IntegrationApi OmdbConf { get; set; } = appSettings.IntegrationApisOptions.Apis["OMDB"];
+    public IntegrationApi OmdbConf { get; } = appSettings.IntegrationApisOptions.Apis["OMDB"];
 
     public async Task<OmdbImdbDetailsResponse> GetImdbDetailsAsync(string imdbId)
     {
-        var query = new Dictionary<string, string>
-        {
-            { "i", imdbId },
-            { "apikey", OmdbConf.Token.Decrypt() }
-        };
+        var tried = 0;
+        var maxTries = OmdbConf.Tokens.Count; // try each token at most once
+        OmdbImdbDetailsResponse response = null!;
 
-        return await apiClient.GetAsync<OmdbImdbDetailsResponse>(OmdbConf.BaseUrl,
-                                                                  null,
-                                                                  null,
-                                                                  query,
-                                                                  managedCancellationToken.Token);
+        while (tried < maxTries)
+        {
+            tried++;
+
+            var requestFailed = false;
+            var token = tokenRing.Current; // current winner
+            var query = new Dictionary<string, string>
+            {
+                { "i", imdbId },
+                { "apikey", token }
+            };
+
+            try
+            {
+                // Prefer a method that gives you both StatusCode and Content.
+                // If your IApiClient only returns T, add a RawGetAsync that returns HttpResponseMessage as well.
+                response = await apiClient.GetAsync<OmdbImdbDetailsResponse>(OmdbConf.BaseUrl,
+                                                                             null,
+                                                                             null,
+                                                                             query,
+                                                                             appToken.Token);
+            }
+            catch
+            {
+                // 401 Unauthorized, 403 Forbidden (some providers use it for bad/expired key), 429 TooManyRequests (quota on this key)
+                requestFailed = true;
+            }
+
+            // Decide which failures should rotate the token:
+            if (!requestFailed)
+                break; // success
+
+            // try next token
+            tokenRing.Advance();
+        }
+
+        return response ?? throw new Exception("Reach max daily requests");
     }
 }

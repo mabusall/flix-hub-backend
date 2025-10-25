@@ -1,4 +1,6 @@
-﻿[assembly: InternalsVisibleTo("FlixHub.Api")]
+﻿using Microsoft.Extensions.Caching.Memory;
+
+[assembly: InternalsVisibleTo("FlixHub.Api")]
 
 namespace FlixHub.Core.Api;
 
@@ -26,7 +28,17 @@ static class DependencyInjection
             // Register TMDB/OMDb/Trakt services
             .AddScoped<TmdbService>()
             .AddScoped<OmdbService>()
-            .AddScoped<TraktService>()
+            //.AddScoped<TraktService>()
+            .AddSingleton<ITokenRing>(sp =>
+            {
+                var cache = sp.GetRequiredService<IMemoryCacheProvider>();
+                var appSettings = sp.GetRequiredService<IAppSettingsKeyManagement>();
+                var omdb = appSettings.IntegrationApisOptions.Apis["OMDB"];
+                var tokens = omdb.Tokens.Select(t => t.Decrypt()).ToList(); // your Decrypt()
+
+                // cacheKey must be unique per API
+                return new CachedTokenRing(cache, "tokenring:omdb", tokens);
+            })
 
             .AddScoped<IFlixHubDbUnitOfWork, FlixHubDbUnitOfWork>()
 
