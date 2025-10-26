@@ -49,10 +49,4 @@ public static class EndpointRouteBuilderExtensions
 
         return builder.AddEndpointFilter(new PermissionFilter(permissionValues));
     }
-
-    public static TBuilder RequireValidToken<TBuilder>(this TBuilder builder)
-        where TBuilder : IEndpointConventionBuilder
-    {
-        return builder.AddEndpointFilter(new ValidTokenFilter());
-    }
 }

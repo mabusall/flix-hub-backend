@@ -5,7 +5,6 @@ public interface IAppSettingsKeyManagement
     ElasticApmOptions ElasticApmOptions { get; }
     ElasticSearchOptions ElasticSearchOptions { get; }
     HangfireOptions HangfireOptions { get; }
-    KeycloakOptions KeycloakOptions { get; }
     RabbitMqOptions RabbitMqOptions { get; }
     RedisOptions RedisOptions { get; }
     SmtpEmailOptions SmtpEmailOptions { get; }
@@ -22,7 +21,6 @@ public interface IAppSettingsKeyManagement
 public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
                                       ElasticSearchOptions elasticSearchOptions,
                                       HangfireOptions hangfireOptions,
-                                      KeycloakOptions keycloakOptions,
                                       RabbitMqOptions rabbitMqOptions,
                                       RedisOptions redisOptions,
                                       SmtpEmailOptions smtpEmailOptions,
@@ -41,8 +39,6 @@ public class AppSettingsKeyManagement(ElasticApmOptions elasticApmOptions,
     public ElasticSearchOptions ElasticSearchOptions { get; } = elasticSearchOptions;
 
     public HangfireOptions HangfireOptions { get; } = hangfireOptions;
-
-    public KeycloakOptions KeycloakOptions { get; } = keycloakOptions;
 
     public RabbitMqOptions RabbitMqOptions { get; } = rabbitMqOptions;
 

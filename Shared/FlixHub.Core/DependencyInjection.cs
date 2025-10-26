@@ -116,7 +116,9 @@ public static class DependencyInjection
         services.AddHttpClient<IApiClient, ApiClient>();
 
         // Add feature management services
-        services.AddFeatureManagement(configuration.GetSection("AppFeatures"));
+        //services
+        //    .AddFeatureManagement(configuration.GetSection("ApiFeatures"))
+        //    .WithTargeting();
 
         if (hangfireOptions.IsEnabled)
         {
@@ -356,7 +358,6 @@ public static class DependencyInjection
         ElasticApmOptions elasticApmOptions = new();
         ElasticSearchOptions elasticSearchOptions = new();
         HangfireOptions hangfireOptions = new();
-        KeycloakOptions keycloakOptions = new();
         RabbitMqOptions rabbitMqOptions = new();
         RedisOptions redisOptions = new();
         SmtpEmailOptions smtpEmailOptions = new();
@@ -378,9 +379,6 @@ public static class DependencyInjection
         configuration
             .GetSection(HangfireOptions.ConfigurationKey)
             .Bind(hangfireOptions);
-        configuration
-            .GetSection(KeycloakOptions.ConfigurationKey)
-            .Bind(keycloakOptions);
         configuration
             .GetSection(RabbitMqOptions.ConfigurationKey)
             .Bind(rabbitMqOptions);
@@ -418,7 +416,6 @@ public static class DependencyInjection
         return new AppSettingsKeyManagement(elasticApmOptions,
                                             elasticSearchOptions,
                                             hangfireOptions,
-                                            keycloakOptions,
                                             rabbitMqOptions,
                                             redisOptions,
                                             smtpEmailOptions,
