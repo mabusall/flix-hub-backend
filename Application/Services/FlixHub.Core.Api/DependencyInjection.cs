@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-
-[assembly: InternalsVisibleTo("FlixHub.Api")]
+﻿[assembly: InternalsVisibleTo("FlixHub.Api")]
 
 namespace FlixHub.Core.Api;
 
