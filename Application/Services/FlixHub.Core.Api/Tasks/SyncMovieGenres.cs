@@ -9,6 +9,7 @@ internal class SyncMovieGenres(IFlixHubDbUnitOfWork uow,
     // ✅ Static semaphore to ensure only one execution at a time across all instances
     private static readonly SemaphoreSlim _syncSemaphore = new(1, 1);
 
+    [DisableConcurrentExecution(timeoutInSeconds: 5 * 60)] // 10 minutes max
     public async Task ExecuteAsync()
     {
         // Try to acquire the semaphore, but don't wait if another instance is running
