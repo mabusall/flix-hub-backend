@@ -115,9 +115,11 @@ internal sealed record PersonResponse
     public string? Biography { get; set; }
 
     [JsonPropertyName("birthday")]
+    [JsonConverter(typeof(FlexibleNullableDateConverter))]
     public DateTime? Birthday { get; set; }
 
     [JsonPropertyName("deathday")]
+    [JsonConverter(typeof(FlexibleNullableDateConverter))]
     public DateTime? Deathday { get; set; }
 
     [JsonPropertyName("gender")]

@@ -185,3 +185,81 @@ public class SecondsToDateTimeConverter : JsonConverter<DateTime>
         writer.WriteStringValue(value.ToString()); // Adjust the format as needed
     }
 }
+
+public sealed class FlexibleNullableDateConverter : JsonConverter<DateTime?>
+{
+    // Accept a few common variants; order matters (most strict first).
+    private static readonly string[] _formats =
+    [
+        "yyyy-MM-dd",    // canonical (ISO-like without time)
+        "dd-MM-yyyy",
+        "d-M-yyyy",
+        "MM-dd-yyyy",
+        "M-d-yyyy",
+        "yyyy/MM/dd",
+        "dd/MM/yyyy",
+        "d/M/yyyy"
+    ];
+
+    public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        // null -> null
+        if (reader.TokenType == JsonTokenType.Null) return null;
+
+        // ISO 8601 fast-path (handles "yyyy-MM-dd" directly and cheaply)
+        if (reader.TokenType == JsonTokenType.String && reader.TryGetDateTime(out var iso))
+            return iso;
+
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            var s = reader.GetString();
+            if (string.IsNullOrWhiteSpace(s)) return null;
+            s = s.Trim();
+
+            // Try exact formats first (no exceptions)
+            foreach (var fmt in _formats)
+            {
+                if (DateTime.TryParseExact(s, fmt, CultureInfo.InvariantCulture,
+                                           DateTimeStyles.None, out var dt))
+                    return dt;
+            }
+
+            // Heuristic for "7-9-1980" and similar with separators (- / . space)
+            var parts = s.Split('-', '/', '.', ' ');
+            if (parts.Length == 3 &&
+                parts[2].Length == 4 &&
+                int.TryParse(parts[0], out int a) &&
+                int.TryParse(parts[1], out int b) &&
+                int.TryParse(parts[2], out int y))
+            {
+                // Try interpret as d-M-yyyy
+                if (a >= 1 && a <= 31 && b >= 1 && b <= 12)
+                {
+                    if (DateTime.TryParseExact($"{a:D2}-{b:D2}-{y}", "dd-MM-yyyy",
+                                               CultureInfo.InvariantCulture, DateTimeStyles.None, out var dmy))
+                        return dmy;
+
+                    // Or M-d-yyyy (US style)
+                    if (DateTime.TryParseExact($"{a:D2}-{b:D2}-{y}", "MM-dd-yyyy",
+                                               CultureInfo.InvariantCulture, DateTimeStyles.None, out var mdy))
+                        return mdy;
+                }
+            }
+
+            // Last resort: permissive parse (still no exceptions thrown)
+            if (DateTime.TryParse(s, CultureInfo.InvariantCulture,
+                                  DateTimeStyles.AllowWhiteSpaces, out var any))
+                return any;
+        }
+
+        // Non-string tokens aren’t supported for this field
+        throw new JsonException("Invalid date token.");
+    }
+
+    public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
+    {
+        if (value is null) { writer.WriteNullValue(); return; }
+        // Normalize output
+        writer.WriteStringValue(value.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+    }
+}
