@@ -14,7 +14,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     // ✅ Static semaphore to ensure only one execution at a time across all instances
     private static readonly SemaphoreSlim _syncSemaphore = new(1, 1);
 
-    [DisableConcurrentExecution(timeoutInSeconds: 5 * 60)] // 10 minutes max
+    //[DisableConcurrentExecution(timeoutInSeconds: 5 * 60)] // 10 minutes max
     /// <summary>
     /// Professional SyncContents ExecuteAsync - Balanced Movie/TV Sync with ContentSyncLog Management
     /// Prevents concurrent execution using SemaphoreSlim
