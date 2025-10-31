@@ -9,7 +9,7 @@ class Episode : AuditableEntity
     [Required]
     public int EpisodeNumber { get; set; } // per season
 
-    [Required, MaxLength(200)]
+    [Required, MaxLength(500)]
     public string Title { get; set; } = null!;
 
     [MaxLength(500)]
