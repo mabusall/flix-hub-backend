@@ -47,8 +47,10 @@ internal sealed record MovieDetailsResponse
     [JsonPropertyName("production_countries")]
     public IList<TmdbProductionCountry> ProductionCountries { get; set; } = [];
 
-    [JsonPropertyName("release_date")]
-    [JsonConverter(typeof(FlexibleNullableDateConverter))]
+    [
+        JsonPropertyName("release_date"),
+        JsonConverter(typeof(FlexibleNullableDateConverter))
+    ]
     public DateTime? ReleaseDate { get; set; }
 
     [JsonPropertyName("revenue")]

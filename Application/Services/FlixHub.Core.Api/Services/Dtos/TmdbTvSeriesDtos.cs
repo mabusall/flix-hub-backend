@@ -14,7 +14,10 @@ internal sealed record TvDetailsResponse
     [JsonPropertyName("episode_run_time")]
     public IList<int> EpisodeRunTime { get; set; } = [];
 
-    [JsonPropertyName("first_air_date")]
+    [
+        JsonPropertyName("first_air_date"),
+        JsonConverter(typeof(FlexibleNullableDateConverter))
+    ]
     public DateTime? FirstAirDate { get; set; }
 
     [JsonPropertyName("genres")]

@@ -114,12 +114,16 @@ internal sealed record PersonResponse
     [JsonPropertyName("biography")]
     public string? Biography { get; set; }
 
-    [JsonPropertyName("birthday")]
-    [JsonConverter(typeof(FlexibleNullableDateConverter))]
+    [
+        JsonPropertyName("birthday"),
+        JsonConverter(typeof(FlexibleNullableDateConverter))
+    ]
     public DateTime? Birthday { get; set; }
 
-    [JsonPropertyName("deathday")]
-    [JsonConverter(typeof(FlexibleNullableDateConverter))]
+    [
+        JsonPropertyName("deathday"),
+        JsonConverter(typeof(FlexibleNullableDateConverter))
+    ]
     public DateTime? Deathday { get; set; }
 
     [JsonPropertyName("gender")]
@@ -191,7 +195,10 @@ internal sealed record TmdbMediaListItem
     [JsonPropertyName("poster_path")]
     public string? PosterPath { get; set; }
 
-    [JsonPropertyName("first_air_date")]
+    [
+        JsonPropertyName("first_air_date"),
+        JsonConverter(typeof(FlexibleNullableDateConverter))
+    ]
     public DateTime? FirstAirDate { get; set; }
 
     [JsonPropertyName("release_date")]
