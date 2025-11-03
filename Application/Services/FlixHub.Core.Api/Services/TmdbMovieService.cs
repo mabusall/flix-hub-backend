@@ -8,7 +8,7 @@ internal sealed class TmdbMovieService(IApiClient apiClient,
 
     private Dictionary<string, string> BuildHeaders() => new()
     {
-        { "Authorization", $"Bearer {TmdbConf.Tokens.First().Decrypt()}" }
+        { "Authorization", $"Bearer {TmdbConf.Tokens[0].Decrypt()}" }
     };
 
     public async Task<TmdbMediaListResponse> GetDiscoverAsync(string? language = "en-US",
@@ -37,10 +37,10 @@ internal sealed class TmdbMovieService(IApiClient apiClient,
             query["page"] = page.Value.ToString();
 
         return await apiClient.GetAsync<TmdbMediaListResponse>(TmdbConf.BaseUrl,
-                                                                            $"search/movie",
-                                                                            BuildHeaders(),
-                                                                            query,
-                                                                            managedCancellationToken.Token);
+                                                               $"search/movie",
+                                                               BuildHeaders(),
+                                                               query,
+                                                               managedCancellationToken.Token);
     }
 
     public async Task<MovieDetailsResponse> GetDetailsAsync(int id)

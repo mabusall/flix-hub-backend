@@ -1,6 +1,6 @@
 ﻿namespace FlixHub.Notification.Helper;
 
-public enum EmailBodyTemplate : int
+public enum EmailBodyTemplate
 {
     ActivateAccount,
     ForgetPassword,

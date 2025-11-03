@@ -1,3 +1,7 @@
+namespace FlixHub.Core.Api.Services;
+
+public sealed class OmdbQuotaExceededException(string message) : Exception(message) { }
+
 internal sealed class OmdbService(IApiClient apiClient,
                                   IAppSettingsKeyManagement appSettings,
                                   IManagedCancellationToken appToken,
@@ -18,10 +22,10 @@ internal sealed class OmdbService(IApiClient apiClient,
             var requestFailed = false;
             var token = tokenRing.Current; // current winner
             var query = new Dictionary<string, string>
-            {
-                { "i", imdbId },
-                { "apikey", token }
-            };
+        {
+            { "i", imdbId },
+            { "apikey", token }
+        };
 
             try
             {
@@ -47,6 +51,9 @@ internal sealed class OmdbService(IApiClient apiClient,
             tokenRing.Advance();
         }
 
-        return response ?? throw new Exception("Reach max daily requests");
+        if (response is null)
+            throw new OmdbQuotaExceededException("Reached max daily requests for OMDB API.");
+
+        return response;
     }
 }

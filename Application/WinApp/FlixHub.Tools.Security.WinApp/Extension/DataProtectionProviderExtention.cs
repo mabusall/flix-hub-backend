@@ -35,15 +35,15 @@ public static class DataProtectionProviderExtention
             byte[] inputbyteArray = Encoding.UTF8.GetBytes(textToEncrypt);
 
             using Aes aes = Aes.Create();
-            using MemoryStream ms = new MemoryStream();
-            using CryptoStream cs = new CryptoStream(ms, aes.CreateEncryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
+            using MemoryStream ms = new();
+            using CryptoStream cs = new(ms, aes.CreateEncryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
             cs.Write(inputbyteArray, 0, inputbyteArray.Length);
             cs.FlushFinalBlock();
 
             var res = Convert.ToBase64String(ms.ToArray())
                              .TrimEnd(Padding)
                              .Replace('+', '-')
-                             .Replace('/', '_'); ;
+                             .Replace('/', '_');
             return res;
         }
         catch (Exception)
@@ -70,8 +70,8 @@ public static class DataProtectionProviderExtention
             inputbyteArray = Convert.FromBase64String(incoming);
 
             using Aes aes = Aes.Create();
-            using MemoryStream ms = new MemoryStream();
-            using CryptoStream cs = new CryptoStream(ms, aes.CreateDecryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
+            using MemoryStream ms = new();
+            using CryptoStream cs = new(ms, aes.CreateDecryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
             cs.Write(inputbyteArray, 0, inputbyteArray.Length);
             cs.FlushFinalBlock();
             Encoding encoding = Encoding.UTF8;

@@ -1,24 +1,13 @@
 ﻿namespace FlixHub.Core.Database;
 
-public class GenericRepository<TEntity, TBrief>
+public class GenericRepository<TEntity, TBrief>(DbContext context)
     : IGenericRepository<TEntity, TBrief>
     where TEntity : AuditableEntity
     where TBrief : class
 {
     #region [ injected variables ]
 
-    private readonly DbSet<TEntity> _table;
-
-    public DbSet<TEntity> Table => _table;
-
-    #endregion
-
-    #region [ constructor ]
-
-    public GenericRepository(DbContext context)
-    {
-        _table = context.Set<TEntity>();
-    }
+    private readonly DbSet<TEntity> _table = context.Set<TEntity>();
 
     #endregion
 
@@ -52,8 +41,9 @@ public class GenericRepository<TEntity, TBrief>
     public Task<int> CountAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken)
         => AsQueryable(false).CountAsync(expression, cancellationToken);
 
-    public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> query, CancellationToken cancellationToken)
-        => AsQueryable(false).Where(query).ToListAsync(cancellationToken);
+    public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression,
+                                            CancellationToken cancellationToken)
+        => AsQueryable(false).Where(expression).ToListAsync(cancellationToken);
 
     public async Task<PaginatedList<TBrief>> GetPaginatedListAsync(IQueryable<TEntity> query,
                                                                    int? pageNumber,
@@ -130,8 +120,7 @@ public class GenericRepository<TEntity, TBrief>
 
     public void Delete(TEntity entity)
     {
-        if (entity is null)
-            throw new NullReferenceException(nameof(TEntity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         _table.Remove(entity);
     }

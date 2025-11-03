@@ -1,6 +1,6 @@
 ﻿namespace FlixHub.Notification.Helper;
 
-public enum NotificationTemplate : int
+public enum NotificationTemplate
 {
     VerifyOTP = 1,
 }

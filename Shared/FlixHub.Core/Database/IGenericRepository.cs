@@ -4,8 +4,6 @@ public interface IGenericRepository<TEntity, TBrief>
     where TEntity : AuditableEntity
     where TBrief : class
 {
-    DbSet<TEntity> Table { get; }
-
     #region [ database query ]
 
     Task<TEntity> GetByIdAsync(int id, CancellationToken cancellationToken);

@@ -22,7 +22,7 @@ public class EmailNotificationResources
         {
             if (ReferenceEquals(resourceMan, null))
             {
-                System.Resources.ResourceManager temp = new System.Resources.ResourceManager("FlixHub.Resources.EmailNotificationResources", typeof(EmailNotificationResources).Assembly);
+                System.Resources.ResourceManager temp = new("FlixHub.Resources.EmailNotificationResources", typeof(EmailNotificationResources).Assembly);
                 resourceMan = temp;
             }
             return resourceMan;
