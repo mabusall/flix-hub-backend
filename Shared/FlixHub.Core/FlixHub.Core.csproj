@@ -27,7 +27,7 @@
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.21" />
 		<PackageReference Include="Hangfire.PostgreSql" Version="1.20.12" />
 		<PackageReference Include="Microsoft.FeatureManagement" Version="4.3.0" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.77.1" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.78.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
