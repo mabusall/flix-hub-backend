@@ -40,6 +40,11 @@ docker run --name postgres-dev --network flixhub-net -e POSTGRES_USER=sa -e POST
 # Recreate pgAdmin container
 docker run --name pgadmin-dev --network flixhub-net -e PGADMIN_DEFAULT_EMAIL=mohannad.xox@gmail.com -e PGADMIN_DEFAULT_PASSWORD=admin -p 5050:80 -d dpage/pgadmin4
 
+# sonarqube
+docker exec -e PGPASSWORD=sa -it postgres-dev psql -U sa -d postgres -c "CREATE ROLE sonarqube LOGIN PASSWORD 'sa';"
+docker exec -e PGPASSWORD=sa -it postgres-dev psql -U sa -d postgres -c "CREATE DATABASE sonarqube OWNER sonarqube ENCODING 'UTF8' TEMPLATE template0;"
+docker exec -e PGPASSWORD=sa -it postgres-dev psql -U sa -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonarqube;"
+# then run docker compose up -d using sonarqube-docker-compose.yml
 ```
 
 # backup & restore pstgresql

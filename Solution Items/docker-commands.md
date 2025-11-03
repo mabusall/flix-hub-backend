@@ -154,3 +154,16 @@ docker-compose build flixhub-api
 # Check status
 docker-compose ps
 ```
+
+```
+
+# list docker networks
+docker network ls
+
+# inspect a docker network
+docker network inspect <network-name>
+
+# Delete a specific network
+docker network rm <network-name>
+
+```
