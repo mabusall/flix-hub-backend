@@ -157,7 +157,7 @@ internal sealed record PersonResponse
 internal sealed record TmdbMediaListItem
 {
     [JsonPropertyName("adult")]
-    public bool Adult { get; set; }
+    public bool? Adult { get; set; }
 
     [JsonPropertyName("backdrop_path")]
     public string? BackdropPath { get; set; }

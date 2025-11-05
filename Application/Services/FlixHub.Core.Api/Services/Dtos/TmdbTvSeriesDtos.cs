@@ -3,7 +3,7 @@ namespace FlixHub.Core.Api.Services.Dtos;
 internal sealed record TvDetailsResponse
 {
     [JsonPropertyName("adult")]
-    public bool Adult { get; set; }
+    public bool? Adult { get; set; }
 
     [JsonPropertyName("backdrop_path")]
     public string? BackdropPath { get; set; }

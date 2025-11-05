@@ -2,13 +2,13 @@ namespace FlixHub.Core.Api.Services;
 
 internal sealed class TmdbTvService(IApiClient apiClient,
                                     IAppSettingsKeyManagement appSettings,
-                                    IManagedCancellationToken managedCancellationToken)
+                                    IManagedCancellationToken appToken)
 {
     public IntegrationApi TmdbConf { get; set; } = appSettings.IntegrationApisOptions.Apis["TMDB"];
 
     private Dictionary<string, string> BuildHeaders() => new()
     {
-        { "Authorization", $"Bearer {TmdbConf.Tokens.First().Decrypt()}" }
+        { "Authorization", $"Bearer {TmdbConf.Tokens[0].Decrypt()}" }
     };
 
     public async Task<TmdbMediaListResponse> GetDiscoverAsync(string? language = "en-US",
@@ -21,15 +21,15 @@ internal sealed class TmdbTvService(IApiClient apiClient,
             query["page"] = page.Value.ToString();
 
         return await apiClient.GetAsync<TmdbMediaListResponse>(TmdbConf.BaseUrl,
-                                                                            $"discover/tv",
-                                                                            BuildHeaders(),
-                                                                            query,
-                                                                            managedCancellationToken.Token);
+                                                               $"discover/tv",
+                                                               BuildHeaders(),
+                                                               query,
+                                                               appToken.Token);
     }
 
     public async Task<TmdbMediaListResponse> GetSearchAsync(string? language = "en-US",
-                                                                         Dictionary<string, string> query = default!,
-                                                                         int? page = null)
+                                                            Dictionary<string, string> query = default!,
+                                                            int? page = null)
     {
         if (!string.IsNullOrEmpty(language))
             query["language"] = language;
@@ -37,10 +37,10 @@ internal sealed class TmdbTvService(IApiClient apiClient,
             query["page"] = page.Value.ToString();
 
         return await apiClient.GetAsync<TmdbMediaListResponse>(TmdbConf.BaseUrl,
-                                                                            $"search/tv",
-                                                                            BuildHeaders(),
-                                                                            query,
-                                                                            managedCancellationToken.Token);
+                                                               $"search/tv",
+                                                               BuildHeaders(),
+                                                               query,
+                                                               appToken.Token);
     }
 
     public async Task<TvDetailsResponse> GetDetailsAsync(int id)
@@ -49,7 +49,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                           $"tv/{id}",
                                                           BuildHeaders(),
                                                           null,
-                                                          managedCancellationToken.Token);
+                                                          appToken.Token);
     }
 
     public async Task<TmdbExternalIdsResponse> GetExternalIdsAsync(int id)
@@ -58,7 +58,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                                  $"tv/{id}/external_ids",
                                                                  BuildHeaders(),
                                                                  null,
-                                                                 managedCancellationToken.Token);
+                                                                 appToken.Token);
     }
 
     public async Task<TmdbCreditsResponse> GetCreditsAsync(int id)
@@ -67,7 +67,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                              $"tv/{id}/credits",
                                                              BuildHeaders(),
                                                              null,
-                                                             managedCancellationToken.Token);
+                                                             appToken.Token);
     }
 
     public async Task<TmdbGenreResponse> GetGenresAsync()
@@ -76,7 +76,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                            $"genre/tv/list",
                                                            BuildHeaders(),
                                                            null,
-                                                           managedCancellationToken.Token);
+                                                           appToken.Token);
     }
 
     public async Task<TmdbImagesResponse> GetImagesAsync(int id)
@@ -85,7 +85,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                             $"tv/{id}/images",
                                                             BuildHeaders(),
                                                             null,
-                                                            managedCancellationToken.Token);
+                                                            appToken.Token);
     }
 
     public async Task<TvKeywordsResponse> GetKeywordsAsync(int id)
@@ -94,7 +94,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                             $"tv/{id}/keywords",
                                                             BuildHeaders(),
                                                             null,
-                                                            managedCancellationToken.Token);
+                                                            appToken.Token);
     }
 
     public async Task<TmdbVideosResponse> GetVideosAsync(int id)
@@ -103,7 +103,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                             $"tv/{id}/videos",
                                                             BuildHeaders(),
                                                             null,
-                                                            managedCancellationToken.Token);
+                                                            appToken.Token);
     }
 
     public async Task<TvSeasonResponse> GetSeasonDetailsAsync(int id, int seasonNumber)
@@ -112,7 +112,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                           $"tv/{id}/season/{seasonNumber}",
                                                           BuildHeaders(),
                                                           null,
-                                                          managedCancellationToken.Token);
+                                                          appToken.Token);
     }
 
     public async Task<TvEpisodeResponse> GetEpisodeDetailsAsync(int id,
@@ -123,7 +123,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                            $"tv/{id}/season/{seasonNumber}/episode/{episodeNumber}",
                                                            BuildHeaders(),
                                                            null,
-                                                           managedCancellationToken.Token);
+                                                           appToken.Token);
     }
 
     public async Task<TmdbChangesResponse> GetChangesAsync(string? language = "en-US",
@@ -139,7 +139,7 @@ internal sealed class TmdbTvService(IApiClient apiClient,
                                                            $"tv/changes",
                                                            BuildHeaders(),
                                                            query,
-                                                           managedCancellationToken.Token);
+                                                           appToken.Token);
     }
 
     public async Task<TmdbMediaListResponse> GetTrendingAsync(string timeWindow = "week", int? page = null)
@@ -149,9 +149,9 @@ internal sealed class TmdbTvService(IApiClient apiClient,
             query["page"] = page.Value.ToString();
 
         return await apiClient.GetAsync<TmdbMediaListResponse>(TmdbConf.BaseUrl,
-                                                                            $"trending/tv/{timeWindow}",
-                                                                            BuildHeaders(),
-                                                                            null,
-                                                                            managedCancellationToken.Token);
+                                                               $"trending/tv/{timeWindow}",
+                                                               BuildHeaders(),
+                                                               null,
+                                                               appToken.Token);
     }
 }

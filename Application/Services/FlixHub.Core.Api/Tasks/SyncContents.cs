@@ -7,6 +7,11 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             OmdbService omdbService)
     : IHangfireJob
 {
+    // S1192: Define constants for repeated string literals
+    private const string YouTubeType = "YouTube";
+    private const string TrailerType = "Trailer";
+    private const string TeaserType = "Teaser";
+
     private readonly int _maxDailyRequests = appSettings.DailySyncRequestsOptions.Limit;
     private readonly int _movieQuota = appSettings.DailySyncRequestsOptions.MovieQuota;
     private readonly int _tvQuota = appSettings.DailySyncRequestsOptions.SeriesQuota;
@@ -134,17 +139,6 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
                     #region [ fetch genres, casts, crews, ratings, images, videos ]
 
-                    // genres
-                    var genres = await uow
-                        .GenresRepository
-                        .AsQueryable(false)
-                        .Where(g => item.GenreIds.Contains(g.TmdbReferenceId))
-                        .Select(s => new ContentGenre
-                        {
-                            GenreId = s.Id,
-                        })
-                        .ToListAsync();
-
                     // always check the request used before asking for the next request
                     if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
 
@@ -181,11 +175,17 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                         .GetVideosAsync(item.Id);
                     requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
 
+                    // always check the request used before asking for the next request
+                    if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
+
                     // external ids
                     var externalIds = await tmdbService
                         .Movies
                         .GetExternalIdsAsync(item.Id);
                     requestsUsed = await IncrementDailyApiUsage(ContentType.Movie);
+
+                    // always check the request used before asking for the next request
+                    if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
 
                     // ratings, awards
                     var omdbResponse = externalIds.ImdbId is null ? default : await omdbService
@@ -226,7 +226,6 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 {
                     // increment page
                     syncLog.LastCompletedPage = nextPage;
-                    nextPage++;
                 }
 
                 // commit database changes
@@ -309,17 +308,6 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
                     #region [ fetch genres, casts, crews, ratings, images, videos ]
 
-                    // genres
-                    var genres = await uow
-                        .GenresRepository
-                        .AsQueryable(false)
-                        .Where(g => item.GenreIds.Contains(g.TmdbReferenceId))
-                        .Select(s => new ContentGenre
-                        {
-                            GenreId = s.Id,
-                        })
-                        .ToListAsync();
-
                     // always check the request used before asking for the next request
                     if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
 
@@ -356,11 +344,17 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                         .GetVideosAsync(item.Id);
                     requestsUsed = await IncrementDailyApiUsage(ContentType.Series);
 
+                    // always check the request used before asking for the next request
+                    if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
+
                     // external ids
                     var externalIds = await tmdbService
                         .Tv
                         .GetExternalIdsAsync(item.Id);
                     requestsUsed = await IncrementDailyApiUsage(ContentType.Series);
+
+                    // always check the request used before asking for the next request
+                    if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
 
                     // ratings, awards
                     var omdbResponse = externalIds.ImdbId is null ? default : await omdbService
@@ -408,7 +402,6 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 {
                     // increment page
                     syncLog.LastCompletedPage = nextPage;
-                    nextPage++;
                 }
 
                 // commit database changes
@@ -526,7 +519,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                         {
                             GenreId = s.Id,
                         })
-                        .ToListAsync(),
+                        .ToListAsync(appToken.Token),
             Awards = omdbResponse?.Awards,
             Status = ParseContentStatus(movieDetails.Status),
             Ratings = omdbResponse is null ? null! : ParseContentRatings(omdbResponse?.Ratings),
@@ -536,7 +529,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             Casts = await MapCastMembers(credits.Cast),
             Crews = await MapCrewMembers(credits.Crew),
             Videos = [.. videos.Results
-                        .Where(w => w.Site == "YouTube" && (w.Type == "Trailer" || w.Type == "Teaser"))
+                        .Where(w => w.Site == YouTubeType && (w.Type == TrailerType || w.Type == TeaserType))
                         .OrderByDescending(o => o.Size)
                         .Select(s => new ContentVideo
                         {
@@ -545,8 +538,8 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             Site = s.Site == "YouTube" ? VideoSite.YouTube : VideoSite.Vimeo,
                             Type = s.Type switch
                             {
-                                "Trailer" => VideoType.Trailer,
-                                "Teaser" => VideoType.Teaser,
+                                TrailerType => VideoType.Trailer,
+                                TeaserType => VideoType.Teaser,
                                 "Clip" => VideoType.Clip,
                                 "Featurette" => VideoType.Featurette,
                                 _ => VideoType.Trailer
@@ -631,7 +624,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             TmdbId = tvDetails.Id,
             ImdbId = externalIds?.ImdbId,
             Type = ContentType.Series,
-            IsAdult = tvDetails.Adult,
+            IsAdult = tvDetails.Adult ?? false,
             Title = tvDetails.Name,
             OriginalTitle = tvDetails.OriginalName,
             Overview = tvDetails.Overview?.Length > 500 ? tvDetails.Overview[..500] : tvDetails.Overview,
@@ -661,7 +654,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             Crews = await MapCrewMembers(credits.Crew),
             Seasons = seasonDetails,
             Videos = [.. videos.Results
-                        .Where(w => w.Site == "YouTube" && (w.Type == "Trailer" || w.Type == "Teaser"))
+                        .Where(w => w.Site == YouTubeType && (w.Type == TrailerType || w.Type == TeaserType))
                         .OrderByDescending(o => o.Size)
                         .Select(s => new ContentVideo
                         {
@@ -670,8 +663,8 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                             Site = s.Site == "YouTube" ? VideoSite.YouTube : VideoSite.Vimeo,
                             Type = s.Type switch
                             {
-                                "Trailer" => VideoType.Trailer,
-                                "Teaser" => VideoType.Teaser,
+                                TrailerType => VideoType.Trailer,
+                                TeaserType => VideoType.Teaser,
                                 "Clip" => VideoType.Clip,
                                 "Featurette" => VideoType.Featurette,
                                 _ => VideoType.Trailer
@@ -698,53 +691,49 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
         for (int season = 1; season <= tvDetails.NumberOfSeasons; season++)
         {
-            try
+            var seasonDetails = await tmdbService
+                .Tv
+                .GetSeasonDetailsAsync(tvDetails.Id, season);
+            requestsUsed = await IncrementDailyApiUsage(ContentType.Series);
+
+            // always check the request used before asking for the next request
+            if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
+
+            var episodes = new List<Episode>();
+
+            if (seasonDetails.Episodes is not null)
             {
-                var seasonDetails = await tmdbService
-                    .Tv
-                    .GetSeasonDetailsAsync(tvDetails.Id, season);
-                requestsUsed = await IncrementDailyApiUsage(ContentType.Series);
-
-                // always check the request used before asking for the next request
-                if (!ValidForNextRequest(requestsUsed, maxRequests)) break;
-
-                var episodes = new List<Episode>();
-
-                if (seasonDetails.Episodes is not null)
+                foreach (var e in seasonDetails.Episodes)
                 {
-                    foreach (var e in seasonDetails.Episodes)
+                    var crews = e.Crew is not null && e.Crew.Count > 0 ? await MapEpisodeCrewMembers(e.Crew) : [];
+
+                    var episode = new Episode
                     {
-                        var crews = e.Crew is not null && e.Crew.Count > 0 ? await MapEpisodeCrewMembers(e.Crew) : [];
+                        EpisodeNumber = e.EpisodeNumber,
+                        Title = e.Name ?? string.Empty,
+                        Overview = e.Overview?.Length > 500 ? e.Overview[..500] : e.Overview,
+                        AirDate = e.AirDate,
+                        Runtime = e.Runtime,
+                        StillPath = string.IsNullOrWhiteSpace(e.StillPath) ? null : $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{e.StillPath}",
+                        VoteAverage = (decimal)e.VoteAverage,
+                        VoteCount = e.VoteCount,
+                        Crews = crews,
+                    };
 
-                        var episode = new Episode
-                        {
-                            EpisodeNumber = e.EpisodeNumber,
-                            Title = e.Name ?? string.Empty,
-                            Overview = e.Overview?.Length > 500 ? e.Overview[..500] : e.Overview,
-                            AirDate = e.AirDate,
-                            Runtime = e.Runtime,
-                            StillPath = string.IsNullOrWhiteSpace(e.StillPath) ? null : $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{e.StillPath}",
-                            VoteAverage = (decimal)e.VoteAverage,
-                            VoteCount = e.VoteCount,
-                            Crews = crews,
-                        };
-
-                        episodes.Add(episode);
-                    }
+                    episodes.Add(episode);
                 }
-
-                lstSeasonDetails.Add(new ContentSeason
-                {
-                    SeasonNumber = seasonDetails.SeasonNumber,
-                    Title = seasonDetails.Name,
-                    Overview = seasonDetails.Overview?.Length > 500 ? seasonDetails.Overview[..500] : seasonDetails.Overview,
-                    AirDate = seasonDetails.AirDate,
-                    EpisodeCount = seasonDetails.Episodes?.Count,
-                    PosterPath = string.IsNullOrWhiteSpace(seasonDetails.PosterPath) ? null : $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{seasonDetails.PosterPath}",
-                    Episodes = episodes
-                });
             }
-            catch { }
+
+            lstSeasonDetails.Add(new ContentSeason
+            {
+                SeasonNumber = seasonDetails.SeasonNumber,
+                Title = seasonDetails.Name,
+                Overview = seasonDetails.Overview?.Length > 500 ? seasonDetails.Overview[..500] : seasonDetails.Overview,
+                AirDate = seasonDetails.AirDate,
+                EpisodeCount = seasonDetails.Episodes?.Count,
+                PosterPath = string.IsNullOrWhiteSpace(seasonDetails.PosterPath) ? null : $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{seasonDetails.PosterPath}",
+                Episodes = episodes
+            });
         }
 
         return (lstSeasonDetails, requestsUsed);
@@ -769,10 +758,10 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 .FirstOrDefault(p => p.TmdbId == crewMember.Id);
 
             // If not found locally, check the database
-            person ??= uow
+            person ??= await uow
                 .PersonsRepository
                 .AsQueryable(true)
-                .FirstOrDefault(p => p.TmdbId == crewMember.Id);
+                .FirstOrDefaultAsync(p => p.TmdbId == crewMember.Id, appToken.Token);
 
             if (person is null)
             {
@@ -814,10 +803,10 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 .FirstOrDefault(p => p.TmdbId == cast.Id);
 
             // If not found locally, check the database
-            person ??= uow
+            person ??= await uow
                 .PersonsRepository
                 .AsQueryable(true)
-                .FirstOrDefault(p => p.TmdbId == cast.Id);
+                .FirstOrDefaultAsync(p => p.TmdbId == cast.Id, appToken.Token);
 
             if (person is null)
             {
@@ -860,10 +849,10 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
                 .FirstOrDefault(p => p.TmdbId == crew.Id);
 
             // If not found locally, check the database
-            person ??= uow
+            person ??= await uow
                     .PersonsRepository
                     .AsQueryable(true)
-                    .FirstOrDefault(p => p.TmdbId == crew.Id);
+                    .FirstOrDefaultAsync(p => p.TmdbId == crew.Id, appToken.Token);
 
             if (person is null)
             {
