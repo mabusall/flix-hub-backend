@@ -688,8 +688,9 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
     {
         var lstSeasonDetails = new List<ContentSeason>();
         var requestsUsed = 0;
+        var seasons = tvDetails.Seasons.Select(s => s.SeasonNumber).Order();
 
-        for (int season = 1; season <= tvDetails.NumberOfSeasons; season++)
+        foreach (int season in seasons)
         {
             var seasonDetails = await tmdbService
                 .Tv
