@@ -704,20 +704,22 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
             if (seasonDetails.Episodes is not null)
             {
-                foreach (var e in seasonDetails.Episodes)
+                foreach (var seasonEpisode in seasonDetails.Episodes)
                 {
-                    var crews = e.Crew is not null && e.Crew.Count > 0 ? await MapEpisodeCrewMembers(e.Crew) : [];
+                    var episodeCrews = seasonEpisode.Crew?.Where(s => s.Id != 0).ToList();
+                    var crews = episodeCrews is not null && episodeCrews.Count > 0 ?
+                        await MapEpisodeCrewMembers(episodeCrews) : [];
 
                     var episode = new Episode
                     {
-                        EpisodeNumber = e.EpisodeNumber,
-                        Title = e.Name ?? string.Empty,
-                        Overview = e.Overview?.Length > 500 ? e.Overview[..500] : e.Overview,
-                        AirDate = e.AirDate,
-                        Runtime = e.Runtime,
-                        StillPath = string.IsNullOrWhiteSpace(e.StillPath) ? null : $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{e.StillPath}",
-                        VoteAverage = (decimal)e.VoteAverage,
-                        VoteCount = e.VoteCount,
+                        EpisodeNumber = seasonEpisode.EpisodeNumber,
+                        Title = seasonEpisode.Name ?? string.Empty,
+                        Overview = seasonEpisode.Overview?.Length > 500 ? seasonEpisode.Overview[..500] : seasonEpisode.Overview,
+                        AirDate = seasonEpisode.AirDate,
+                        Runtime = seasonEpisode.Runtime,
+                        StillPath = string.IsNullOrWhiteSpace(seasonEpisode.StillPath) ? null : $"{appSettings.IntegrationApisOptions.Apis["TMDB"].ResourcesUrl}/original{seasonEpisode.StillPath}",
+                        VoteAverage = (decimal)seasonEpisode.VoteAverage,
+                        VoteCount = seasonEpisode.VoteCount,
                         Crews = crews,
                     };
 
