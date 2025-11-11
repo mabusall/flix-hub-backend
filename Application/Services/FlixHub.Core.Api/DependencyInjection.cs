@@ -59,7 +59,6 @@ static class DependencyInjection
                 }
             });
 
-
         return services;
     }
 
@@ -70,9 +69,11 @@ static class DependencyInjection
             .GetSection(HangfireOptions.ConfigurationKey)
             .Get<HangfireOptions>()!;
 
-        var jobManager = app.Services.GetRequiredService<IRecurringJobManager>();
-
-        TaskRegister.Register(app, jobManager, hangfireOptions);
+        if (hangfireOptions.IsEnabled)
+        {
+            var jobManager = app.Services.GetRequiredService<IRecurringJobManager>();
+            TaskRegister.Register(app, jobManager, hangfireOptions);
+        }
 
         return app;
     }

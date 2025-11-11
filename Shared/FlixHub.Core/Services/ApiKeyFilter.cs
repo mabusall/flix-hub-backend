@@ -7,10 +7,10 @@ public class ApiKeyFilter : IEndpointFilter
 
     public static string ApiKey { get; set; }
 
-    public async ValueTask<object> InvokeAsync(EndpointFilterInvocationContext endpointFilterInvocationContext,
+    public async ValueTask<object> InvokeAsync(EndpointFilterInvocationContext context,
                                                EndpointFilterDelegate next)
     {
-        var httpContext = endpointFilterInvocationContext.HttpContext;
+        var httpContext = context.HttpContext;
 
         // Read the API key from configuration
         if (!httpContext.Request.Headers.TryGetValue(_apiKeyHeaderName, out var apiKey) ||
@@ -22,6 +22,6 @@ public class ApiKeyFilter : IEndpointFilter
         }
 
         // Proceed to the next filter or handler if ApiKey are satisfied
-        return await next(endpointFilterInvocationContext);
+        return await next(context);
     }
 }

@@ -6,9 +6,9 @@ public sealed class LoginSystemUserEndpoint : IEndpointRoute
     {
         endpointRouteBuilder.MapPost("/auth/login", async ([FromBody] LoginSystemUserCommand command,
                                                            ISender sender,
-                                                           IManagedCancellationToken applicationLifetime) =>
+                                                           IManagedCancellationToken appToken) =>
         {
-            var response = await sender.Send(command, applicationLifetime.Token);
+            var response = await sender.Send(command, appToken.Token);
 
             return Results.Ok(response);
         })

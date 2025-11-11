@@ -45,4 +45,4 @@ app
     .UseCoreServices(builder.Configuration)
     .UseApiHealthChecks();
 
-app.Run();
+await app.RunAsync();
