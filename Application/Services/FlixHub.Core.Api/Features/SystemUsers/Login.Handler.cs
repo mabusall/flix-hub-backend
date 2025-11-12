@@ -13,10 +13,11 @@ internal class LoginSystemUserCommandHandler(IFlixHubDbUnitOfWork uow,
                 .AsQueryable(false)
                 .FirstOrDefaultAsync(user => (user.Email == command.EmailOrAccount || user.Username == command.EmailOrAccount) &&
                                      user.Password == password, cancellationToken);
+        var fullName = string.Join(' ', user!.FirstName!.Trim(), user.LastName!.Trim()).Trim();
         var cachedToken = await cacheProvider.GetAsync<string>(user!.Email, cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(cachedToken))
-            return new LoginSystemUserResult(cachedToken);
+            return new LoginSystemUserResult(fullName, cachedToken);
 
         // Generate JWT token
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -45,6 +46,6 @@ internal class LoginSystemUserCommandHandler(IFlixHubDbUnitOfWork uow,
             AbsoluteExpirationRelativeToNow = null
         }, cancellationToken);
 
-        return new LoginSystemUserResult(newToken);
+        return new LoginSystemUserResult(fullName, newToken);
     }
 }

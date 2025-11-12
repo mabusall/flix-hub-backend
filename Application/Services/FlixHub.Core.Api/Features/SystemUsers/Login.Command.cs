@@ -5,4 +5,4 @@ public record LoginSystemUserCommand(
     string Password
 ) : ICommand<LoginSystemUserResult>;
 
-public record LoginSystemUserResult(string Token);
+public record LoginSystemUserResult(string Name, string Token);
