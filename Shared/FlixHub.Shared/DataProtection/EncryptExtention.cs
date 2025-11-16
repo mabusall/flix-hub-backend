@@ -38,7 +38,7 @@ public static class DataProtectionProviderExtention
                 .TrimEnd(padding)
                 .Replace('+', '-')
                 .Replace('/', '_');
-            ;
+
             return res;
         }
         catch (Exception)
@@ -74,8 +74,6 @@ public static class DataProtectionProviderExtention
         try
         {
             // Print the public and salt key to the console.
-            //Console.WriteLine($"Vault keys: PublicKey = {PublicKey}, SaltKey = {SaltKey}");
-
             ArgumentException.ThrowIfNullOrWhiteSpace(PublicKey, nameof(PublicKey));
             ArgumentException.ThrowIfNullOrWhiteSpace(SaltKey, nameof(SaltKey));
             ArgumentException.ThrowIfNullOrWhiteSpace(textToDecrypt, nameof(textToDecrypt));
