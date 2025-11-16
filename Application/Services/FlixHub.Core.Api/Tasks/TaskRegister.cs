@@ -2,12 +2,10 @@
 
 internal static class TaskRegister
 {
-    static void RegisterSyncMovieGenres(WebApplication app,
-                                        IRecurringJobManager jobManager,
+    static void RegisterSyncMovieGenres(IRecurringJobManager jobManager,
                                         HangfireOptions options)
     {
         var task = options!.Tasks["SyncMovieGenres"];
-        var cron = task.Schedule.ToCronExpression();
         jobManager.RemoveIfExists(task.Id);
         if (task.IsEnabled)
         {
@@ -19,12 +17,10 @@ internal static class TaskRegister
         }
     }
 
-    static void RegisterSyncContentLog(WebApplication app,
-                                       IRecurringJobManager jobManager,
+    static void RegisterSyncContentLog(IRecurringJobManager jobManager,
                                        HangfireOptions options)
     {
         var task = options!.Tasks["SyncContentLog"];
-        var cron = task.Schedule.ToCronExpression();
         jobManager.RemoveIfExists(task.Id);
         if (task.IsEnabled)
         {
@@ -36,12 +32,10 @@ internal static class TaskRegister
         }
     }
 
-    static void RegisterSyncContents(WebApplication app,
-                                     IRecurringJobManager jobManager,
+    static void RegisterSyncContents(IRecurringJobManager jobManager,
                                      HangfireOptions options)
     {
         var task = options!.Tasks["SyncContents"];
-        var cron = task.Schedule.ToCronExpression();
         jobManager.RemoveIfExists(task.Id);
         if (task.IsEnabled)
         {
@@ -57,9 +51,9 @@ internal static class TaskRegister
                                           IRecurringJobManager jobManager,
                                           HangfireOptions options)
     {
-        RegisterSyncMovieGenres(app, jobManager, options);
-        RegisterSyncContentLog(app, jobManager, options);
-        RegisterSyncContents(app, jobManager, options);
+        RegisterSyncMovieGenres(jobManager, options);
+        RegisterSyncContentLog(jobManager, options);
+        RegisterSyncContents(jobManager, options);
 
         return app;
     }
