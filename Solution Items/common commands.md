@@ -45,6 +45,7 @@ docker exec -e PGPASSWORD=sa -it postgres-dev psql -U sa -d postgres -c "CREATE 
 docker exec -e PGPASSWORD=sa -it postgres-dev psql -U sa -d postgres -c "CREATE DATABASE sonarqube OWNER sonarqube ENCODING 'UTF8' TEMPLATE template0;"
 docker exec -e PGPASSWORD=sa -it postgres-dev psql -U sa -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonarqube;"
 # then run docker compose up -d using sonarqube-docker-compose.yml
+# or docker compose -p sonarqube -f sonarqube-docker-compose-no-db.yml up -d
 ```
 
 # backup & restore pstgresql

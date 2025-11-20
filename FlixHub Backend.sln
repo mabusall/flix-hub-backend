@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Solution Items\LICENSE = Solution Items\LICENSE
 		Solution Items\metadata analysis.md = Solution Items\metadata analysis.md
 		Solution Items\README.md = Solution Items\README.md
+		sonarqube-docker-compose-no-db.yml = sonarqube-docker-compose-no-db.yml
 		sonarqube-docker-compose.yml = sonarqube-docker-compose.yml
 		Solution Items\sync inquiries.sql = Solution Items\sync inquiries.sql
 		Solution Items\SyncContentLog.md = Solution Items\SyncContentLog.md
