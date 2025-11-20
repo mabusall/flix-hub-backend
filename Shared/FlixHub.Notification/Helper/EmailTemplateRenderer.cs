@@ -5,13 +5,13 @@ public class EmailTemplateRenderer(IRazorViewEngine engine,
                                    ITempDataProvider tempDataProvider)
     : IEmailTemplateRenderer
 {
-    public async Task<string> RenderRazorTemplateAsStringAsync<T>(string viewName, T model)
+    public async Task<string> RenderRazorTemplateAsStringAsync<T>(string razorViewName, T model)
     {
         var httpContext = new DefaultHttpContext() { RequestServices = serviceProvider };
         var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
 
         using StringWriter sw = new();
-        var viewResult = engine.FindView(actionContext, viewName, false);
+        var viewResult = engine.FindView(actionContext, razorViewName, false);
 
         if (!viewResult.Success) return string.Empty;
 
@@ -33,13 +33,13 @@ public class EmailTemplateRenderer(IRazorViewEngine engine,
         return sw.ToString();
     }
 
-    public async Task<string> RenderRazorTemplateFromPathAsStringAsync<T>(string viewPath, T model)
+    public async Task<string> RenderRazorTemplateFromPathAsStringAsync<T>(string razorViewPath, T model)
     {
         var httpContext = new DefaultHttpContext() { RequestServices = serviceProvider };
         var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
 
         using StringWriter sw = new();
-        var viewResult = engine.GetView(viewPath, viewPath, false);
+        var viewResult = engine.GetView(razorViewPath, razorViewPath, false);
 
         if (!viewResult.Success) return string.Empty;
 

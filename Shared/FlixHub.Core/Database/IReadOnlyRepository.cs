@@ -6,7 +6,7 @@ public interface IReadOnlyRepository<TEntity, TBrief>
 {
     #region [ database query ]
 
-    Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression);
+    Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken);
 
     Task<PaginatedList<TBrief>> GetPaginatedListAsync(IQueryable<TEntity> query,
                                                       int? pageNumber,

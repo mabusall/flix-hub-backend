@@ -25,8 +25,8 @@ public class AesFileEncryptionProvider(IEncryptionProvider encryptionProvider) :
         EncryptFile(fileContent, encryptedOutputFilePath, key.Get256ShaHash(), salt.Get128MD5Hash());
     }
 
-    public byte[] DecryptFile(string filePath, byte[] key, byte[] salt)
-        => encryptionProvider.Decrypt(File.ReadAllBytes(filePath), key, salt);
+    public byte[] DecryptFile(string inFile, byte[] key, byte[] salt)
+        => encryptionProvider.Decrypt(File.ReadAllBytes(inFile), key, salt);
 
     public byte[] DecryptFile(string inFile, string key, string salt)
         => DecryptFile(inFile, key.Get256ShaHash(), salt.Get128MD5Hash());

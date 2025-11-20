@@ -42,8 +42,8 @@ public class ReadOnlyRepository<TEntity, TBrief>
     public Task<int> CountAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken)
         => AsQueryable().CountAsync(expression, cancellationToken);
 
-    public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> query)
-        => AsQueryable().Where(query).ToListAsync();
+    public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken)
+        => AsQueryable().Where(expression).ToListAsync(cancellationToken);
 
     public async Task<PaginatedList<TBrief>> GetPaginatedListAsync(IQueryable<TEntity> query,
                                                                    int? pageNumber,
