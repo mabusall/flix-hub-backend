@@ -101,13 +101,22 @@ public static class DependencyInjection
                 }
 
                 // Finite timeout: cancel either on timeout OR app stopping
+                // Use CreateLinkedTokenSource to properly link both cancellation sources
+                // This will be automatically disposed when the application stops
                 var cts = new CancellationTokenSource(timeout);
-                //var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(lifetime.ApplicationStopping,
-                //                                                                cts.Token);
-                //return new ManagedCancellationToken(linkedCts.Token);
+                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
+                    lifetime.ApplicationStopping,
+                    cts.Token);
+
+                // Register disposal of both CancellationTokenSources when the application stops
+                lifetime.ApplicationStopping.Register(() =>
+                {
+                    linkedCts?.Dispose();
+                    cts?.Dispose();
+                });
 
                 // Configure the managed cancellation token
-                return new ManagedCancellationToken(cts.Token);
+                return new ManagedCancellationToken(linkedCts.Token);
             })
 
             .AddMessageBus(rabbitMqConfig);
