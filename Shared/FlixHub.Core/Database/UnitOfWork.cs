@@ -26,8 +26,18 @@ public class UnitOfWork(DbContext context) : IUnitOfWork
         => context.SaveChangesAsync(cancellationToken);
 
     /// <summary>
+    /// Clears all tracked entities from the EF Core ChangeTracker to free memory.
+    /// Should be called after SaveChangesAsync in batch operations.
+    /// </summary>
+    public void ClearChangeTracker()
+        => context.ChangeTracker.Clear();
+
+    /// <summary>
     /// Releases the allocated resources for this context.
     /// </summary>
     public async ValueTask DisposeAsync()
-        => await context.DisposeAsync();
+    {
+        await context.DisposeAsync();
+        GC.SuppressFinalize(this);
+    }
 }

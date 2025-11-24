@@ -59,7 +59,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             }
         }
         finally
-        {
+        {           
             // Always release the semaphore
             _syncSemaphore.Release();
         }
@@ -125,6 +125,11 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
                     // used for first time setup when TotalPages is null
                     await uow.SaveChangesAsync(appToken.Token);
+                    uow.ClearChangeTracker();
+
+                    // ✅ C++ STYLE: Re-attach without DB query
+                    uow.Context().Attach(syncLog);
+                    uow.Context().Entry(syncLog).State = EntityState.Unchanged;
                 }
 
                 // always check the request used before asking for the next request
@@ -218,6 +223,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
                     // commit database changes
                     await uow.SaveChangesAsync(appToken.Token);
+                    uow.ClearChangeTracker();
 
                     // exit the while loop to find the next sync log
                     break;
@@ -230,6 +236,11 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
                 // commit database changes
                 await uow.SaveChangesAsync(appToken.Token);
+                uow.ClearChangeTracker();
+
+                // ✅ C++ STYLE: Re-attach without DB query
+                uow.Context().Attach(syncLog);
+                uow.Context().Entry(syncLog).State = EntityState.Unchanged;
 
                 #endregion
             }
@@ -294,6 +305,11 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
                     // used for first time setup when TotalPages is null
                     await uow.SaveChangesAsync(appToken.Token);
+                    uow.ClearChangeTracker();
+
+                    // ✅ C++ STYLE: Re-attach without DB query
+                    uow.Context().Attach(syncLog);
+                    uow.Context().Entry(syncLog).State = EntityState.Unchanged;
                 }
 
                 // always check the request used before asking for the next request
@@ -394,6 +410,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
                     // commit database changes
                     await uow.SaveChangesAsync(appToken.Token);
+                    uow.ClearChangeTracker();
 
                     // exit the while loop to find the next sync log
                     break;
@@ -406,6 +423,11 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
 
                 // commit database changes
                 await uow.SaveChangesAsync(appToken.Token);
+                uow.ClearChangeTracker();
+
+                // ✅ C++ STYLE: Re-attach without DB query (eliminates network/DB overhead)
+                uow.Context().Attach(syncLog);
+                uow.Context().Entry(syncLog).State = EntityState.Unchanged;
 
                 #endregion
             }

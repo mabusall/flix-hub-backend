@@ -133,6 +133,12 @@ docker run -d --name flixhub-prod -p 2535:80 -e ASPNETCORE_ENVIRONMENT=Productio
 # Build and start
 docker-compose up -d --build
 
+# Build without start
+docker-compose up --no-start
+
+# Check if memory metrics
+docker stats --no-stream flixhub-api
+
 # Start (without rebuilding)
 docker-compose up -d
 
