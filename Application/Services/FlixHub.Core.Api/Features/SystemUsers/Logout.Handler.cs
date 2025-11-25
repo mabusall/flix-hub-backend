@@ -13,6 +13,6 @@ internal class LogoutSystemUserCommandHandler(IFlixHubDbUnitOfWork uow,
 
         await cacheProvider.RemoveAsync(user!.Email, cancellationToken);
 
-        return await Task.FromResult(new LogoutSystemUserResult(true));
+        return new LogoutSystemUserResult(true);
     }
 }

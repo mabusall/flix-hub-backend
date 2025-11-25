@@ -10,8 +10,8 @@ public static class DataProtectionProviderExtention
 
     public static void Initialize(string publicKey, string saltKey)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(publicKey, nameof(publicKey));
-        ArgumentException.ThrowIfNullOrWhiteSpace(saltKey, nameof(saltKey));
+        ArgumentException.ThrowIfNullOrWhiteSpace(publicKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(saltKey);
 
         PublicKey = publicKey;
         SaltKey = saltKey;
@@ -19,32 +19,25 @@ public static class DataProtectionProviderExtention
 
     public static string Encrypt(this string textToEncrypt)
     {
-        try
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(PublicKey, nameof(PublicKey));
-            ArgumentException.ThrowIfNullOrWhiteSpace(SaltKey, nameof(SaltKey));
+        ArgumentException.ThrowIfNullOrWhiteSpace(PublicKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(SaltKey);
 
-            byte[] secretkeyByte = Encoding.UTF8.GetBytes(SaltKey);
-            byte[] publickeybyte = Encoding.UTF8.GetBytes(PublicKey);
-            byte[] inputbyteArray = Encoding.UTF8.GetBytes(textToEncrypt);
+        byte[] secretKeyByte = Encoding.UTF8.GetBytes(SaltKey);
+        byte[] publicKeyByte = Encoding.UTF8.GetBytes(PublicKey);
+        byte[] inputbyteArray = Encoding.UTF8.GetBytes(textToEncrypt);
 
-            using Aes aes = Aes.Create();
-            using MemoryStream ms = new();
-            using CryptoStream cs = new(ms, aes.CreateEncryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
-            cs.Write(inputbyteArray, 0, inputbyteArray.Length);
-            cs.FlushFinalBlock();
+        using Aes aes = Aes.Create();
+        using MemoryStream ms = new();
+        using CryptoStream cs = new(ms, aes.CreateEncryptor(publicKeyByte, secretKeyByte), CryptoStreamMode.Write);
+        cs.Write(inputbyteArray, 0, inputbyteArray.Length);
+        cs.FlushFinalBlock();
 
-            var res = Convert.ToBase64String(ms.ToArray())
-                .TrimEnd(padding)
-                .Replace('+', '-')
-                .Replace('/', '_');
+        var res = Convert.ToBase64String(ms.ToArray())
+            .TrimEnd(padding)
+            .Replace('+', '-')
+            .Replace('/', '_');
 
-            return res;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return res;
     }
 
     public static byte[] Encrypt(this byte[] data)
@@ -71,39 +64,29 @@ public static class DataProtectionProviderExtention
 
     public static string Decrypt(this string textToDecrypt)
     {
-        try
+        // Print the public and salt key to the console.
+        ArgumentException.ThrowIfNullOrWhiteSpace(PublicKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(SaltKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(textToDecrypt);
+
+        string incoming = textToDecrypt.Replace('_', '/').Replace('-', '+');
+        switch (textToDecrypt.Length % 4)
         {
-            // Print the public and salt key to the console.
-            ArgumentException.ThrowIfNullOrWhiteSpace(PublicKey, nameof(PublicKey));
-            ArgumentException.ThrowIfNullOrWhiteSpace(SaltKey, nameof(SaltKey));
-            ArgumentException.ThrowIfNullOrWhiteSpace(textToDecrypt, nameof(textToDecrypt));
-
-            string incoming = textToDecrypt.Replace('_', '/').Replace('-', '+');
-            switch (textToDecrypt.Length % 4)
-            {
-                case 2: incoming += "=="; break;
-                case 3: incoming += "="; break;
-            }
-
-            byte[] secretkeyByte = Encoding.UTF8.GetBytes(SaltKey);
-            byte[] publickeybyte = Encoding.UTF8.GetBytes(PublicKey);
-            byte[] inputbyteArray = new byte[incoming.Length];
-
-            inputbyteArray = Convert.FromBase64String(incoming);
-
-            using Aes aes = Aes.Create();
-            using MemoryStream ms = new();
-            using CryptoStream cs = new(ms, aes.CreateDecryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
-            cs.Write(inputbyteArray, 0, inputbyteArray.Length);
-            cs.FlushFinalBlock();
-            Encoding encoding = Encoding.UTF8;
-
-            return encoding.GetString(ms.ToArray());
+            case 2: incoming += "=="; break;
+            case 3: incoming += "="; break;
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        byte[] secretKeyByte = Encoding.UTF8.GetBytes(SaltKey);
+        byte[] publicKeybyte = Encoding.UTF8.GetBytes(PublicKey);
+        byte[] inputbyteArray = Convert.FromBase64String(incoming);
+
+        using Aes aes = Aes.Create();
+        using MemoryStream ms = new();
+        using CryptoStream cs = new(ms, aes.CreateDecryptor(publicKeybyte, secretKeyByte), CryptoStreamMode.Write);
+        cs.Write(inputbyteArray, 0, inputbyteArray.Length);
+        cs.FlushFinalBlock();
+
+        return Encoding.UTF8.GetString(ms.ToArray());
     }
 
     public static byte[] Decrypt(this byte[] data)
