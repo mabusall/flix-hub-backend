@@ -1,21 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35327.3
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A852B369-ADD7-4C68-9C5E-F9BA338533DD}"
 	ProjectSection(SolutionItems) = preProject
-		.env = .env
 		Solution Items\API-Integration.md = Solution Items\API-Integration.md
-		Build-DockerImage.ps1 = Build-DockerImage.ps1
+		Solution Items\Build-DockerImage.ps1 = Solution Items\Build-DockerImage.ps1
 		Solution Items\common commands.md = Solution Items\common commands.md
 		Solution Items\docker-commands.md = Solution Items\docker-commands.md
 		docker-compose.yml = docker-compose.yml
+		Solution Items\DOCKER-NETWORK-CONFIG.md = Solution Items\DOCKER-NETWORK-CONFIG.md
 		Solution Items\LICENSE = Solution Items\LICENSE
 		Solution Items\metadata analysis.md = Solution Items\metadata analysis.md
 		Solution Items\README.md = Solution Items\README.md
-		sonarqube-docker-compose-no-db.yml = sonarqube-docker-compose-no-db.yml
-		sonarqube-docker-compose.yml = sonarqube-docker-compose.yml
+		Solution Items\sonarqube-docker-compose-no-db.yml = Solution Items\sonarqube-docker-compose-no-db.yml
+		Solution Items\sonarqube-docker-compose.yml = Solution Items\sonarqube-docker-compose.yml
 		Solution Items\sync inquiries.sql = Solution Items\sync inquiries.sql
 		Solution Items\SyncContentLog.md = Solution Items\SyncContentLog.md
 	EndProjectSection
