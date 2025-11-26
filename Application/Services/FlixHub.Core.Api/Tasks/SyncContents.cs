@@ -59,7 +59,7 @@ internal class SyncContents(IFlixHubDbUnitOfWork uow,
             }
         }
         finally
-        {           
+        {
             // Always release the semaphore
             _syncSemaphore.Release();
         }
